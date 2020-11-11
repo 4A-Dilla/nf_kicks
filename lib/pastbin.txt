@@ -1,0 +1,48 @@
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          elevation: 20,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Favorite',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_border),
+              label: 'Favorite',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag_outlined),
+              label: 'Cart',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              label: 'Profile',
+            ),
+          ],
+        ),
+
+Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 100,
+                    child: RaisedButton(
+                      onPressed: () {},
+                      child: Text("Gym"),
+                    ),
+                  ),
+                  RaisedButton(
+                    onPressed: () {},
+                    child: Text("Running"),
+                  ),
+                  RaisedButton(
+                    onPressed: () {},
+                    child: Text("Style"),
+                  ),
+                  RaisedButton(
+                    onPressed: () {},
+                    child: Text("Trainers"),
+                  ),
+                ],
+              ),
