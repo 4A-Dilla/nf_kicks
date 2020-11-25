@@ -1,61 +1,30 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:nf_kicks/widgets/bottom_navigator_bar.dart';
-import 'package:nf_kicks/widgets/brand_list_view.dart';
-import 'package:nf_kicks/widgets/common_widgets.dart';
-import 'package:nf_kicks/widgets/sidebar_home.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(Home());
+import 'pages/user_state_page.dart';
+import 'services/auth/auth.dart';
+import 'services/auth/base.dart';
 
-class Home extends StatelessWidget {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Nf_Kicks',
-      theme: mainThemeData,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Image.asset(
-            'assets/logo.png',
-            scale: 10,
+    return Provider<Base>(
+      create: (context) => Auth(),
+      child: Container(
+        child: MaterialApp(
+          title: 'Nf_Kicks',
+          theme: ThemeData(
+            primarySwatch: Colors.indigo,
           ),
-          actions: <IconButton>[
-            IconButton(
-              icon: Icon(Icons.filter_list),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {},
-            ),
-          ],
+          home: UserStatePage(),
         ),
-        body: Column(
-          children: [
-            BrandSliderListView(),
-            Expanded(
-              flex: 10,
-              child: Row(
-                children: [
-                  SidebarHome(),
-                  Expanded(
-                    flex: 5,
-                    child: ListView(
-                      scrollDirection: Axis.vertical,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        bottomNavigationBar: BottomNavBar(),
       ),
     );
   }
