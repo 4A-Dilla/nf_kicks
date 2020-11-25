@@ -23,7 +23,10 @@ Future<bool> showAlertDialog(
               onPressed: () => Navigator.of(context).pop(false),
             ),
           FlatButton(
-            child: Text(defaultActionText),
+            child: Text(
+              defaultActionText,
+              style: TextStyle(color: Colors.deepOrangeAccent),
+            ),
             onPressed: () => Navigator.of(context).pop(true),
           ),
         ],
