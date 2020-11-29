@@ -19,44 +19,48 @@ class LoginAndRegistrationPage extends StatefulWidget {
 
 class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-  final FocusNode _emailFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
-  final FocusNode _repeatPasswordFocusNode = FocusNode();
-
   String get _email => _emailController.text;
 
   String get _password => _passwordController.text;
-
-  String get _repeatPassword => _confirmPasswordController.text;
 
   FormType _formType = FormType.login;
 
   bool _obscureText = true;
   bool _isLoading = false;
 
-  // bool _submitted = false;
-
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _emailFocusNode.dispose();
-    _passwordFocusNode.dispose();
-    _repeatPasswordFocusNode.dispose();
     super.dispose();
+  }
+
+  Future<void> _loginWithFacebook(BuildContext context) async {
+    try {
+      setState(() => _isLoading = true);
+      final auth = Provider.of<Base>(context, listen: false);
+      await auth.loginWithFacebook();
+    } on FirebaseException catch (e) {
+      print("my exception : $e");
+      showAlertDialog(context,
+          title: 'Sign in failed', content: e.message, defaultActionText: 'OK');
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   Future<void> _loginWithGoogle(BuildContext context) async {
     try {
       setState(() => _isLoading = true);
       final auth = Provider.of<Base>(context, listen: false);
-      await auth.logInWithGoogle();
+      await auth.loginWithGoogle();
     } on FirebaseException catch (e) {
       print("my exception : $e");
       showAlertDialog(context,
@@ -74,7 +78,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
     try {
       final auth = Provider.of<Base>(context, listen: false);
       if (_formType == FormType.login) {
-        await auth.logInWithEmailAndPassword(_email, _password);
+        await auth.loginWithEmailAndPassword(_email, _password);
       } else {
         final compromised = await isPasswordCompromised(_password);
         if (compromised) {
@@ -99,7 +103,6 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
 
   void _toggleFormType() {
     setState(() {
-      // _submitted = false;
       _formType =
           _formType == FormType.login ? FormType.register : FormType.login;
     });
@@ -406,7 +409,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                           ),
                         ),
                         RaisedButton(
-                          onPressed: () {},
+                          onPressed: () => _loginWithFacebook(context),
                           color: Colors.white,
                           child: Container(
                             height: 50,

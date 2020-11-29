@@ -7,11 +7,11 @@ abstract class Base {
 
   Future<void> logOut();
 
-  Future<User> logInWithGoogle();
+  Future<User> loginWithGoogle();
 
-  Future<User> logInWithEmailAndPassword(String email, String password);
+  Future<User> loginWithEmailAndPassword(String email, String password);
 
   Future<User> createUserWithEmailAndPassword(String email, String password);
 
-  // Future<User> logInWithFacebook();
+  Future<User> loginWithFacebook();
 }

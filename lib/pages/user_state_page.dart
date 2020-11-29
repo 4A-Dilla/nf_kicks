@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nf_kicks/constants.dart';
 import 'package:provider/provider.dart';
 
 import '../services/auth/base.dart';
@@ -45,25 +46,7 @@ class UserStatePage extends StatelessWidget {
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.all(30.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "assets/logo.png",
-                        alignment: Alignment.center,
-                      ),
-                      SizedBox(
-                        height: 90,
-                      ),
-                      Center(
-                        child: CircularProgressIndicator(
-                          backgroundColor: Colors.white,
-                          valueColor: new AlwaysStoppedAnimation<Color>(
-                              Colors.deepOrangeAccent),
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: kLoadingLogo,
                 ),
               ),
             ],

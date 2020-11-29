@@ -1,9 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:nf_kicks/pages/landing/landing_map.dart';
 import 'package:nf_kicks/services/auth/base.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
-class LandingPage extends StatelessWidget {
+class LandingPage extends StatefulWidget {
+  @override
+  _LandingPageState createState() => _LandingPageState();
+}
+
+class _LandingPageState extends State<LandingPage> {
+  int _selectedItemPosition = 2;
+
   Future<void> _logOut(BuildContext context) async {
     try {
       final auth = Provider.of<Base>(context, listen: false);
@@ -27,20 +38,62 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Landing Page'),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'Logout',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.white,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            LandingMap(),
+            Center(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Image.asset(
+                    "assets/logo.png",
+                    alignment: Alignment.center,
+                    scale: 7,
+                  ),
+                ],
               ),
             ),
-            onPressed: () => _showLogoutDialog(context),
-          ),
-        ],
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 30,
+              child: SnakeNavigationBar.color(
+                snakeViewColor: Colors.deepOrangeAccent,
+                unselectedItemColor: Colors.deepOrangeAccent,
+                selectedItemColor: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                elevation: 2.0,
+                behaviour: SnakeBarBehaviour.floating,
+                snakeShape: SnakeShape.circle,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25)),
+                ),
+                currentIndex: _selectedItemPosition,
+                onTap: (index) => setState(() => _selectedItemPosition = index),
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.notifications),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.shopping_cart),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.history),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.settings),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
