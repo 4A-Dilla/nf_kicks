@@ -12,6 +12,7 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
+// Todo: Overhaul this widget with a futurebuilder https://firebase.flutter.dev/docs/overview#initializing-flutterfire
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
