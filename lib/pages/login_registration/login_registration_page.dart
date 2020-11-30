@@ -1,6 +1,9 @@
 import 'dart:ui';
 
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:nf_kicks/constants.dart';
+import 'package:nf_kicks/pages/loading_page.dart';
+import 'package:nf_kicks/widgets/background_stack.dart';
 import 'package:password_compromised/password_compromised.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +55,9 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
       showAlertDialog(context,
           title: 'Sign in failed', content: e.message, defaultActionText: 'OK');
     } finally {
-      setState(() => _isLoading = false);
+      if (this.mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -66,13 +71,14 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
       showAlertDialog(context,
           title: 'Sign in failed', content: e.message, defaultActionText: 'OK');
     } finally {
-      setState(() => _isLoading = false);
+      if (this.mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
   void _submit() async {
     setState(() {
-      // _submitted = true;
       _isLoading = true;
     });
     try {
@@ -95,9 +101,9 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
       showAlertDialog(context,
           title: 'Sign in failed', content: e.message, defaultActionText: 'OK');
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (this.mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -111,7 +117,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
     _confirmPasswordController.clear();
   }
 
-  void _toggle() {
+  void _togglePasswordField() {
     setState(() {
       _obscureText = !_obscureText;
     });
@@ -171,7 +177,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                 labelText: 'Password',
                 suffixIcon: IconButton(
                   onPressed: () {
-                    _toggle();
+                    _togglePasswordField();
                   },
                   icon: Icon(
                     _obscureText
@@ -254,7 +260,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                 labelText: 'Password',
                 suffixIcon: IconButton(
                   onPressed: () {
-                    _toggle();
+                    _togglePasswordField();
                   },
                   icon: Icon(
                     _obscureText
@@ -313,192 +319,126 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              constraints: BoxConstraints.expand(),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/background.jpeg"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-              child: Container(
-                color: Colors.orangeAccent.withOpacity(0.2),
-              ),
-            ),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/logo.png",
-                      alignment: Alignment.center,
-                    ),
-                    SizedBox(
-                      height: 90,
-                    ),
-                    Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.white,
-                        valueColor: new AlwaysStoppedAnimation<Color>(
-                            Colors.deepOrangeAccent),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+      return Loading(
+        loadingWidget: kLoadingLogo,
       );
     }
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            constraints: BoxConstraints.expand(),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/background.jpeg"),
-                fit: BoxFit.cover,
+      body: backgroundStack(
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 60,
               ),
-            ),
-          ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-            child: Container(
-              color: Colors.orangeAccent.withOpacity(0.2),
-            ),
-          ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 60,
+              Image.asset(
+                "assets/logo.png",
+                alignment: Alignment.center,
+              ),
+              SizedBox(
+                height: 90,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  RaisedButton(
+                    onPressed: () => _loginWithGoogle(context),
+                    color: Colors.white,
+                    child: Container(
+                      height: 50,
+                      width: 80,
+                      child: Image.asset(
+                        "assets/google.png",
+                        scale: 29,
+                      ),
                     ),
-                    Image.asset(
-                      "assets/logo.png",
-                      alignment: Alignment.center,
+                  ),
+                  RaisedButton(
+                    onPressed: () => _loginWithFacebook(context),
+                    color: Colors.white,
+                    child: Container(
+                      height: 50,
+                      width: 80,
+                      child: Image.asset(
+                        "assets/facebook.png",
+                        scale: 29,
+                      ),
                     ),
-                    SizedBox(
-                      height: 90,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              _formFields(),
+              SizedBox(
+                height: 40,
+              ),
+              ButtonTheme(
+                minWidth: 200.0,
+                padding: EdgeInsets.all(10),
+                child: RaisedButton(
+                  color: Colors.deepOrangeAccent,
+                  child: Text(
+                    _formType == FormType.login ? "Login" : "Sign Up",
+                    style: GoogleFonts.permanentMarker(
+                      textStyle: TextStyle(
+                        fontSize: 23,
+                        color: Colors.white,
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        RaisedButton(
-                          onPressed: () => _loginWithGoogle(context),
-                          color: Colors.white,
-                          child: Container(
-                            height: 50,
-                            width: 80,
-                            child: Image.asset(
-                              "assets/google.png",
-                              scale: 29,
-                            ),
-                          ),
-                        ),
-                        RaisedButton(
-                          onPressed: () => _loginWithFacebook(context),
-                          color: Colors.white,
-                          child: Container(
-                            height: 50,
-                            width: 80,
-                            child: Image.asset(
-                              "assets/facebook.png",
-                              scale: 29,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    _formFields(),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    ButtonTheme(
-                      minWidth: 200.0,
-                      padding: EdgeInsets.all(10),
-                      child: RaisedButton(
+                  ),
+                  onPressed: () =>
+                      _formKey.currentState.validate() ? _submit() : null,
+                ),
+              ),
+              SizedBox(
+                height: 80,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _formType == FormType.login
+                        ? "Don't have an account?"
+                        : "Already have an account?",
+                    style: GoogleFonts.permanentMarker(
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                         color: Colors.deepOrangeAccent,
-                        child: Text(
-                          _formType == FormType.login ? "Login" : "Sign Up",
-                          style: GoogleFonts.permanentMarker(
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  GestureDetector(
+                    onTap: () => _toggleFormType(),
+                    child: Row(
+                      children: [
+                        Text(
+                          _formType == FormType.login ? "Sign up" : "Login",
+                          style: GoogleFonts.josefinSans(
                             textStyle: TextStyle(
-                              fontSize: 23,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                         ),
-                        onPressed: () =>
-                            _formKey.currentState.validate() ? _submit() : null,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 80,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _formType == FormType.login
-                              ? "Don't have an account?"
-                              : "Already have an account?",
-                          style: GoogleFonts.permanentMarker(
-                            textStyle: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.deepOrangeAccent,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        GestureDetector(
-                          onTap: () => _toggleFormType(),
-                          child: Row(
-                            children: [
-                              Text(
-                                _formType == FormType.login
-                                    ? "Sign up"
-                                    : "Login",
-                                style: GoogleFonts.josefinSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Icon(
-                                Icons.keyboard_arrow_right,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
+                        Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Colors.white,
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

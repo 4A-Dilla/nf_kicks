@@ -6,6 +6,7 @@ import 'package:nf_kicks/services/auth/base.dart';
 class Auth implements Base {
   final _firebaseAuth = FirebaseAuth.instance;
   final googleSignIn = GoogleSignIn();
+  final fb = FacebookLogin();
 
   @override
   User get currentUser => _firebaseAuth.currentUser;
@@ -55,7 +56,6 @@ class Auth implements Base {
 
   @override
   Future<User> loginWithFacebook() async {
-    final fb = FacebookLogin();
     final response = await fb.logIn(permissions: [
       FacebookPermission.publicProfile,
       FacebookPermission.email
@@ -86,7 +86,6 @@ class Auth implements Base {
   Future<void> logOut() async {
     await _firebaseAuth.signOut();
     await googleSignIn.signOut();
-    final facebookLogin = FacebookLogin();
-    facebookLogin.logOut();
+    await fb.logOut();
   }
 }
