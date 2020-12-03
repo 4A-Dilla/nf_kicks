@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:nf_kicks/constants.dart';
 import 'package:nf_kicks/pages/loading_page.dart';
+import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/widgets/background_stack.dart';
 import 'package:password_compromised/password_compromised.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nf_kicks/services/auth/base.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +48,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
   Future<void> _loginWithFacebook(BuildContext context) async {
     try {
       setState(() => _isLoading = true);
-      final auth = Provider.of<Base>(context, listen: false);
+      final auth = Provider.of<AuthenticationApi>(context, listen: false);
       await auth.loginWithFacebook();
     } on FirebaseException catch (e) {
       print("my exception : $e");
@@ -64,7 +64,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
   Future<void> _loginWithGoogle(BuildContext context) async {
     try {
       setState(() => _isLoading = true);
-      final auth = Provider.of<Base>(context, listen: false);
+      final auth = Provider.of<AuthenticationApi>(context, listen: false);
       await auth.loginWithGoogle();
     } on FirebaseException catch (e) {
       print("my exception : $e");
@@ -82,7 +82,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
       _isLoading = true;
     });
     try {
-      final auth = Provider.of<Base>(context, listen: false);
+      final auth = Provider.of<AuthenticationApi>(context, listen: false);
       if (_formType == FormType.login) {
         await auth.loginWithEmailAndPassword(_email, _password);
       } else {

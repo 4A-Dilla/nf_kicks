@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class Base {
+abstract class AuthenticationApi {
   User get currentUser;
 
   Stream<User> authStateChanges();

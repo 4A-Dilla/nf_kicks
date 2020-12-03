@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:nf_kicks/services/auth/base.dart';
 
-class Auth implements Base {
+import 'authentication_api.dart';
+
+class Authentication implements AuthenticationApi {
   final _firebaseAuth = FirebaseAuth.instance;
   final googleSignIn = GoogleSignIn();
   final fb = FacebookLogin();
