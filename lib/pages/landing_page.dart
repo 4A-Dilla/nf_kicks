@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:nf_kicks/pages/landing/landing_map.dart';
-import 'package:nf_kicks/services/auth/base.dart';
+import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +17,7 @@ class _LandingPageState extends State<LandingPage> {
 
   Future<void> _logOut(BuildContext context) async {
     try {
-      final auth = Provider.of<Base>(context, listen: false);
+      final auth = Provider.of<AuthenticationApi>(context, listen: false);
       await auth.logOut();
     } catch (e) {
       print(e.toString());
