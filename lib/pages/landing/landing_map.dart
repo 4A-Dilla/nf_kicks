@@ -10,6 +10,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nf_kicks/constants.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/pages/something_went_wrong_page.dart';
+import 'package:nf_kicks/pages/store/store_page.dart';
+import 'package:nf_kicks/services/database/database.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:provider/provider.dart';
 
@@ -124,21 +126,27 @@ class _LandingMapState extends State<LandingMap> {
         snapshot.data.forEach((element) async {
           // initMarker(element);
           BitmapDescriptor markerImage = await _makeMarkerIcon(element.image);
-          _markers.add(Marker(
-            markerId: MarkerId(element.id) ?? MarkerId(''),
-            icon: markerImage ?? BitmapDescriptor.defaultMarker,
-            position:
-                LatLng(element.latLong.latitude, element.latLong.longitude) ??
-                    LatLng(0, 0),
-            infoWindow:
-                InfoWindow(title: element.name, snippet: element.address) ??
-                    InfoWindow(title: '', snippet: ''),
-            onTap: () => Navigator.push(
+          _markers.add(
+            Marker(
+              markerId: MarkerId(element.id) ?? MarkerId(''),
+              icon: markerImage ?? BitmapDescriptor.defaultMarker,
+              position:
+                  LatLng(element.latLong.latitude, element.latLong.longitude) ??
+                      LatLng(0, 0),
+              infoWindow:
+                  InfoWindow(title: element.name, snippet: element.address) ??
+                      InfoWindow(title: '', snippet: ''),
+              onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SomethingWentWrong(),
-                )),
-          ));
+                  builder: (context) => StorePage(
+                    storeId: element.id,
+                    dataStore: database,
+                  ),
+                ),
+              ),
+            ),
+          );
           return _buildGoogleMaps(_markers);
         });
         return _buildGoogleMaps(_markers);

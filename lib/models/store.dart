@@ -2,16 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Store {
-  Store(
-      {@required this.id,
-      @required this.name,
-      @required this.description,
-      @required this.address,
-      @required this.image,
-      @required this.storeImage,
-      @required this.inStorePickup,
-      @required this.inStoreShopping,
-      @required this.latLong});
+  Store({
+    @required this.id,
+    @required this.name,
+    @required this.description,
+    @required this.address,
+    @required this.image,
+    @required this.storeImage,
+    @required this.inStorePickup,
+    @required this.inStoreShopping,
+    @required this.latLong,
+  });
 
   String id;
   String name;
@@ -27,6 +28,7 @@ class Store {
     if (data == null) {
       return null;
     }
+
     return new Store(
       id: documentId,
       name: data['name'] ?? '',
