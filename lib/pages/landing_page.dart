@@ -8,6 +8,8 @@ import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatefulWidget {
+  static const String id = 'landing_screen';
+
   @override
   _LandingPageState createState() => _LandingPageState();
 }

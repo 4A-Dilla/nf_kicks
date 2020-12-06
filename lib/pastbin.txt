@@ -1,87 +1,11 @@
 api_key = 'AIzaSyDFQ7tdsvCGI5T35-NqywZOsGqq_i4zWi4';
 
 
-              showBottomSheet(
-                context: context,
-                builder: (context) => Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 300,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20)),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(docs.docs[i]['storeImage']),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(28.0),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                docs.docs[i]['name'],
-                                style: GoogleFonts.josefinSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductPage(
+                                        productId: snapshot.data[index].id,
+                                        dataStore: dataStore),
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                docs.docs[i]['address'],
-                                style: GoogleFonts.josefinSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                docs.docs[i]['description'],
-                                style: GoogleFonts.josefinSans(
-                                  textStyle: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(
-                                    "${docs.docs[i]['inStorePickup'] ? "✅️" : "❌"} - in store pickup",
-                                  ),
-                                  Text(
-                                    "${docs.docs[i]['inStoreShopping'] ? "✅️" : "❌"} - in store shopping",
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );

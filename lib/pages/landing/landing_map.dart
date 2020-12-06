@@ -9,9 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nf_kicks/constants.dart';
 import 'package:nf_kicks/models/store.dart';
-import 'package:nf_kicks/pages/something_went_wrong_page.dart';
 import 'package:nf_kicks/pages/store/store_page.dart';
-import 'package:nf_kicks/services/database/database.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:provider/provider.dart';
 
@@ -69,11 +67,9 @@ class _LandingMapState extends State<LandingMap> {
   @override
   Widget build(BuildContext context) {
     // print("my markers: $markers");
-    return Scaffold(
-      body: _initialPosition == null
-          ? kLoadingNoLogo
-          : _buildGoogleMapsWithMarkers(),
-    );
+    return _initialPosition == null
+        ? kLoadingNoLogo
+        : _buildGoogleMapsWithMarkers();
   }
 
   // Future<void> initMarker(Store storeMarker) async {
@@ -139,11 +135,8 @@ class _LandingMapState extends State<LandingMap> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => StorePage(
-                    storeId: element.id,
-                    dataStore: database,
-                  ),
-                ),
+                    builder: (context) =>
+                        StorePage(storeId: element.id, dataStore: database)),
               ),
             ),
           );

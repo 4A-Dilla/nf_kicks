@@ -5,12 +5,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nf_kicks/constants.dart';
+import 'package:nf_kicks/pages/home/home_page.dart';
+import 'package:nf_kicks/pages/landing_page.dart';
 import 'package:nf_kicks/pages/loading_page.dart';
 import 'package:nf_kicks/pages/something_went_wrong_page.dart';
+import 'package:nf_kicks/pages/store/store_page.dart';
 import 'package:nf_kicks/services/authentication/authentication.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:provider/provider.dart';
 
+import 'models/store.dart';
 import 'pages/user_state_page.dart';
 
 void main() {
@@ -77,25 +81,14 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Nf_Kicks',
-      home: _connectionStatusBool
-          ? FutureBuilder(
-              future: _init,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return SomethingWentWrong();
-                }
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Provider<AuthenticationApi>(
-                    create: (context) => Authentication(),
-                    child: UserStatePage(),
-                  );
-                }
-                return Loading(
-                  loadingWidget: kLoadingLogo,
-                );
-              },
-            )
-          : SomethingWentWrong(),
+      initialRoute: Home.id,
+      routes: {
+        Home.id: (context) => Home(
+              connectionStatus: _connectionStatusBool,
+              init: _init,
+            ),
+        LandingPage.id: (context) => LandingPage(),
+      },
     );
   }
 }
