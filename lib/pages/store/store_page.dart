@@ -1,14 +1,11 @@
 import 'dart:ui';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/models/store.dart';
-import 'package:nf_kicks/pages/something_went_wrong_page.dart';
 import 'package:nf_kicks/pages/store/product_page.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
-import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 
@@ -30,16 +27,13 @@ class StorePage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             print("Errors: ${snapshot.error}");
-            return kLoadingNoLogo;
+            return kLoadingLogo;
           }
 
           if (!snapshot.hasData) {
             return kLoadingLogo;
           }
-          if (snapshot.hasError) {
-            print("Errors: ${snapshot.error}");
-            return kLoadingLogo;
-          }
+
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -144,7 +138,6 @@ class StorePage extends StatelessWidget {
                         if (!snapshot.hasData) {
                           return kLoadingNoLogo;
                         }
-
                         return ListView.builder(
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
