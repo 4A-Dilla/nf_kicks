@@ -23,7 +23,7 @@ class UserStatePage extends StatelessWidget {
             return LoginAndRegistrationPage();
           }
           return Provider<DatabaseApi>(
-            create: (_) => Database(),
+            create: (_) => Database(uid: user.uid),
             child: LandingPage(),
           );
         }
