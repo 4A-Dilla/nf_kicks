@@ -28,6 +28,11 @@ class StorePage extends StatelessWidget {
     return StreamBuilder<Store>(
         stream: dataStore.storeStream(storeId: storeId),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print("Errors: ${snapshot.error}");
+            return kLoadingNoLogo;
+          }
+
           if (!snapshot.hasData) {
             return kLoadingLogo;
           }
@@ -36,10 +41,14 @@ class StorePage extends StatelessWidget {
             return kLoadingLogo;
           }
           return Scaffold(
-            backgroundColor: Colors.white70,
+            backgroundColor: Colors.white,
             appBar: AppBar(
-              title: Text(snapshot.data.name),
-              backgroundColor: Colors.black,
+              centerTitle: true,
+              title: Text(
+                snapshot.data.name,
+                style: GoogleFonts.permanentMarker(),
+              ),
+              backgroundColor: Colors.deepOrangeAccent,
             ),
             body: Column(
               children: [
@@ -61,52 +70,41 @@ class StorePage extends StatelessWidget {
                                     ? Icon(
                                         Icons.check_circle,
                                         color: Colors.greenAccent,
-                                        size: 30,
+                                        size: 25,
                                       )
                                     : Icon(
                                         Icons.cancel,
                                         color: Colors.redAccent,
-                                        size: 30,
+                                        size: 25,
                                       ),
-                                SizedBox(
-                                  width: 10,
-                                ),
                                 Flexible(
                                   child: Text(
                                     "In-store shopping",
-                                    style: GoogleFonts.permanentMarker(
-                                      textStyle: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black,
-                                      ),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      color: Colors.black,
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 10,
                                 ),
                                 snapshot.data.inStorePickup
                                     ? Icon(
                                         Icons.check_circle,
                                         color: Colors.greenAccent,
-                                        size: 30,
+                                        size: 25,
                                       )
                                     : Icon(
                                         Icons.cancel,
                                         color: Colors.redAccent,
-                                        size: 30,
+                                        size: 25,
                                       ),
-                                SizedBox(
-                                  width: 10,
-                                ),
                                 Flexible(
                                   child: Text(
                                     "In-store pick-up",
-                                    style: GoogleFonts.permanentMarker(
-                                      textStyle: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.black,
-                                      ),
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
                                     ),
                                   ),
                                 ),
@@ -114,6 +112,8 @@ class StorePage extends StatelessWidget {
                             ),
                           ),
                           decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.deepOrangeAccent, width: 2),
                             color: Colors.white,
                             borderRadius: BorderRadius.vertical(
                               bottom: Radius.circular(20),
@@ -127,74 +127,145 @@ class StorePage extends StatelessWidget {
                           BorderRadius.vertical(bottom: Radius.circular(20)),
                       image: DecorationImage(
                           image: NetworkImage(snapshot.data.storeImage),
-                          fit: BoxFit.cover),
+                          fit: BoxFit.cover,
+                          alignment: Alignment(-1.0, -1)),
                     ),
                   ),
-                ),
-                SizedBox(
-                  height: 10,
                 ),
                 Expanded(
                   flex: 2,
                   child: StreamBuilder<List<Product>>(
                       stream: dataStore.productsStream(storeId: storeId),
                       builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          print("Errors: ${snapshot.error}");
+                          return kLoadingNoLogo;
+                        }
                         if (!snapshot.hasData) {
                           return kLoadingNoLogo;
                         }
-                        if (snapshot.hasError) {
-                          print("Errors: ${snapshot.error}");
-                          return kLoadingLogo;
-                        }
+
                         return ListView.builder(
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
-                            return Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  // mainAxisAlignment:
-                                  //     MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            snapshot.data[index].name,
-                                            softWrap: true,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                  "€${snapshot.data[index].price.toStringAsFixed(2)}"),
-                                              Text("|"),
-                                              Text(
-                                                  "Stock: ${snapshot.data[index].stock.toStringAsFixed(0)}"),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(20),
+                            return GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductPage(
+                                      productId: snapshot.data[index].id,
+                                      dataStore: dataStore),
+                                ),
+                              ),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                elevation: 5,
+                                borderOnForeground: true,
+                                margin: EdgeInsets.only(
+                                    top: 18, left: 18, right: 18),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.deepOrangeAccent,
+                                          width: 2),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                            padding: EdgeInsets.only(
+                                                right: 20, left: 10),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  snapshot.data[index].name
+                                                      .toUpperCase(),
+                                                  softWrap: true,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          color: Colors
+                                                              .deepOrangeAccent,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          5))),
+                                                      padding:
+                                                          EdgeInsets.all(8),
+                                                      child: Text(
+                                                        "€${snapshot.data[index].price.toStringAsFixed(2)}",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.black,
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          5))),
+                                                      padding:
+                                                          EdgeInsets.all(8),
+                                                      child: Text(
+                                                          "${snapshot.data[index].stock.toStringAsFixed(0)}",
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        child: Image.network(
-                                          snapshot.data[index].image,
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            height: 100,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(snapshot
+                                                      .data[index].image),
+                                                  fit: BoxFit.cover),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             );

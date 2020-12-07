@@ -17,7 +17,7 @@ class Product {
   String name;
   String description;
   double price;
-  double stock;
+  int stock;
   String image;
   bool inStock;
 
@@ -33,8 +33,8 @@ class Product {
       storeId: data['storeId'] ?? '',
       name: data['name'] ?? '',
       description: data['description'] ?? '',
-      price: data['price'] ?? 00.00,
-      stock: data['stock'] ?? 0.0,
+      price: data['price'].toDouble() ?? 00.00,
+      stock: data['stock'].toInt() ?? 0,
       image: data['image'] ?? '',
       inStock: data['inStock'] ?? false,
     );
