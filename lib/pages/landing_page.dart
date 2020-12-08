@@ -39,12 +39,15 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_selectedItemPosition == 4) {
+      _logOut(context);
+    }
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            LandingMap(),
-            Center(
+      body: Stack(
+        children: [
+          LandingMap(),
+          SafeArea(
+            child: Center(
               child: Column(
                 children: [
                   SizedBox(
@@ -58,44 +61,44 @@ class _LandingPageState extends State<LandingPage> {
                 ],
               ),
             ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 30,
-              child: SnakeNavigationBar.color(
-                snakeViewColor: Colors.deepOrangeAccent,
-                unselectedItemColor: Colors.deepOrangeAccent,
-                selectedItemColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                elevation: 2.0,
-                behaviour: SnakeBarBehaviour.floating,
-                snakeShape: SnakeShape.circle,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25)),
-                ),
-                currentIndex: _selectedItemPosition,
-                onTap: (index) => setState(() => _selectedItemPosition = index),
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.notifications),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.shopping_cart),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.history),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.settings),
-                  )
-                ],
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 90,
+            child: SnakeNavigationBar.color(
+              snakeViewColor: Colors.deepOrangeAccent,
+              unselectedItemColor: Colors.deepOrangeAccent,
+              selectedItemColor: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              elevation: 2.0,
+              behaviour: SnakeBarBehaviour.floating,
+              snakeShape: SnakeShape.circle,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25)),
               ),
+              currentIndex: _selectedItemPosition,
+              onTap: (index) => setState(() => _selectedItemPosition = index),
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.notifications),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_cart),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.history),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

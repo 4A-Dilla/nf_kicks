@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/services/api/store_api_path.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 
 class Database implements DatabaseApi {
+  Database({@required this.uid});
+
+  final String uid;
+
   @override
   Stream<Store> storeStream({String storeId}) {
     final path = StoreAPIPath.store(storeId);
@@ -65,5 +70,22 @@ class Database implements DatabaseApi {
           )
           .toList(),
     );
+  }
+
+  @override
+  Future<void> addToCart(
+      {Product product, int quantity, String storeName}) async {
+    final path = StoreAPIPath.userAccount(uid);
+    final documentReference = FirebaseFirestore.instance.doc(path);
+    final collection = documentReference.collection(
+        "${storeName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart");
+    await collection.add(product.toMap(quantity));
+  }
+
+  @override
+  Future<void> createUser({Map<String, dynamic> user}) async {
+    final path = StoreAPIPath.userAccount(uid);
+    final documentReference = FirebaseFirestore.instance.doc(path);
+    await documentReference.set(user);
   }
 }

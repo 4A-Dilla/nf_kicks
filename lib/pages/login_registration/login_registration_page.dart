@@ -4,6 +4,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:nf_kicks/constants.dart';
 import 'package:nf_kicks/pages/loading_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
+import 'package:nf_kicks/services/database/database.dart';
 import 'package:nf_kicks/widgets/background_stack.dart';
 import 'package:password_compromised/password_compromised.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -95,6 +96,8 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
               defaultActionText: 'OK');
         } else {
           await auth.createUserWithEmailAndPassword(_email, _password);
+          final Database myDb = Database(uid: auth.currentUser.uid);
+          myDb.createUser(user: {'email': _email});
         }
       }
     } on FirebaseAuthException catch (e) {

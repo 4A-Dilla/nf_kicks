@@ -130,24 +130,27 @@ class StorePage extends StatelessWidget {
                   flex: 2,
                   child: StreamBuilder<List<Product>>(
                       stream: dataStore.productsStream(storeId: storeId),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          print("Errors: ${snapshot.error}");
+                      builder:
+                          (context, AsyncSnapshot<List<Product>> snapshotData) {
+                        if (snapshotData.hasError) {
+                          print("Errors: ${snapshotData.error}");
                           return kLoadingNoLogo;
                         }
-                        if (!snapshot.hasData) {
+                        if (!snapshotData.hasData) {
                           return kLoadingNoLogo;
                         }
                         return ListView.builder(
-                          itemCount: snapshot.data.length,
+                          itemCount: snapshotData.data.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ProductPage(
-                                      productId: snapshot.data[index].id,
-                                      dataStore: dataStore),
+                                    productId: snapshotData.data[index].id,
+                                    dataStore: dataStore,
+                                    storeName: snapshot.data.name,
+                                  ),
                                 ),
                               ),
                               child: Card(
@@ -181,7 +184,7 @@ class StorePage extends StatelessWidget {
                                                   MainAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  snapshot.data[index].name
+                                                  snapshotData.data[index].name
                                                       .toUpperCase(),
                                                   softWrap: true,
                                                   style: TextStyle(
@@ -205,7 +208,7 @@ class StorePage extends StatelessWidget {
                                                       padding:
                                                           EdgeInsets.all(8),
                                                       child: Text(
-                                                        "€${snapshot.data[index].price.toStringAsFixed(2)}",
+                                                        "€${snapshotData.data[index].price.toStringAsFixed(2)}",
                                                         style: TextStyle(
                                                             color: Colors.white,
                                                             fontWeight:
@@ -227,7 +230,7 @@ class StorePage extends StatelessWidget {
                                                       padding:
                                                           EdgeInsets.all(8),
                                                       child: Text(
-                                                          "${snapshot.data[index].stock.toStringAsFixed(0)}",
+                                                          "${snapshotData.data[index].stock.toStringAsFixed(0)}",
                                                           style: TextStyle(
                                                               color:
                                                                   Colors.white,
@@ -247,8 +250,9 @@ class StorePage extends StatelessWidget {
                                             height: 100,
                                             decoration: BoxDecoration(
                                               image: DecorationImage(
-                                                  image: NetworkImage(snapshot
-                                                      .data[index].image),
+                                                  image: NetworkImage(
+                                                      snapshotData
+                                                          .data[index].image),
                                                   fit: BoxFit.cover),
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(10),

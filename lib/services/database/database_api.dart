@@ -7,4 +7,9 @@ abstract class DatabaseApi {
   Stream<Product> productStream({@required String productId});
   Stream<List<Store>> storesStream();
   Stream<Store> storeStream({@required String storeId});
+  Future<void> addToCart(
+      {@required Product product,
+      @required int quantity,
+      @required String storeName});
+  Future<void> createUser({@required Map<String, dynamic> user});
 }

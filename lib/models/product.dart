@@ -39,4 +39,13 @@ class Product {
       inStock: data['inStock'] ?? false,
     );
   }
+
+  Map<String, dynamic> toMap(int quantity) {
+    return {
+      'productId': id,
+      'storeId': storeId,
+      'name': name,
+      'quantity': quantity,
+    };
+  }
 }

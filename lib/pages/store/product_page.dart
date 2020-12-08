@@ -8,10 +8,12 @@ import '../../constants.dart';
 class ProductPage extends StatefulWidget {
   final String productId;
   final DatabaseApi dataStore;
+  final String storeName;
 
   ProductPage({
     @required this.productId,
     @required this.dataStore,
+    @required this.storeName,
   });
 
   @override
@@ -19,6 +21,8 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  int quantity = 0;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Product>(
@@ -30,7 +34,11 @@ class _ProductPageState extends State<ProductPage> {
           return Scaffold(
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                // Add your onPressed code here!
+                widget.dataStore.addToCart(
+                    product: snapshotData.data,
+                    quantity: quantity,
+                    storeName: widget.storeName);
+                print("Added to cart");
               },
               child: Icon(Icons.add_shopping_cart),
               backgroundColor: Colors.deepOrangeAccent,
@@ -123,19 +131,44 @@ class _ProductPageState extends State<ProductPage> {
                           children: [
                             Row(
                               children: <Widget>[
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      color: Colors.deepOrangeAccent,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Center(
-                                    child: Text(
-                                      "-",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold),
+                                GestureDetector(
+                                  onTap: () => {
+                                    if (snapshotData.data.inStock ||
+                                        snapshotData.data.stock > 0)
+                                      {
+                                        if (quantity < 1)
+                                          {
+                                            print("You can't do that too..."),
+                                          }
+                                        else
+                                          {
+                                            setState(() {
+                                              quantity--;
+                                            }),
+                                          }
+                                      }
+                                    else
+                                      {
+                                        print("This item is not in stock"),
+                                        setState(() {
+                                          quantity = 0;
+                                        })
+                                      },
+                                  },
+                                  child: Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        color: Colors.deepOrangeAccent,
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Center(
+                                      child: Text(
+                                        "-",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -143,7 +176,7 @@ class _ProductPageState extends State<ProductPage> {
                                   width: 15,
                                 ),
                                 Text(
-                                  "1",
+                                  quantity.toString(),
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold),
@@ -151,19 +184,43 @@ class _ProductPageState extends State<ProductPage> {
                                 SizedBox(
                                   width: 15,
                                 ),
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      color: Colors.deepOrangeAccent,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Center(
-                                    child: Text(
-                                      "+",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold),
+                                GestureDetector(
+                                  onTap: () => {
+                                    if (snapshotData.data.inStock ||
+                                        snapshotData.data.stock > 0)
+                                      {
+                                        if (quantity ==
+                                            snapshotData.data.stock.toInt())
+                                          {print("You can't do that...")}
+                                        else
+                                          {
+                                            setState(() {
+                                              quantity++;
+                                            })
+                                          },
+                                      }
+                                    else
+                                      {
+                                        print("This item is not in stock"),
+                                        setState(() {
+                                          quantity = 0;
+                                        })
+                                      },
+                                  },
+                                  child: Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        color: Colors.deepOrangeAccent,
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Center(
+                                      child: Text(
+                                        "+",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -204,9 +261,6 @@ class _ProductPageState extends State<ProductPage> {
                           snapshotData.data.description,
                           style: TextStyle(height: 1.3),
                         ),
-                        SizedBox(
-                          height: 30,
-                        )
                       ],
                     ),
                   ),
@@ -235,8 +289,10 @@ class _ProductPageState extends State<ProductPage> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => ProductPage(
-                                          productId: snapshot.data[index].id,
-                                          dataStore: widget.dataStore),
+                                        productId: snapshot.data[index].id,
+                                        dataStore: widget.dataStore,
+                                        storeName: widget.storeName,
+                                      ),
                                     ),
                                   ),
                                   child: Card(
