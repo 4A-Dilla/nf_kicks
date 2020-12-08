@@ -62,6 +62,18 @@ class _LandingMapState extends State<LandingMap> {
     }
   }
 
+  void _recenterCamera() async {
+    final GoogleMapController controller = await _controller.future;
+    LatLng currentLocation = _initialPosition;
+
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        target: LatLng(currentLocation.latitude, currentLocation.longitude),
+        zoom: 14.4746,
+      ),
+    ));
+  }
+
   MapType _currentMapType = MapType.normal;
 
   @override
@@ -97,6 +109,9 @@ class _LandingMapState extends State<LandingMap> {
     return GoogleMap(
       markers: markers,
       mapType: _currentMapType,
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
       initialCameraPosition: CameraPosition(
         target: _initialPosition,
         zoom: 14.4746,
@@ -104,46 +119,84 @@ class _LandingMapState extends State<LandingMap> {
       zoomControlsEnabled: false,
       zoomGesturesEnabled: true,
       myLocationEnabled: true,
-      compassEnabled: true,
-      myLocationButtonEnabled: true,
+      compassEnabled: false,
+      myLocationButtonEnabled: false,
     );
   }
 
   Widget _buildGoogleMapsWithMarkers() {
     final database = Provider.of<DatabaseApi>(context, listen: false);
 
-    return StreamBuilder<List<Store>>(
-      stream: database.storesStream(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return kLoadingNoLogo;
-        }
+    return Stack(
+      children: [
+        StreamBuilder<List<Store>>(
+          stream: database.storesStream(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return kLoadingNoLogo;
+            }
 
-        snapshot.data.forEach((element) async {
-          // initMarker(element);
-          BitmapDescriptor markerImage = await _makeMarkerIcon(element.image);
-          _markers.add(
-            Marker(
-              markerId: MarkerId(element.id) ?? MarkerId(''),
-              icon: markerImage ?? BitmapDescriptor.defaultMarker,
-              position:
-                  LatLng(element.latLong.latitude, element.latLong.longitude) ??
+            snapshot.data.forEach((element) async {
+              // initMarker(element);
+              BitmapDescriptor markerImage =
+                  await _makeMarkerIcon(element.image);
+              _markers.add(
+                Marker(
+                  markerId: MarkerId(element.id) ?? MarkerId(''),
+                  icon: markerImage ?? BitmapDescriptor.defaultMarker,
+                  position: LatLng(element.latLong.latitude,
+                          element.latLong.longitude) ??
                       LatLng(0, 0),
-              infoWindow:
-                  InfoWindow(title: element.name, snippet: element.address) ??
+                  infoWindow: InfoWindow(
+                          title: element.name, snippet: element.address) ??
                       InfoWindow(title: '', snippet: ''),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        StorePage(storeId: element.id, dataStore: database)),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => StorePage(
+                            storeId: element.id, dataStore: database)),
+                  ),
+                ),
+              );
+              return _buildGoogleMaps(_markers);
+            });
+            return _buildGoogleMaps(_markers);
+          },
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    child: RaisedButton.icon(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: BorderSide(
+                            color: Colors.deepOrangeAccent, width: 2),
+                      ),
+                      onPressed: _recenterCamera,
+                      color: Colors.white,
+                      textColor: Colors.deepOrangeAccent,
+                      icon: Icon(Icons.navigation_outlined),
+                      label: Text("Recenter".toUpperCase(),
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
               ),
             ),
-          );
-          return _buildGoogleMaps(_markers);
-        });
-        return _buildGoogleMaps(_markers);
-      },
+            Expanded(
+              flex: 9,
+              child: Container(),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
