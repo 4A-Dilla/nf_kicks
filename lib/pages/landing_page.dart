@@ -2,13 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:nf_kicks/pages/cart/cart_page.dart';
 import 'package:nf_kicks/pages/landing/landing_map.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
+import 'package:nf_kicks/services/database/database.dart';
+import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatefulWidget {
+  final String uid;
   static const String id = 'landing_screen';
+
+  const LandingPage({Key key, this.uid}) : super(key: key);
 
   @override
   _LandingPageState createState() => _LandingPageState();
@@ -38,9 +44,28 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final database = Provider.of<DatabaseApi>(context, listen: false);
+
     if (_selectedItemPosition == 4) {
       _logOut(context);
+    }
+    if (_selectedItemPosition == 1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CartPage(
+              dataStore: database,
+            ),
+          ),
+        );
+      });
     }
     return Scaffold(
       body: Stack(

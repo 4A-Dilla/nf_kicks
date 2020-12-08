@@ -22,7 +22,7 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  int quantity = 0;
+  int quantity = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,23 @@ class _ProductPageState extends State<ProductPage> {
           return Scaffold(
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                widget.dataStore.addToCart(
-                    product: snapshotData.data,
-                    quantity: quantity,
-                    storeName: widget.storeName);
-                print("Added to cart");
+                if (!snapshotData.data.inStock ||
+                    snapshotData.data.stock == 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('This product is out of stock'),
+                    duration: Duration(seconds: 1),
+                  ));
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Product was added to your cart!'),
+                    duration: Duration(seconds: 1),
+                  ));
+
+                  widget.dataStore.addToCart(
+                      product: snapshotData.data,
+                      quantity: quantity,
+                      storeName: widget.storeName);
+                }
               },
               child: Icon(Icons.add_shopping_cart),
               backgroundColor: Colors.deepOrangeAccent,
@@ -134,10 +146,10 @@ class _ProductPageState extends State<ProductPage> {
                               children: <Widget>[
                                 GestureDetector(
                                   onTap: () => {
-                                    if (snapshotData.data.inStock ||
+                                    if (snapshotData.data.inStock &&
                                         snapshotData.data.stock > 0)
                                       {
-                                        if (quantity < 1)
+                                        if (quantity < 2)
                                           {
                                             print("You can't do that too..."),
                                           }
@@ -150,10 +162,15 @@ class _ProductPageState extends State<ProductPage> {
                                       }
                                     else
                                       {
-                                        print("This item is not in stock"),
-                                        setState(() {
-                                          quantity = 0;
-                                        })
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'This product is not in stock!',
+                                            ),
+                                            duration: Duration(seconds: 1),
+                                          ),
+                                        ),
                                       },
                                   },
                                   child: Container(
@@ -177,7 +194,9 @@ class _ProductPageState extends State<ProductPage> {
                                   width: 15,
                                 ),
                                 Text(
-                                  quantity.toString(),
+                                  snapshotData.data.inStock
+                                      ? quantity.toString()
+                                      : 0.toString(),
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold),
@@ -187,7 +206,7 @@ class _ProductPageState extends State<ProductPage> {
                                 ),
                                 GestureDetector(
                                   onTap: () => {
-                                    if (snapshotData.data.inStock ||
+                                    if (snapshotData.data.inStock &&
                                         snapshotData.data.stock > 0)
                                       {
                                         if (quantity ==
@@ -202,10 +221,15 @@ class _ProductPageState extends State<ProductPage> {
                                       }
                                     else
                                       {
-                                        print("This item is not in stock"),
-                                        setState(() {
-                                          quantity = 0;
-                                        })
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'This product is not in stock!',
+                                            ),
+                                            duration: Duration(seconds: 1),
+                                          ),
+                                        ),
                                       },
                                   },
                                   child: Container(
@@ -245,10 +269,11 @@ class _ProductPageState extends State<ProductPage> {
                                   padding: EdgeInsets.all(8),
                                   child: Center(
                                     child: Text(
-                                        "${snapshotData.data.stock.toStringAsFixed(0)}",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold)),
+                                      "${snapshotData.data.stock.toStringAsFixed(0)}",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 ),
                               ],

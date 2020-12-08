@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nf_kicks/models/cartItem.dart';
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/models/store.dart';
 
@@ -7,6 +8,7 @@ abstract class DatabaseApi {
   Stream<Product> productStream({@required String productId});
   Stream<List<Store>> storesStream();
   Stream<Store> storeStream({@required String storeId});
+  Stream<List<CartItem>> storeCartStream({@required String storeCartName});
   Future<void> addToCart(
       {@required Product product,
       @required int quantity,

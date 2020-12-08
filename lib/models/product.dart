@@ -25,8 +25,6 @@ class Product {
     if (data == null) {
       return null;
     }
-    print("returned2 $documentId");
-    print("returned2 $data");
 
     return new Product(
       id: documentId,
@@ -41,11 +39,14 @@ class Product {
   }
 
   Map<String, dynamic> toMap(int quantity) {
+    double finalPrice = price.toDouble() * quantity;
     return {
-      'productId': id,
-      'storeId': storeId,
-      'name': name,
+      'productId': id.toString(),
+      'storeId': storeId.toString(),
+      'name': name.toString(),
       'quantity': quantity,
+      'price': finalPrice,
+      'image': image.toString(),
     };
   }
 }

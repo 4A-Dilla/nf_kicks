@@ -4,4 +4,6 @@ class StoreAPIPath {
   static String products(String storeId) => 'products';
   static String product(String productId) => 'products/$productId';
   static String userAccount(String uid) => 'users/$uid';
+  static String storeCart(String uid, String storeCart) =>
+      'users/$uid/$storeCart';
 }

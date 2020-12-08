@@ -24,7 +24,7 @@ class UserStatePage extends StatelessWidget {
           }
           return Provider<DatabaseApi>(
             create: (_) => Database(uid: user.uid),
-            child: LandingPage(),
+            child: LandingPage(uid: user.uid),
           );
         }
         return Loading(

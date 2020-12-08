@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:nf_kicks/models/cartItem.dart';
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/services/api/store_api_path.dart';
@@ -75,10 +76,11 @@ class Database implements DatabaseApi {
   @override
   Future<void> addToCart(
       {Product product, int quantity, String storeName}) async {
+    final String storeNameCart =
+        "${storeName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart";
     final path = StoreAPIPath.userAccount(uid);
     final documentReference = FirebaseFirestore.instance.doc(path);
-    final collection = documentReference.collection(
-        "${storeName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart");
+    final collection = documentReference.collection(storeNameCart);
     await collection.add(product.toMap(quantity));
   }
 
@@ -87,5 +89,24 @@ class Database implements DatabaseApi {
     final path = StoreAPIPath.userAccount(uid);
     final documentReference = FirebaseFirestore.instance.doc(path);
     await documentReference.set(user);
+  }
+
+  @override
+  Stream<List<CartItem>> storeCartStream({String storeCartName}) {
+    final String storeNameCart =
+        "${storeCartName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart";
+    final path = StoreAPIPath.storeCart(uid, storeNameCart);
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => snapshot.docs
+          .map(
+            (snapshot) => CartItem.fromMap(
+              snapshot.data(),
+              snapshot.id,
+            ),
+          )
+          .toList(),
+    );
   }
 }

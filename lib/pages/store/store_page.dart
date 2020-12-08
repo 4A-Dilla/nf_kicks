@@ -34,7 +34,6 @@ class StorePage extends StatelessWidget {
           if (!snapshot.hasData) {
             return kLoadingLogo;
           }
-
           return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
