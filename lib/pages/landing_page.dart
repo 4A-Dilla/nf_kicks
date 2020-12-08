@@ -47,54 +47,61 @@ class _LandingPageState extends State<LandingPage> {
         children: [
           LandingMap(),
           SafeArea(
-            child: Center(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 10,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "assets/logo.png",
+                        scale: 7,
+                      ),
+                    ],
                   ),
-                  Image.asset(
-                    "assets/logo.png",
-                    alignment: Alignment.center,
-                    scale: 7,
+                ),
+                Expanded(
+                  flex: 10,
+                  child: SnakeNavigationBar.color(
+                    snakeViewColor: Colors.deepOrangeAccent,
+                    unselectedItemColor: Colors.deepOrangeAccent,
+                    selectedItemColor: Colors.white,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    elevation: 2.0,
+                    behaviour: SnakeBarBehaviour.floating,
+                    snakeShape: SnakeShape.circle,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                    ),
+                    currentIndex: _selectedItemPosition,
+                    onTap: (index) =>
+                        setState(() => _selectedItemPosition = index),
+                    items: [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.notifications),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.shopping_cart),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.history),
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.settings),
+                      )
+                    ],
                   ),
-                ],
-              ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 90,
-            child: SnakeNavigationBar.color(
-              snakeViewColor: Colors.deepOrangeAccent,
-              unselectedItemColor: Colors.deepOrangeAccent,
-              selectedItemColor: Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              elevation: 2.0,
-              behaviour: SnakeBarBehaviour.floating,
-              snakeShape: SnakeShape.circle,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(25)),
-              ),
-              currentIndex: _selectedItemPosition,
-              onTap: (index) => setState(() => _selectedItemPosition = index),
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.notifications),
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart),
+                SizedBox(
+                  height: 30,
                 ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.history),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                )
               ],
             ),
           ),

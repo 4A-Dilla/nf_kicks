@@ -15,10 +15,11 @@ class StorePage extends StatelessWidget {
   final String storeId;
   final DatabaseApi dataStore;
 
-  StorePage({
+  const StorePage({
+    Key key,
     @required this.storeId,
     @required this.dataStore,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

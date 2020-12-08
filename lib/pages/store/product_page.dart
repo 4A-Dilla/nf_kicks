@@ -10,11 +10,12 @@ class ProductPage extends StatefulWidget {
   final DatabaseApi dataStore;
   final String storeName;
 
-  ProductPage({
+  const ProductPage({
+    Key key,
     @required this.productId,
     @required this.dataStore,
     @required this.storeName,
-  });
+  }) : super(key: key);
 
   @override
   _ProductPageState createState() => _ProductPageState();
