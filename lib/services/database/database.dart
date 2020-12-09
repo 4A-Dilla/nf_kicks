@@ -81,7 +81,7 @@ class Database implements DatabaseApi {
     final path = StoreAPIPath.userAccount(uid);
     final documentReference = FirebaseFirestore.instance.doc(path);
     final collection = documentReference.collection(storeNameCart);
-    await collection.add(product.toMap(quantity));
+    await collection.doc(product.id).set(product.toMap(quantity));
   }
 
   @override
