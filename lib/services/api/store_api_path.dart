@@ -6,4 +6,7 @@ class StoreAPIPath {
   static String userAccount(String uid) => 'users/$uid';
   static String storeCart(String uid, String storeCart) =>
       'users/$uid/$storeCart';
+  static String storeCartItem(
+          String uid, String storeCart, String cartItemId) =>
+      'users/$uid/$storeCart/$cartItemId';
 }

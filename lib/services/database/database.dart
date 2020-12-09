@@ -109,4 +109,13 @@ class Database implements DatabaseApi {
           .toList(),
     );
   }
+
+  @override
+  Future<void> deleteCartItem({String cartItemId, String storeCartName}) async {
+    final String storeNameCart =
+        "${storeCartName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart";
+    final path = StoreAPIPath.storeCartItem(uid, storeNameCart, cartItemId);
+    final documentReference = FirebaseFirestore.instance.doc(path);
+    await documentReference.delete();
+  }
 }

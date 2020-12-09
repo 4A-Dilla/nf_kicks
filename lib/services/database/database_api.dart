@@ -5,13 +5,22 @@ import 'package:nf_kicks/models/store.dart';
 
 abstract class DatabaseApi {
   Stream<List<Product>> productsStream({@required String storeId});
+
   Stream<Product> productStream({@required String productId});
+
   Stream<List<Store>> storesStream();
+
   Stream<Store> storeStream({@required String storeId});
+
   Stream<List<CartItem>> storeCartStream({@required String storeCartName});
+
   Future<void> addToCart(
       {@required Product product,
       @required int quantity,
       @required String storeName});
+
+  Future<void> deleteCartItem(
+      {@required String cartItemId, @required String storeCartName});
+
   Future<void> createUser({@required Map<String, dynamic> user});
 }
