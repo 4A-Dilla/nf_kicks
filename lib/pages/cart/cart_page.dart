@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nf_kicks/models/cartItem.dart';
 import 'package:nf_kicks/models/order.dart';
@@ -134,11 +135,13 @@ class _CartPageState extends State<CartPage> {
                                       FlatButton(
                                         onPressed: () {
                                           ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content:
-                                                Text('An order has been made!'),
-                                            duration: Duration(seconds: 1),
-                                          ));
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  'An order has been made!'),
+                                              duration: Duration(seconds: 1),
+                                            ),
+                                          );
 
                                           widget.dataStore.createOrder(
                                               order: new Order(
@@ -146,7 +149,7 @@ class _CartPageState extends State<CartPage> {
                                                 isComplete: false,
                                                 totalPrice: totalPrice,
                                                 readyForPickup: false,
-                                                dateOpened: DateTime.now(),
+                                                dateOpened: Timestamp.now(),
                                               ),
                                               storeName: tab.name);
                                         },

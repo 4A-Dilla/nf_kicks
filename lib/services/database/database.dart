@@ -119,6 +119,27 @@ class Database implements DatabaseApi {
   }
 
   @override
+  Stream<List<Order>> ordersStream({String storeOrderName}) {
+    final String storeNameOrder =
+        "${storeOrderName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Order";
+    final path = StoreAPIPath.storeCart(uid, storeNameOrder);
+    final reference = FirebaseFirestore.instance
+        .collection(path)
+        .orderBy('dateOpened', descending: true);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => snapshot.docs
+          .map(
+            (snapshot) => Order.fromMap(
+              snapshot.data(),
+              snapshot.id,
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  @override
   Stream<List<CartItem>> storeCartStream({String storeCartName}) {
     final String storeNameCart =
         "${storeCartName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart";
@@ -144,5 +165,20 @@ class Database implements DatabaseApi {
     final path = StoreAPIPath.storeCartItem(uid, storeNameCart, cartItemId);
     final documentReference = FirebaseFirestore.instance.doc(path);
     await documentReference.delete();
+  }
+
+  @override
+  Stream<Order> orderStream({String storeOrderName, String orderId}) {
+    final String storeNameOrder =
+        "${storeOrderName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Order";
+    final path = StoreAPIPath.storeOrder(uid, storeNameOrder, orderId);
+    final reference = FirebaseFirestore.instance.doc(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => Order.fromMap(
+        snapshot.data(),
+        snapshot.id,
+      ),
+    );
   }
 }

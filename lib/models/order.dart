@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:nf_kicks/models/cartItem.dart';
 
@@ -11,7 +12,7 @@ class Order {
       @required this.totalPrice});
 
   String id;
-  DateTime dateOpened;
+  Timestamp dateOpened;
   bool isComplete;
   bool readyForPickup;
   List<Map<String, dynamic>> products;
@@ -24,7 +25,7 @@ class Order {
 
     return new Order(
       id: documentId,
-      dateOpened: data['dateOpened'] ?? DateTime.now(),
+      dateOpened: data['dateOpened'] ?? Timestamp.now(),
       isComplete: data['isComplete'] ?? false,
       readyForPickup: data['readyForPickup'] ?? false,
       products: new List<Map<String, dynamic>>.from(data['products']) ??
@@ -35,7 +36,7 @@ class Order {
 
   Map<String, dynamic> toMap() {
     return {
-      'dateOpened': DateTime.now(),
+      'dateOpened': Timestamp.now(),
       'isComplete': false,
       'readyForPickup': false,
       'products': products,

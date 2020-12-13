@@ -15,6 +15,11 @@ abstract class DatabaseApi {
 
   Stream<List<CartItem>> storeCartStream({@required String storeCartName});
 
+  Stream<List<Order>> ordersStream({@required String storeOrderName});
+
+  Stream<Order> orderStream(
+      {@required String storeOrderName, @required String orderId});
+
   Future<void> addToCart(
       {@required Product product,
       @required int quantity,
