@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nf_kicks/models/cartItem.dart';
+import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/services/api/store_api_path.dart';
@@ -71,6 +72,32 @@ class Database implements DatabaseApi {
           )
           .toList(),
     );
+  }
+
+  @override
+  Future<void> createOrder({Order order, String storeName}) async {
+    final String storeNameOrder =
+        "${storeName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Order";
+    final path = StoreAPIPath.userAccount(uid);
+    final documentReference = FirebaseFirestore.instance.doc(path);
+    final collection = documentReference.collection(storeNameOrder);
+    print("here: ${order.toMap()}");
+
+    await collection.add(order.toMap());
+    emptyCart(storeName: storeName);
+  }
+
+  Future<void> emptyCart({String storeName}) async {
+    final String storeNameCart =
+        "${storeName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart";
+    final cartPath = StoreAPIPath.storeCart(uid, storeNameCart);
+    final cartCollectionReference =
+        FirebaseFirestore.instance.collection(cartPath);
+    cartCollectionReference.get().then((snapshot) async {
+      for (DocumentSnapshot ds in snapshot.docs) {
+        await ds.reference.delete();
+      }
+    });
   }
 
   @override

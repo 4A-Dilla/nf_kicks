@@ -35,13 +35,13 @@ class CartItem {
     );
   }
 
-  // Map<String, dynamic> toMap(int quantity) {
-  //   return {
-  //     'productId': id.toString(),
-  //     'storeId': storeId.toString(),
-  //     'name': name.toString(),
-  //     'quantity': quantity,
-  //     'price': price.toDouble(),
-  //   };
-  // }
+  Map<String, dynamic> toMap() {
+    return {
+      'productId': id.toString(),
+      'storeId': storeId.toString(),
+      'name': name.toString(),
+      'quantity': quantity,
+      'price': price.toDouble(),
+    };
+  }
 }

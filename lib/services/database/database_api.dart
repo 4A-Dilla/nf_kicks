@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nf_kicks/models/cartItem.dart';
+import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/models/store.dart';
 
@@ -18,6 +19,8 @@ abstract class DatabaseApi {
       {@required Product product,
       @required int quantity,
       @required String storeName});
+
+  Future<void> createOrder({@required Order order, @required String storeName});
 
   Future<void> deleteCartItem(
       {@required String cartItemId, @required String storeCartName});

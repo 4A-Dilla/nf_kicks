@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nf_kicks/models/cartItem.dart';
+import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/pages/store/product_page.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/widgets/product_card.dart';
+import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 
@@ -18,6 +20,11 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   TabController _tabController;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +79,23 @@ class _CartPageState extends State<CartPage> {
                         return kLoadingNoLogo;
                       }
                       double totalPrice = 0;
+                      List<Map<String, dynamic>> myList =
+                          new List<Map<String, dynamic>>();
 
                       for (int i = 0; i < snapshotData.data.length; i++) {
                         totalPrice += snapshotData.data[i].price;
+                        myList.add(snapshotData.data[i].toMap());
+                        // applePayItems.add(ApplePayItem(
+                        //     label: snapshotData.data[i].name,
+                        //     amount:
+                        //         snapshotData.data[i].price.toStringAsFixed(2),
+                        //     type: 'shoe'));
                       }
+
+                      // applePayItems.add(ApplePayItem(
+                      //   label: "Total",
+                      //   amount: totalPrice.toStringAsFixed(2),
+                      // ));
 
                       return ListView.builder(
                         itemCount: snapshotData.data.length,
@@ -112,7 +132,24 @@ class _CartPageState extends State<CartPage> {
                                         ],
                                       ),
                                       FlatButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content:
+                                                Text('An order has been made!'),
+                                            duration: Duration(seconds: 1),
+                                          ));
+
+                                          widget.dataStore.createOrder(
+                                              order: new Order(
+                                                products: myList,
+                                                isComplete: false,
+                                                totalPrice: totalPrice,
+                                                readyForPickup: false,
+                                                dateOpened: DateTime.now(),
+                                              ),
+                                              storeName: tab.name);
+                                        },
                                         child: Text(
                                           "Checkout",
                                           style: TextStyle(
@@ -170,126 +207,15 @@ class _CartPageState extends State<CartPage> {
                                           ),
                                         ),
                                       ),
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                        elevation: 5,
-                                        borderOnForeground: true,
-                                        margin: EdgeInsets.only(
-                                            top: 18, left: 18, right: 18),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color:
-                                                      Colors.deepOrangeAccent,
-                                                  width: 2),
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(15))),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Container(
-                                                    padding: EdgeInsets.only(
-                                                        right: 20, left: 10),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "${snapshotData.data[index].name}",
-                                                          softWrap: true,
-                                                          style: TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 10,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .deepOrangeAccent,
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              5))),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(8),
-                                                              child: Text(
-                                                                "€${snapshotData.data[index].price.toStringAsFixed(2)}",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 5,
-                                                            ),
-                                                            Container(
-                                                              decoration: BoxDecoration(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              5))),
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .all(8),
-                                                              child: Text(
-                                                                  "Quantity: ${snapshotData.data[index].quantity.toStringAsFixed(0)}",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold)),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Container(
-                                                    height: 100,
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                          image: NetworkImage(
-                                                              snapshotData
-                                                                  .data[index]
-                                                                  .image),
-                                                          fit: BoxFit.cover),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(10),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                      child: productCard(
+                                          productName:
+                                              snapshotData.data[index].name,
+                                          productPrice:
+                                              snapshotData.data[index].price,
+                                          productQuantity:
+                                              snapshotData.data[index].quantity,
+                                          productImage:
+                                              snapshotData.data[index].image),
                                     ),
                                   ),
                                 ],
@@ -334,118 +260,14 @@ class _CartPageState extends State<CartPage> {
                                     ),
                                   ),
                                 ),
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  elevation: 5,
-                                  borderOnForeground: true,
-                                  margin: EdgeInsets.only(
-                                      top: 18, left: 18, right: 18),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.deepOrangeAccent,
-                                            width: 2),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(15))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 2,
-                                            child: Container(
-                                              padding: EdgeInsets.only(
-                                                  right: 20, left: 10),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    "${snapshotData.data[index].name}",
-                                                    softWrap: true,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      Container(
-                                                        decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .deepOrangeAccent,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            5))),
-                                                        padding:
-                                                            EdgeInsets.all(8),
-                                                        child: Text(
-                                                          "€${snapshotData.data[index].price.toStringAsFixed(2)}",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      Container(
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.black,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            5))),
-                                                        padding:
-                                                            EdgeInsets.all(8),
-                                                        child: Text(
-                                                            "Quantity: ${snapshotData.data[index].quantity.toStringAsFixed(0)}",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: Container(
-                                              height: 100,
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        snapshotData
-                                                            .data[index].image),
-                                                    fit: BoxFit.cover),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(10),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                child: productCard(
+                                    productName: snapshotData.data[index].name,
+                                    productPrice:
+                                        snapshotData.data[index].price,
+                                    productQuantity:
+                                        snapshotData.data[index].quantity,
+                                    productImage:
+                                        snapshotData.data[index].image),
                               ),
                             );
                           } else {
