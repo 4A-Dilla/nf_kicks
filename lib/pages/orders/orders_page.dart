@@ -5,6 +5,7 @@ import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:toast/toast.dart';
 
 import '../../constants.dart';
 
@@ -40,7 +41,7 @@ class OrdersPage extends StatelessWidget {
               bottom: TabBar(
                 indicatorColor: Colors.white,
                 isScrollable: true,
-                tabs: [
+                tabs: <Tab>[
                   for (final tab in snapshot.data)
                     Tab(
                       child: Text(tab.name),
@@ -57,45 +58,27 @@ class OrdersPage extends StatelessWidget {
                     builder:
                         (context, AsyncSnapshot<List<Order>> snapshotData) {
                       if (snapshotData.hasError) {
-                        print("Errors: ${snapshotData.error}");
+                        // print("Errors: ${snapshotData.error}");
                         return kLoadingNoLogo;
                       }
                       if (!snapshotData.hasData) {
-                        return kLoadingNoLogo;
+                        return Column(
+                          children: [
+                            kLoadingNoLogo,
+                          ],
+                        );
                       }
 
                       return ListView.builder(
                         itemCount: snapshotData.data.length,
                         itemBuilder: (context, index) {
                           if (snapshotData.data.isNotEmpty) {
-                            return ExpansionTile(
-                              title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    new DateFormat('d MMM, HH:mm a').format(
-                                        snapshotData.data[index].dateOpened
-                                            .toDate()),
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.card_travel),
-                                    onPressed: () => print("Ready for pickup"),
-                                  ),
-                                ],
-                              ),
-                              children: [
-                                QrImage(
-                                  data: snapshotData.data[index].id,
-                                  version: QrVersions.auto,
-                                  size: 200.0,
-                                ),
-                              ],
-                            );
+                            return orderInfo(
+                                context,
+                                snapshotData.data[index].dateOpened.toDate(),
+                                snapshotData.data[index].readyForPickup,
+                                snapshotData.data[index].isComplete,
+                                snapshotData.data[index].id);
                           } else {
                             return kLoadingNoLogo;
                           }
@@ -110,4 +93,57 @@ class OrdersPage extends StatelessWidget {
       },
     );
   }
+}
+
+ExpansionTile orderInfo(BuildContext context, DateTime dateOpened,
+    bool readyForPickup, bool completed, String id) {
+  Color _color;
+  IconData _buttonIcon;
+  String _toastMsg;
+
+  if (readyForPickup == true && completed == true) {
+    _color = Colors.green;
+    _buttonIcon = Icons.check;
+    _toastMsg = "Order completed!";
+  } else if (readyForPickup == true && completed == false) {
+    _color = Colors.blue;
+    _buttonIcon = Icons.card_travel;
+    _toastMsg = "Order is ready for pickup!";
+  } else {
+    _color = Colors.black;
+    _buttonIcon = Icons.history;
+    _toastMsg = "Order is being processed!";
+  }
+
+  return ExpansionTile(
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          DateFormat('d MMM, HH:mm a').format(dateOpened),
+          style: TextStyle(
+            color: _color,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        IconButton(
+          color: _color,
+          icon: Icon(_buttonIcon),
+          onPressed: () => showToast(_toastMsg, context, gravity: Toast.CENTER),
+        ),
+      ],
+    ),
+    children: <QrImage>[
+      QrImage(
+        data: id,
+        version: QrVersions.auto,
+        size: 200.0,
+      ),
+    ],
+  );
+}
+
+void showToast(String msg, BuildContext context, {int duration, int gravity}) {
+  Toast.show(msg, context, duration: duration ?? 3, gravity: gravity);
 }

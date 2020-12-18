@@ -20,8 +20,6 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  TabController _tabController;
-
   @override
   void dispose() {
     super.dispose();
@@ -50,7 +48,6 @@ class _CartPageState extends State<CartPage> {
                 "Cart",
                 style: GoogleFonts.permanentMarker(),
               ),
-              automaticallyImplyLeading: true,
               bottom: TabBar(
                 indicatorColor: Colors.white,
                 isScrollable: true,
@@ -64,7 +61,6 @@ class _CartPageState extends State<CartPage> {
               backgroundColor: Colors.deepOrangeAccent,
             ),
             body: TabBarView(
-              controller: _tabController,
               children: [
                 for (final tab in snapshot.data)
                   StreamBuilder<List<CartItem>>(
@@ -72,6 +68,10 @@ class _CartPageState extends State<CartPage> {
                         .storeCartStream(storeCartName: tab.name),
                     builder:
                         (context, AsyncSnapshot<List<CartItem>> snapshotData) {
+                      double _totalPrice = 0;
+                      List<Map<String, dynamic>> _myList =
+                          new List<Map<String, dynamic>>();
+
                       if (snapshotData.hasError) {
                         print("Errors: ${snapshotData.error}");
                         return kLoadingNoLogo;
@@ -79,24 +79,11 @@ class _CartPageState extends State<CartPage> {
                       if (!snapshotData.hasData) {
                         return kLoadingNoLogo;
                       }
-                      double totalPrice = 0;
-                      List<Map<String, dynamic>> myList =
-                          new List<Map<String, dynamic>>();
 
-                      for (int i = 0; i < snapshotData.data.length; i++) {
-                        totalPrice += snapshotData.data[i].price;
-                        myList.add(snapshotData.data[i].toMap());
-                        // applePayItems.add(ApplePayItem(
-                        //     label: snapshotData.data[i].name,
-                        //     amount:
-                        //         snapshotData.data[i].price.toStringAsFixed(2),
-                        //     type: 'shoe'));
-                      }
-
-                      // applePayItems.add(ApplePayItem(
-                      //   label: "Total",
-                      //   amount: totalPrice.toStringAsFixed(2),
-                      // ));
+                      snapshotData.data.forEach((cartItem) {
+                        _totalPrice += cartItem.price;
+                        _myList.add(cartItem.toMap());
+                      });
 
                       return ListView.builder(
                         itemCount: snapshotData.data.length,
@@ -124,7 +111,7 @@ class _CartPageState extends State<CartPage> {
                                             width: 5,
                                           ),
                                           Text(
-                                            totalPrice.toStringAsFixed(2),
+                                            _totalPrice.toStringAsFixed(2),
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 16,
@@ -145,9 +132,9 @@ class _CartPageState extends State<CartPage> {
 
                                           widget.dataStore.createOrder(
                                               order: new Order(
-                                                products: myList,
+                                                products: _myList,
                                                 isComplete: false,
-                                                totalPrice: totalPrice,
+                                                totalPrice: _totalPrice,
                                                 readyForPickup: false,
                                                 dateOpened: Timestamp.now(),
                                               ),
@@ -288,3 +275,57 @@ class _CartPageState extends State<CartPage> {
     );
   }
 }
+
+Dismissible dismissibleProductCard(
+  String id,
+    DatabaseApi databaseApi,
+    String storeName,
+) {
+  return Dismissible(
+    background: Container(
+      color: Colors.red,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(Icons.delete, color: Colors.white),
+          ],
+        ),
+      ),
+    ),
+    key: Key(id),
+    onDismissed: (direction) {
+      databaseApi.deleteCartItem(
+          cartItemId: id, storeCartName: storeName);
+      Toast()
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Product deleted!',
+          ),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    },
+    child: GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductPage(
+            productId: snapshotData.data[index].productId,
+            dataStore: widget.dataStore,
+            storeName: tab.name,
+          ),
+        ),
+      ),
+      child: productCard(
+          productName: snapshotData.data[index].name,
+          productPrice: snapshotData.data[index].price,
+          productQuantity: snapshotData.data[index].quantity,
+          productImage: snapshotData.data[index].image),
+    ),
+  );
+}
+
+Row totalPriceCheckoutButton() {}
