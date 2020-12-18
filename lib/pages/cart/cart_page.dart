@@ -1,12 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nf_kicks/models/cartItem.dart';
-import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/models/store.dart';
-import 'package:nf_kicks/pages/store/product_page.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/product_card.dart';
-import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 
@@ -69,7 +66,7 @@ class _CartPageState extends State<CartPage> {
                     builder:
                         (context, AsyncSnapshot<List<CartItem>> snapshotData) {
                       double _totalPrice = 0;
-                      List<Map<String, dynamic>> _myList =
+                      List<Map<String, dynamic>> _productListMap =
                           new List<Map<String, dynamic>>();
 
                       if (snapshotData.hasError) {
@@ -82,7 +79,7 @@ class _CartPageState extends State<CartPage> {
 
                       snapshotData.data.forEach((cartItem) {
                         _totalPrice += cartItem.price;
-                        _myList.add(cartItem.toMap());
+                        _productListMap.add(cartItem.toMap());
                       });
 
                       return ListView.builder(
@@ -95,170 +92,36 @@ class _CartPageState extends State<CartPage> {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            "Total Price:",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 5,
-                                          ),
-                                          Text(
-                                            _totalPrice.toStringAsFixed(2),
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                  'An order has been made!'),
-                                              duration: Duration(seconds: 1),
-                                            ),
-                                          );
-
-                                          widget.dataStore.createOrder(
-                                              order: new Order(
-                                                products: _myList,
-                                                isComplete: false,
-                                                totalPrice: _totalPrice,
-                                                readyForPickup: false,
-                                                dateOpened: Timestamp.now(),
-                                              ),
-                                              storeName: tab.name);
-                                        },
-                                        child: Text(
-                                          "Checkout",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        color: Colors.deepOrangeAccent,
-                                      ),
-                                    ],
-                                  ),
-                                  Dismissible(
-                                    background: Container(
-                                      color: Colors.red,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(15),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Icon(Icons.delete,
-                                                color: Colors.white),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    key: Key(snapshotData.data[index].id),
-                                    onDismissed: (direction) {
-                                      widget.dataStore.deleteCartItem(
-                                          cartItemId:
-                                              snapshotData.data[index].id,
-                                          storeCartName: tab.name);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            'Product deleted!',
-                                          ),
-                                          duration: Duration(seconds: 1),
-                                        ),
-                                      );
-                                    },
-                                    child: GestureDetector(
-                                      onTap: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ProductPage(
-                                            productId: snapshotData
-                                                .data[index].productId,
-                                            dataStore: widget.dataStore,
-                                            storeName: tab.name,
-                                          ),
-                                        ),
-                                      ),
-                                      child: productCard(
-                                          productName:
-                                              snapshotData.data[index].name,
-                                          productPrice:
-                                              snapshotData.data[index].price,
-                                          productQuantity:
-                                              snapshotData.data[index].quantity,
-                                          productImage:
-                                              snapshotData.data[index].image),
-                                    ),
+                                  totalPriceCheckoutButton(
+                                      context,
+                                      _totalPrice,
+                                      widget.dataStore,
+                                      _productListMap,
+                                      tab.name),
+                                  dismissibleProductCard(
+                                    context,
+                                    snapshotData.data[index].id,
+                                    widget.dataStore,
+                                    tab.name,
+                                    snapshotData.data[index].productId,
+                                    snapshotData.data[index].name,
+                                    snapshotData.data[index].price,
+                                    snapshotData.data[index].quantity,
+                                    snapshotData.data[index].image,
                                   ),
                                 ],
                               );
                             }
-                            return Dismissible(
-                              background: Container(
-                                color: Colors.red,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(15),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Icon(Icons.delete, color: Colors.white),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              key: Key(snapshotData.data[index].id),
-                              onDismissed: (direction) {
-                                widget.dataStore.deleteCartItem(
-                                    cartItemId: snapshotData.data[index].id,
-                                    storeCartName: tab.name);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Product deleted!',
-                                    ),
-                                    duration: Duration(seconds: 1),
-                                  ),
-                                );
-                              },
-                              child: GestureDetector(
-                                onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProductPage(
-                                      productId:
-                                          snapshotData.data[index].productId,
-                                      dataStore: widget.dataStore,
-                                      storeName: tab.name,
-                                    ),
-                                  ),
-                                ),
-                                child: productCard(
-                                    productName: snapshotData.data[index].name,
-                                    productPrice:
-                                        snapshotData.data[index].price,
-                                    productQuantity:
-                                        snapshotData.data[index].quantity,
-                                    productImage:
-                                        snapshotData.data[index].image),
-                              ),
+                            return dismissibleProductCard(
+                              context,
+                              snapshotData.data[index].id,
+                              widget.dataStore,
+                              tab.name,
+                              snapshotData.data[index].productId,
+                              snapshotData.data[index].name,
+                              snapshotData.data[index].price,
+                              snapshotData.data[index].quantity,
+                              snapshotData.data[index].image,
                             );
                           } else {
                             return kLoadingNoLogo;
@@ -275,57 +138,3 @@ class _CartPageState extends State<CartPage> {
     );
   }
 }
-
-Dismissible dismissibleProductCard(
-  String id,
-    DatabaseApi databaseApi,
-    String storeName,
-) {
-  return Dismissible(
-    background: Container(
-      color: Colors.red,
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Icon(Icons.delete, color: Colors.white),
-          ],
-        ),
-      ),
-    ),
-    key: Key(id),
-    onDismissed: (direction) {
-      databaseApi.deleteCartItem(
-          cartItemId: id, storeCartName: storeName);
-      Toast()
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Product deleted!',
-          ),
-          duration: Duration(seconds: 1),
-        ),
-      );
-    },
-    child: GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProductPage(
-            productId: snapshotData.data[index].productId,
-            dataStore: widget.dataStore,
-            storeName: tab.name,
-          ),
-        ),
-      ),
-      child: productCard(
-          productName: snapshotData.data[index].name,
-          productPrice: snapshotData.data[index].price,
-          productQuantity: snapshotData.data[index].quantity,
-          productImage: snapshotData.data[index].image),
-    ),
-  );
-}
-
-Row totalPriceCheckoutButton() {}

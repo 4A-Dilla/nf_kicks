@@ -1,4 +1,132 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:nf_kicks/models/order.dart';
+import 'package:nf_kicks/pages/store/product_page.dart';
+import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:toast/toast.dart';
+
+Row totalPriceCheckoutButton(
+  BuildContext context,
+  double totalPrice,
+  DatabaseApi databaseApi,
+  List<Map<String, dynamic>> productsList,
+  String storeName,
+) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: [
+      Row(
+        children: [
+          Text(
+            "Total Price:",
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            totalPrice.toStringAsFixed(2),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+      FlatButton(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'An order has been made!',
+              ),
+              duration: Duration(
+                seconds: 1,
+              ),
+            ),
+          );
+
+          databaseApi.createOrder(
+            order: new Order(
+              products: productsList,
+              isComplete: false,
+              totalPrice: totalPrice,
+              readyForPickup: false,
+              dateOpened: Timestamp.now(),
+            ),
+            storeName: storeName,
+          );
+        },
+        child: Text(
+          "Checkout",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            20,
+          ),
+        ),
+        color: Colors.deepOrangeAccent,
+      ),
+    ],
+  );
+}
+
+Dismissible dismissibleProductCard(
+  BuildContext context,
+  String cartId,
+  DatabaseApi databaseApi,
+  String storeName,
+  String productId,
+  String productName,
+  double productPrice,
+  int productQuantity,
+  String productImage,
+) {
+  return Dismissible(
+    background: Container(
+      color: Colors.red,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(Icons.delete, color: Colors.white),
+          ],
+        ),
+      ),
+    ),
+    key: Key(cartId),
+    onDismissed: (direction) {
+      databaseApi.deleteCartItem(cartItemId: cartId, storeCartName: storeName);
+      showToast(context, "Product deleted!", gravity: Toast.CENTER);
+    },
+    child: GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ProductPage(
+            productId: productId,
+            dataStore: databaseApi,
+            storeName: storeName,
+          ),
+        ),
+      ),
+      child: productCard(
+        productName: productName,
+        productPrice: productPrice,
+        productQuantity: productQuantity,
+        productImage: productImage,
+      ),
+    ),
+  );
+}
 
 Card productCard(
     {String productName,
@@ -90,4 +218,8 @@ Card productCard(
       ),
     ),
   );
+}
+
+void showToast(BuildContext context, String msg, {int duration, int gravity}) {
+  Toast.show(msg, context, duration: duration ?? 1, gravity: gravity);
 }
