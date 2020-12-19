@@ -1,11 +1,7 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nf_kicks/constants.dart';
 import 'package:nf_kicks/models/store.dart';
@@ -20,7 +16,6 @@ class LandingMap extends StatefulWidget {
 
 class _LandingMapState extends State<LandingMap> {
   Completer<GoogleMapController> _controller = Completer();
-  Set<Marker> _markers = Set<Marker>();
 
   static LatLng _initialPosition;
 
@@ -33,23 +28,6 @@ class _LandingMapState extends State<LandingMap> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<BitmapDescriptor> _makeMarkerIcon(String image) async {
-    final File markerImageFile =
-        await DefaultCacheManager().getSingleFile(image);
-    final Uint8List markerImageBytes = await markerImageFile.readAsBytes();
-
-    ui.Codec codec =
-        await ui.instantiateImageCodec(markerImageBytes, targetWidth: 50);
-    ui.FrameInfo fi = await codec.getNextFrame();
-
-    final Uint8List markerImage =
-        (await fi.image.toByteData(format: ui.ImageByteFormat.png))
-            .buffer
-            .asUint8List();
-
-    return BitmapDescriptor.fromBytes(markerImage);
   }
 
   void _getUserLocation() async {
@@ -78,32 +56,10 @@ class _LandingMapState extends State<LandingMap> {
 
   @override
   Widget build(BuildContext context) {
-    // print("my markers: $markers");
     return _initialPosition == null
         ? kLoadingNoLogo
         : _buildGoogleMapsWithMarkers();
   }
-
-  // Future<void> initMarker(Store storeMarker) async {
-  //   var markerIdVal = storeMarker.id;
-  //   final MarkerId markerId = MarkerId(markerIdVal);
-  //   BitmapDescriptor markerImage = await _makeMarkerIcon(storeMarker.image);
-  //
-  //   final Marker marker = Marker(
-  //     markerId: markerId ?? '',
-  //     icon: markerImage ?? BitmapDescriptor.defaultMarker,
-  //     position:
-  //         LatLng(storeMarker.latLong.latitude, storeMarker.latLong.longitude) ??
-  //             LatLng(0, 0),
-  //     infoWindow:
-  //         InfoWindow(title: storeMarker.name, snippet: storeMarker.address) ??
-  //             InfoWindow(title: '', snippet: ''),
-  //   );
-  //
-  //   setState(() {
-  //     markers[markerId] = marker;
-  //   });
-  // }
 
   GoogleMap _buildGoogleMaps(Set<Marker> markers) {
     return GoogleMap(
@@ -132,64 +88,46 @@ class _LandingMapState extends State<LandingMap> {
         StreamBuilder<List<Store>>(
           stream: database.storesStream(),
           builder: (context, snapshot) {
+            Set<Marker> _markers = Set<Marker>();
+
+            if (snapshot.hasError) {
+              print("Errors: ${snapshot.error}");
+              return kLoadingLogo;
+            }
+
             if (!snapshot.hasData) {
               return kLoadingNoLogo;
             }
 
             snapshot.data.forEach((element) async {
-              // initMarker(element);
-              BitmapDescriptor markerImage =
-                  await _makeMarkerIcon(element.image);
               _markers.add(
                 Marker(
                   markerId: MarkerId(element.id) ?? MarkerId(''),
-                  icon: markerImage ?? BitmapDescriptor.defaultMarker,
+                  icon: BitmapDescriptor.defaultMarkerWithHue(20.00),
                   position: LatLng(element.latLong.latitude,
                           element.latLong.longitude) ??
                       LatLng(0, 0),
                   infoWindow: InfoWindow(
                           title: element.name, snippet: element.address) ??
                       InfoWindow(title: '', snippet: ''),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => StorePage(
-                            storeId: element.id, dataStore: database)),
-                  ),
+                  onTap: () => showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return storeBottomDrawer(
+                            StorePage(storeId: element.id, dataStore: database),
+                            element.storeImage);
+                      }),
                 ),
               );
-              return _buildGoogleMaps(_markers);
             });
+
             return _buildGoogleMaps(_markers);
           },
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
-              flex: 2,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    child: RaisedButton.icon(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                        side: BorderSide(
-                            color: Colors.deepOrangeAccent, width: 2),
-                      ),
-                      onPressed: _recenterCamera,
-                      color: Colors.white,
-                      textColor: Colors.deepOrangeAccent,
-                      icon: Icon(Icons.navigation_outlined),
-                      label: Text("Recenter".toUpperCase(),
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            recenterButton(),
             Expanded(
               flex: 9,
               child: Container(),
@@ -197,6 +135,73 @@ class _LandingMapState extends State<LandingMap> {
           ],
         ),
       ],
+    );
+  }
+
+  GestureDetector storeBottomDrawer(Widget storePage, String storeImage) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => storePage),
+      ),
+      child: Container(
+        height: 300,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            child: Center(
+              child: RaisedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => storePage,
+                  ),
+                ),
+                color: Colors.deepOrangeAccent,
+                child: Text(
+                  "Go to store",
+                  style: GoogleFonts.permanentMarker(
+                      color: Colors.white, fontSize: 30),
+                ),
+              ),
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50)), //here
+              image: DecorationImage(
+                  fit: BoxFit.cover,
+                  alignment: Alignment(-1.0, -1),
+                  image: NetworkImage(storeImage)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Expanded recenterButton() {
+    return Expanded(
+      flex: 2,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Container(
+            child: RaisedButton.icon(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.deepOrangeAccent, width: 2),
+              ),
+              onPressed: _recenterCamera,
+              color: Colors.white,
+              textColor: Colors.deepOrangeAccent,
+              icon: Icon(Icons.navigation_outlined),
+              label: Text("Recenter".toUpperCase(),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

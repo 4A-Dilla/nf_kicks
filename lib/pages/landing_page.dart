@@ -6,7 +6,6 @@ import 'package:nf_kicks/pages/cart/cart_page.dart';
 import 'package:nf_kicks/pages/landing/landing_map.dart';
 import 'package:nf_kicks/pages/orders/orders_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
-import 'package:nf_kicks/services/database/database.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:provider/provider.dart';
@@ -57,28 +56,14 @@ class _LandingPageState extends State<LandingPage> {
       _logOut(context);
     }
     if (_selectedItemPosition == 3) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => OrdersPage(
-              dataStore: database,
-            ),
-          ),
-        );
-      });
+      changePage(OrdersPage(
+        dataStore: database,
+      ));
     }
     if (_selectedItemPosition == 1) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CartPage(
-              dataStore: database,
-            ),
-          ),
-        );
-      });
+      changePage(CartPage(
+        dataStore: database,
+      ));
     }
     return Scaffold(
       body: Stack(
@@ -102,41 +87,7 @@ class _LandingPageState extends State<LandingPage> {
                     ],
                   ),
                 ),
-                Expanded(
-                  flex: 10,
-                  child: SnakeNavigationBar.color(
-                    snakeViewColor: Colors.deepOrangeAccent,
-                    unselectedItemColor: Colors.deepOrangeAccent,
-                    selectedItemColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    elevation: 2.0,
-                    behaviour: SnakeBarBehaviour.floating,
-                    snakeShape: SnakeShape.circle,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25)),
-                    ),
-                    currentIndex: _selectedItemPosition,
-                    onTap: (index) =>
-                        setState(() => _selectedItemPosition = index),
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.notifications),
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.shopping_cart),
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.history),
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.settings),
-                      )
-                    ],
-                  ),
-                ),
+                landingBottomAppBar(),
                 SizedBox(
                   height: 30,
                 ),
@@ -146,5 +97,53 @@ class _LandingPageState extends State<LandingPage> {
         ],
       ),
     );
+  }
+
+  Expanded landingBottomAppBar() {
+    return Expanded(
+      flex: 10,
+      child: SnakeNavigationBar.color(
+        snakeViewColor: Colors.deepOrangeAccent,
+        unselectedItemColor: Colors.deepOrangeAccent,
+        selectedItemColor: Colors.white,
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        elevation: 2.0,
+        behaviour: SnakeBarBehaviour.floating,
+        snakeShape: SnakeShape.circle,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(25)),
+        ),
+        currentIndex: _selectedItemPosition,
+        onTap: (index) => setState(() => _selectedItemPosition = index),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+          )
+        ],
+      ),
+    );
+  }
+
+  void changePage(Widget pageToNavigateTo) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => pageToNavigateTo,
+        ),
+      );
+    });
   }
 }
