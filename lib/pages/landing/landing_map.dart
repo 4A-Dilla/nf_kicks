@@ -7,6 +7,7 @@ import 'package:nf_kicks/constants.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/pages/store/store_page.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/widgets/product_card.dart';
 import 'package:provider/provider.dart';
 
 class LandingMap extends StatefulWidget {
@@ -115,7 +116,9 @@ class _LandingMapState extends State<LandingMap> {
                       builder: (BuildContext context) {
                         return storeBottomDrawer(
                             StorePage(storeId: element.id, dataStore: database),
-                            element.storeImage);
+                            element.storeImage,
+                            element.inStoreShopping,
+                            element.inStorePickup);
                       }),
                 ),
               );
@@ -138,12 +141,21 @@ class _LandingMapState extends State<LandingMap> {
     );
   }
 
-  GestureDetector storeBottomDrawer(Widget storePage, String storeImage) {
+  GestureDetector storeBottomDrawer(
+      Widget storePage, String storeImage, bool shopping, bool pickup) {
+    bool _isStoreClosed;
+    if (!shopping && !pickup) {
+      _isStoreClosed = true;
+    } else {
+      _isStoreClosed = false;
+    }
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => storePage),
-      ),
+      onTap: () => !_isStoreClosed
+          ? Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => storePage),
+            )
+          : showToast(context, "Store is closed!"),
       child: Container(
         height: 300,
         child: Padding(
@@ -151,15 +163,15 @@ class _LandingMapState extends State<LandingMap> {
           child: Container(
             child: Center(
               child: RaisedButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => storePage,
-                  ),
-                ),
-                color: Colors.deepOrangeAccent,
+                onPressed: () => !_isStoreClosed
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => storePage),
+                      )
+                    : showToast(context, "Store is closed!"),
+                color: !_isStoreClosed ? Colors.deepOrangeAccent : Colors.grey,
                 child: Text(
-                  "Go to store",
+                  !_isStoreClosed ? "Go to store" : "Store Closed",
                   style: GoogleFonts.permanentMarker(
                       color: Colors.white, fontSize: 30),
                 ),

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/widgets/product_card.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:toast/toast.dart';
 
@@ -130,7 +131,7 @@ ExpansionTile orderInfo(BuildContext context, DateTime dateOpened,
         IconButton(
           color: _color,
           icon: Icon(_buttonIcon),
-          onPressed: () => showToast(_toastMsg, context, gravity: Toast.CENTER),
+          onPressed: () => showToast(context, _toastMsg, gravity: Toast.CENTER),
         ),
       ],
     ),
@@ -142,8 +143,4 @@ ExpansionTile orderInfo(BuildContext context, DateTime dateOpened,
       ),
     ],
   );
-}
-
-void showToast(String msg, BuildContext context, {int duration, int gravity}) {
-  Toast.show(msg, context, duration: duration ?? 3, gravity: gravity);
 }

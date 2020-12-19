@@ -7,25 +7,15 @@ import 'package:nf_kicks/widgets/product_card.dart';
 
 import '../../constants.dart';
 
-class CartPage extends StatefulWidget {
+class CartPage extends StatelessWidget {
   final DatabaseApi dataStore;
 
   const CartPage({Key key, this.dataStore}) : super(key: key);
 
   @override
-  _CartPageState createState() => _CartPageState();
-}
-
-class _CartPageState extends State<CartPage> {
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Store>>(
-      stream: widget.dataStore.storesStream(),
+      stream: dataStore.storesStream(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           print("Errors: ${snapshot.error}");
@@ -61,8 +51,7 @@ class _CartPageState extends State<CartPage> {
               children: [
                 for (final tab in snapshot.data)
                   StreamBuilder<List<CartItem>>(
-                    stream: widget.dataStore
-                        .storeCartStream(storeCartName: tab.name),
+                    stream: dataStore.storeCartStream(storeCartName: tab.name),
                     builder:
                         (context, AsyncSnapshot<List<CartItem>> snapshotData) {
                       double _totalPrice = 0;
@@ -92,16 +81,12 @@ class _CartPageState extends State<CartPage> {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  totalPriceCheckoutButton(
-                                      context,
-                                      _totalPrice,
-                                      widget.dataStore,
-                                      _productListMap,
-                                      tab.name),
+                                  totalPriceCheckoutButton(context, _totalPrice,
+                                      dataStore, _productListMap, tab.name),
                                   dismissibleProductCard(
                                     context,
                                     snapshotData.data[index].id,
-                                    widget.dataStore,
+                                    dataStore,
                                     tab.name,
                                     snapshotData.data[index].productId,
                                     snapshotData.data[index].name,
@@ -115,7 +100,7 @@ class _CartPageState extends State<CartPage> {
                             return dismissibleProductCard(
                               context,
                               snapshotData.data[index].id,
-                              widget.dataStore,
+                              dataStore,
                               tab.name,
                               snapshotData.data[index].productId,
                               snapshotData.data[index].name,
