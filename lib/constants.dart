@@ -45,6 +45,31 @@ final kLogoError = Column(
   ],
 );
 
+final kLogoCheckEmail = Column(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Image.asset(
+      "assets/logo.png",
+      alignment: Alignment.center,
+    ),
+    SizedBox(
+      height: 90,
+    ),
+    Center(
+      child: Text(
+        "Check your email and login to continue!",
+        style: GoogleFonts.josefinSans(
+          textStyle: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    ),
+  ],
+);
+
 final kLoadingNoLogo = Center(
   child: CircularProgressIndicator(
     backgroundColor: Colors.white,

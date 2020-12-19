@@ -5,6 +5,7 @@ import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:nf_kicks/pages/cart/cart_page.dart';
 import 'package:nf_kicks/pages/landing/landing_map.dart';
 import 'package:nf_kicks/pages/orders/orders_page.dart';
+import 'package:nf_kicks/pages/profile/profile_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
@@ -58,7 +59,7 @@ class _LandingPageState extends State<LandingPage> {
       });
     }
     if (_selectedItemPosition == 3) {
-      changePage(OrdersPage(
+      changePage(ProfilePage(
         dataStore: database,
       ));
     }
