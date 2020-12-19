@@ -35,9 +35,9 @@ class _LandingPageState extends State<LandingPage> {
   Future<void> _showLogoutDialog(BuildContext context) async {
     final logoutDialog = await showAlertDialog(context,
         title: 'Logout',
-        content: 'Are you sure you to logout',
-        cancelActionText: 'Cancel',
-        defaultActionText: 'Logout');
+        description: 'Are you sure you to logout',
+        cancelBtn: 'Cancel',
+        actionBtn: 'Logout');
     if (logoutDialog == true) {
       _logOut(context);
     }
@@ -53,7 +53,9 @@ class _LandingPageState extends State<LandingPage> {
     final database = Provider.of<DatabaseApi>(context, listen: false);
 
     if (_selectedItemPosition == 4) {
-      _logOut(context);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showLogoutDialog(context);
+      });
     }
     if (_selectedItemPosition == 3) {
       changePage(OrdersPage(
@@ -61,6 +63,11 @@ class _LandingPageState extends State<LandingPage> {
       ));
     }
     if (_selectedItemPosition == 1) {
+      changePage(OrdersPage(
+        dataStore: database,
+      ));
+    }
+    if (_selectedItemPosition == 0) {
       changePage(CartPage(
         dataStore: database,
       ));
@@ -117,19 +124,19 @@ class _LandingPageState extends State<LandingPage> {
         onTap: (index) => setState(() => _selectedItemPosition = index),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.settings),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.login),
           )
         ],
       ),

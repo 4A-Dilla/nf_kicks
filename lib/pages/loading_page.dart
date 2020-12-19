@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nf_kicks/constants.dart';
 import 'package:nf_kicks/widgets/background_stack.dart';
 
 class Loading extends StatelessWidget {

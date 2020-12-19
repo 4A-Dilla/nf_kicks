@@ -54,7 +54,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
     } on FirebaseException catch (e) {
       print("my exception : $e");
       showAlertDialog(context,
-          title: 'Sign in failed', content: e.message, defaultActionText: 'OK');
+          title: 'Sign in failed', description: e.message, actionBtn: 'OK');
     } finally {
       if (this.mounted) {
         setState(() => _isLoading = false);
@@ -70,7 +70,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
     } on FirebaseException catch (e) {
       print("my exception : $e");
       showAlertDialog(context,
-          title: 'Sign in failed', content: e.message, defaultActionText: 'OK');
+          title: 'Sign in failed', description: e.message, actionBtn: 'OK');
     } finally {
       if (this.mounted) {
         setState(() => _isLoading = false);
@@ -91,9 +91,9 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
         if (compromised) {
           showAlertDialog(context,
               title: 'Sign in failed',
-              content:
+              description:
                   'The password you have chosen has been compromised choose another.',
-              defaultActionText: 'OK');
+              actionBtn: 'OK');
         } else {
           await auth.createUserWithEmailAndPassword(_email, _password);
           final Database myDb = Database(uid: auth.currentUser.uid);
@@ -102,7 +102,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
       }
     } on FirebaseAuthException catch (e) {
       showAlertDialog(context,
-          title: 'Sign in failed', content: e.message, defaultActionText: 'OK');
+          title: 'Sign in failed', description: e.message, actionBtn: 'OK');
     } finally {
       if (this.mounted) {
         setState(() => _isLoading = false);
