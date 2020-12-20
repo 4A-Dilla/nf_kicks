@@ -36,7 +36,7 @@ class _LandingPageState extends State<LandingPage> {
   Future<void> _showLogoutDialog(BuildContext context) async {
     final logoutDialog = await showAlertDialog(context,
         title: 'Logout',
-        description: 'Are you sure you to logout',
+        description: 'Are you sure you want to logout?',
         cancelBtn: 'Cancel',
         actionBtn: 'Logout');
     if (logoutDialog == true) {

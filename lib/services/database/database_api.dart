@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nf_kicks/models/cartItem.dart';
+import 'package:nf_kicks/models/nfkicksUser.dart';
 import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/models/store.dart';
@@ -31,4 +32,9 @@ abstract class DatabaseApi {
       {@required String cartItemId, @required String storeCartName});
 
   Future<void> createUser({@required Map<String, dynamic> user});
+
+  Stream<NfkicksUser> getUserInformation({@required String uid});
+
+  Future<void> updateUserInformation(
+      {@required NfkicksUser user, @required String uid});
 }

@@ -182,9 +182,10 @@ class _LandingMapState extends State<LandingMap> {
                   bottomLeft: Radius.circular(50),
                   bottomRight: Radius.circular(50)), //here
               image: DecorationImage(
-                  fit: BoxFit.cover,
-                  alignment: Alignment(-1.0, -1),
-                  image: NetworkImage(storeImage)),
+                fit: BoxFit.cover,
+                alignment: Alignment(-1.0, -1),
+                image: NetworkImage(storeImage),
+              ),
             ),
           ),
         ),

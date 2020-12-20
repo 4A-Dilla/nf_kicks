@@ -1,4 +1,4 @@
-class StoreAPIPath {
+class APIPath {
   static String stores() => 'stores';
 
   static String store(String storeId) => 'stores/$storeId';

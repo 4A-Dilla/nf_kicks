@@ -47,6 +47,7 @@ dependencies:
   intl: ^0.16.1
   qr_flutter: ^3.2.0
   toast: ^0.1.5
+  cached_network_image: ^2.4.1
 
 dev_dependencies:
   flutter_test:
