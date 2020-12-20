@@ -34,7 +34,6 @@ class NfkicksUser {
 
   Map<String, dynamic> toMap() {
     return {
-      'productId': uid.toString(),
       'fullName': fullName.toString(),
       'email': email.toString(),
       'phoneNumber': phoneNumber.toString(),
