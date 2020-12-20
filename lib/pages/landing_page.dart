@@ -12,10 +12,13 @@ import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatefulWidget {
-  final String uid;
   static const String id = 'landing_screen';
 
-  const LandingPage({Key key, this.uid}) : super(key: key);
+  final String uid;
+  final AuthenticationApi authenticationApi;
+
+  const LandingPage({Key key, this.authenticationApi, this.uid})
+      : super(key: key);
 
   @override
   _LandingPageState createState() => _LandingPageState();
@@ -52,6 +55,7 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     final database = Provider.of<DatabaseApi>(context, listen: false);
+    final auth = Provider.of<AuthenticationApi>(context, listen: false);
 
     if (_selectedItemPosition == 4) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -61,6 +65,7 @@ class _LandingPageState extends State<LandingPage> {
     if (_selectedItemPosition == 3) {
       changePage(ProfilePage(
         dataStore: database,
+        authenticationApi: auth,
       ));
     }
     if (_selectedItemPosition == 1) {

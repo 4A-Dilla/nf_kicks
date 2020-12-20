@@ -202,4 +202,11 @@ class Database implements DatabaseApi {
     final documentReference = FirebaseFirestore.instance.doc(path);
     await documentReference.set(user.toMap());
   }
+
+  @override
+  Future<void> deleteUserInformation({String uid}) async {
+    final path = APIPath.userAccount(uid);
+    final documentReference = FirebaseFirestore.instance.doc(path);
+    await documentReference.delete();
+  }
 }

@@ -13,5 +13,9 @@ abstract class AuthenticationApi {
 
   Future<User> createUserWithEmailAndPassword(String email, String password);
 
+  Future<void> resetCurrentUserPassword(String newPassword);
+
+  Future<void> deleteUserAccount();
+
   Future<User> loginWithFacebook();
 }

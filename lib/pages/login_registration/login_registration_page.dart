@@ -90,7 +90,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
         final compromised = await isPasswordCompromised(_password);
         if (compromised) {
           showAlertDialog(context,
-              title: 'Sign in failed',
+              title: 'Sign up failed',
               description:
                   'The password you have chosen has been compromised choose another.',
               actionBtn: 'OK');
@@ -230,6 +230,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
               validator: emailValidator,
               controller: _emailController,
               style: TextStyle(color: Colors.white, fontSize: 16),
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 errorStyle: TextStyle(fontSize: 16),
                 hintStyle: TextStyle(color: Colors.white),

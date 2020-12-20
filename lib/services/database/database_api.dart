@@ -37,4 +37,6 @@ abstract class DatabaseApi {
 
   Future<void> updateUserInformation(
       {@required NfkicksUser user, @required String uid});
+
+  Future<void> deleteUserInformation({@required String uid});
 }

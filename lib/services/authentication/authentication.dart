@@ -89,4 +89,14 @@ class Authentication implements AuthenticationApi {
     await googleSignIn.signOut();
     await fb.logOut();
   }
+
+  @override
+  Future<void> resetCurrentUserPassword(String newPassword) async {
+    await _firebaseAuth.currentUser.updatePassword(newPassword);
+  }
+
+  @override
+  Future<void> deleteUserAccount() async {
+    await _firebaseAuth.currentUser.delete();
+  }
 }

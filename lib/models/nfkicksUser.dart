@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class NfkicksUser {
   NfkicksUser({
-    @required this.uid,
-    @required this.fullName,
-    @required this.email,
-    @required this.phoneNumber,
-    @required this.image,
-    @required this.has2FA,
+    this.uid,
+    this.fullName,
+    this.email,
+    this.phoneNumber,
+    this.image,
+    this.has2FA,
   });
 
   String uid;
@@ -35,10 +35,7 @@ class NfkicksUser {
   Map<String, dynamic> toMap() {
     return {
       'fullName': fullName.toString(),
-      'email': email.toString(),
       'phoneNumber': phoneNumber.toString(),
-      'image': image.toString(),
-      'has2FA': has2FA,
     };
   }
 }
