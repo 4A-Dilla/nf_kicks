@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:nf_kicks/models/cartItem.dart';
 import 'package:nf_kicks/models/nfkicksUser.dart';
@@ -39,4 +41,7 @@ abstract class DatabaseApi {
       {@required NfkicksUser user, @required String uid});
 
   Future<void> deleteUserInformation({@required String uid});
+
+  Future<void> uploadUserAvatar(
+      {@required String uid, @required File imageFile});
 }

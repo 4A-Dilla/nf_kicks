@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nf_kicks/models/nfkicksUser.dart';
+import 'package:nf_kicks/pages/profile/image_upload.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
@@ -449,6 +450,9 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
     {DatabaseApi databaseApi,
     AuthenticationApi authenticationApi,
     VoidCallback toggleFormField}) {
+  final String _defaultImageUrl =
+      "https://firebasestorage.googleapis.com/v0/b/nfkicks-35620.appspot.com/o/avatar.jpg?alt=media&token=a95e1f32-eb65-49cd-8e30-3f26693f4d2f";
+
   return StreamBuilder<NfkicksUser>(
     stream:
         databaseApi.getUserInformation(uid: authenticationApi.currentUser.uid),
@@ -465,10 +469,20 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
           Expanded(
             flex: 2,
             child: GestureDetector(
-              onTap: () => {},
+              onTap: () => {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ImageUpload(
+                      uid: authenticationApi.currentUser.uid,
+                      databaseApi: databaseApi,
+                    ),
+                  ),
+                )
+              },
               child: userImage(snapshot.data.image.toString().isNotEmpty
                   ? snapshot.data.image
-                  : "https://firebasestorage.googleapis.com/v0/b/nfkicks-35620.appspot.com/o/avatar.jpg?alt=media&token=a95e1f32-eb65-49cd-8e30-3f26693f4d2f"),
+                  : _defaultImageUrl),
             ),
           ),
           SizedBox(

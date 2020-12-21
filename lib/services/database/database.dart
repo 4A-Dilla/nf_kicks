@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:nf_kicks/models/cartItem.dart';
@@ -200,7 +205,7 @@ class Database implements DatabaseApi {
   Future<void> updateUserInformation({NfkicksUser user, String uid}) async {
     final path = APIPath.userAccount(uid);
     final documentReference = FirebaseFirestore.instance.doc(path);
-    await documentReference.set(user.toMap());
+    await documentReference.update(user.toMap());
   }
 
   @override
@@ -208,5 +213,18 @@ class Database implements DatabaseApi {
     final path = APIPath.userAccount(uid);
     final documentReference = FirebaseFirestore.instance.doc(path);
     await documentReference.delete();
+  }
+
+  @override
+  Future<void> uploadUserAvatar({String uid, File imageFile}) async {
+    String fileName = basename(imageFile.path);
+    final path = APIPath.userImageLocation(uid, fileName);
+    final firebaseStorageRef = FirebaseStorage.instance.ref(path);
+    await firebaseStorageRef.putFile(imageFile);
+
+    final accountPath = APIPath.userAccount(uid);
+    final documentReference = FirebaseFirestore.instance.doc(accountPath);
+    await documentReference
+        .update({'image': await firebaseStorageRef.getDownloadURL()});
   }
 }

@@ -22,4 +22,7 @@ class APIPath {
   static String storeOrder(
           String uid, String storeOrder, String storeOrderId) =>
       'users/$uid/$storeOrder/$storeOrderId';
+
+  static String userImageLocation(String uid, String imageName) =>
+      'avatars/$uid/$imageName';
 }
