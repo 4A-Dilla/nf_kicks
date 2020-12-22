@@ -8,6 +8,9 @@ import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/product_card.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 
+import '../../constants.dart';
+import '../loading_page.dart';
+
 class ImageUpload extends StatefulWidget {
   final String uid;
   final DatabaseApi databaseApi;
@@ -20,6 +23,8 @@ class ImageUpload extends StatefulWidget {
 }
 
 class _ImageUploadState extends State<ImageUpload> {
+  bool _isLoading = false;
+
   File _imageFile;
   final String _defaultImageUrl =
       "https://firebasestorage.googleapis.com/v0/b/nfkicks-35620.appspot.com/o/avatar.jpg?alt=media&token=a95e1f32-eb65-49cd-8e30-3f26693f4d2f";
@@ -36,6 +41,9 @@ class _ImageUploadState extends State<ImageUpload> {
   }
 
   Future<void> _uploadImage() async {
+    setState(() {
+      _isLoading = true;
+    });
     widget.databaseApi.uploadUserAvatar(uid: widget.uid, imageFile: _imageFile);
     Navigator.pop(context);
     showToast(context, "Avatar image uploaded");
@@ -61,6 +69,11 @@ class _ImageUploadState extends State<ImageUpload> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Loading(
+        loadingWidget: kLoadingLogo,
+      );
+    }
     List<Widget> returnHome() {
       if (_imageFile != null) {
         return <Widget>[
