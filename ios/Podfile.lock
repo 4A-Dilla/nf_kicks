@@ -381,6 +381,10 @@ PODS:
   - Reachability (3.2)
   - shared_preferences (0.0.1):
     - Flutter
+  - Stripe (19.4.0)
+  - stripe_payment (1.0.0):
+    - Flutter
+    - Stripe (~> 19.4.0)
   - TOCropViewController (2.5.5)
 
 DEPENDENCIES:
@@ -398,6 +402,7 @@ DEPENDENCIES:
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - stripe_payment (from `.symlinks/plugins/stripe_payment/ios`)
 
 SPEC REPOS:
   trunk:
@@ -424,6 +429,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - Reachability
+    - Stripe
     - TOCropViewController
 
 EXTERNAL SOURCES:
@@ -455,6 +461,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  stripe_payment:
+    :path: ".symlinks/plugins/stripe_payment/ios"
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
@@ -494,6 +502,8 @@ SPEC CHECKSUMS:
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  Stripe: 92f1c73a9dbd3c54277ed06a1fea6e08f20414c6
+  stripe_payment: 1cbe9c339c21b5ecf01035e80eea351067c67c56
   TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c

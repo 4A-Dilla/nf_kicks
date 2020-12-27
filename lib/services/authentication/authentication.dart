@@ -6,8 +6,8 @@ import 'authentication_api.dart';
 
 class Authentication implements AuthenticationApi {
   final _firebaseAuth = FirebaseAuth.instance;
-  final googleSignIn = GoogleSignIn();
-  final fb = FacebookLogin();
+  final _googleSignIn = GoogleSignIn();
+  final _fb = FacebookLogin();
 
   @override
   User get currentUser => _firebaseAuth.currentUser;
@@ -33,7 +33,7 @@ class Authentication implements AuthenticationApi {
 
   @override
   Future<User> loginWithGoogle() async {
-    final googleAccount = await googleSignIn.signIn();
+    final googleAccount = await _googleSignIn.signIn();
     if (googleAccount != null) {
       final googleAuth = await googleAccount.authentication;
       if (googleAuth.idToken != null) {
@@ -57,7 +57,7 @@ class Authentication implements AuthenticationApi {
 
   @override
   Future<User> loginWithFacebook() async {
-    final response = await fb.logIn(permissions: [
+    final response = await _fb.logIn(permissions: [
       FacebookPermission.publicProfile,
       FacebookPermission.email
     ]);
@@ -86,8 +86,8 @@ class Authentication implements AuthenticationApi {
   @override
   Future<void> logOut() async {
     await _firebaseAuth.signOut();
-    await googleSignIn.signOut();
-    await fb.logOut();
+    await _googleSignIn.signOut();
+    await _fb.logOut();
   }
 
   @override

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nf_kicks/models/cartItem.dart';
 import 'package:nf_kicks/models/store.dart';
+import 'package:nf_kicks/pages/payment/payment_button.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/product_card.dart';
 
@@ -81,8 +82,11 @@ class CartPage extends StatelessWidget {
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  totalPriceCheckoutButton(context, _totalPrice,
-                                      dataStore, _productListMap, tab.name),
+                                  PaymentsButton(
+                                      totalPrice: _totalPrice,
+                                      dataStore: dataStore,
+                                      productListMap: _productListMap,
+                                      currentTabName: tab.name),
                                   dismissibleProductCard(
                                     context,
                                     snapshotData.data[index].id,
