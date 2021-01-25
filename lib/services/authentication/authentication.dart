@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:nf_kicks/services/authentication/firebase_auth_exception_handler.dart';
 
 import 'authentication_api.dart';
 
@@ -18,17 +19,25 @@ class Authentication implements AuthenticationApi {
   @override
   Future<User> createUserWithEmailAndPassword(
       String email, String password) async {
-    final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    return userCredential.user;
+    try {
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      return userCredential.user;
+    } catch (e) {
+      throw FirebaseAuthExceptionHandler.handleException(e);
+    }
   }
 
   @override
   Future<User> loginWithEmailAndPassword(String email, String password) async {
-    final userCredential = await _firebaseAuth.signInWithCredential(
-      EmailAuthProvider.credential(email: email, password: password),
-    );
-    return userCredential.user;
+    try {
+      final userCredential = await _firebaseAuth.signInWithCredential(
+        EmailAuthProvider.credential(email: email, password: password),
+      );
+      return userCredential.user;
+    } catch (e) {
+      throw FirebaseAuthExceptionHandler.handleException(e);
+    }
   }
 
   @override
@@ -37,11 +46,12 @@ class Authentication implements AuthenticationApi {
     if (googleAccount != null) {
       final googleAuth = await googleAccount.authentication;
       if (googleAuth.idToken != null) {
-        final userCredential = await _firebaseAuth
-            .signInWithCredential(GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-          accessToken: googleAuth.accessToken,
-        ));
+        final userCredential = await _firebaseAuth.signInWithCredential(
+          GoogleAuthProvider.credential(
+            idToken: googleAuth.idToken,
+            accessToken: googleAuth.accessToken,
+          ),
+        );
         return userCredential.user;
       } else {
         throw FirebaseAuthException(
@@ -51,7 +61,7 @@ class Authentication implements AuthenticationApi {
       }
     } else {
       throw FirebaseAuthException(
-          code: 'ERROR_ABORTED_BY_USER', message: 'Login aborted by user');
+          code: 'ERROR_ABORTED_BY_USER', message: 'Login aborted');
     }
   }
 
@@ -92,11 +102,19 @@ class Authentication implements AuthenticationApi {
 
   @override
   Future<void> resetCurrentUserPassword(String newPassword) async {
-    await _firebaseAuth.currentUser.updatePassword(newPassword);
+    try {
+      await _firebaseAuth.currentUser.updatePassword(newPassword);
+    } catch (e) {
+      throw FirebaseAuthExceptionHandler.handleException(e);
+    }
   }
 
   @override
   Future<void> deleteUserAccount() async {
-    await _firebaseAuth.currentUser.delete();
+    try {
+      await _firebaseAuth.currentUser.delete();
+    } catch (e) {
+      throw FirebaseAuthExceptionHandler.handleException(e);
+    }
   }
 }

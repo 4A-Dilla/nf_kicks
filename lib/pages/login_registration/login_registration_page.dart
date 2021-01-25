@@ -52,9 +52,10 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
       final auth = Provider.of<AuthenticationApi>(context, listen: false);
       await auth.loginWithFacebook();
     } on FirebaseException catch (e) {
-      print("my exception : $e");
       showAlertDialog(context,
-          title: 'Sign in failed', description: e.message, actionBtn: 'OK');
+          title: 'Facebook login failed',
+          description: e.message,
+          actionBtn: 'OK');
     } finally {
       if (this.mounted) {
         setState(() => _isLoading = false);
@@ -68,9 +69,10 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
       final auth = Provider.of<AuthenticationApi>(context, listen: false);
       await auth.loginWithGoogle();
     } on FirebaseException catch (e) {
-      print("my exception : $e");
       showAlertDialog(context,
-          title: 'Sign in failed', description: e.message, actionBtn: 'OK');
+          title: 'Google login failed',
+          description: e.message,
+          actionBtn: 'OK');
     } finally {
       if (this.mounted) {
         setState(() => _isLoading = false);
@@ -82,31 +84,35 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
     setState(() {
       _isLoading = true;
     });
-    try {
-      final auth = Provider.of<AuthenticationApi>(context, listen: false);
-      if (_formType == FormType.login) {
+    final auth = Provider.of<AuthenticationApi>(context, listen: false);
+    if (_formType == FormType.login) {
+      try {
         await auth.loginWithEmailAndPassword(_email, _password);
+      } catch (e) {
+        showAlertDialog(context,
+            title: 'Sign in failed', description: e, actionBtn: 'OK');
+      }
+    } else {
+      final compromised = await isPasswordCompromised(_password);
+      if (compromised) {
+        showAlertDialog(context,
+            title: 'Sign up failed',
+            description:
+                'The password you have chosen has been compromised choose another.',
+            actionBtn: 'OK');
       } else {
-        final compromised = await isPasswordCompromised(_password);
-        if (compromised) {
-          showAlertDialog(context,
-              title: 'Sign up failed',
-              description:
-                  'The password you have chosen has been compromised choose another.',
-              actionBtn: 'OK');
-        } else {
+        try {
           await auth.createUserWithEmailAndPassword(_email, _password);
           final Database myDb = Database(uid: auth.currentUser.uid);
           myDb.createUser(user: {'email': _email});
+        } catch (e) {
+          showAlertDialog(context,
+              title: 'Sign up failed', description: e, actionBtn: 'OK');
         }
       }
-    } on FirebaseAuthException catch (e) {
-      showAlertDialog(context,
-          title: 'Sign in failed', description: e.message, actionBtn: 'OK');
-    } finally {
-      if (this.mounted) {
-        setState(() => _isLoading = false);
-      }
+    }
+    if (this.mounted) {
+      setState(() => _isLoading = false);
     }
   }
 
