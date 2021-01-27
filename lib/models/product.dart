@@ -41,7 +41,7 @@ class Product {
   }
 
   Map<String, dynamic> toMap(int quantity) {
-    double finalPrice = price is num ? price?.toDouble() * quantity : 00.00;
+    double finalPrice = price is num ? price.toDouble() * quantity : 00.00;
     return {
       'productId': id is String ? id?.toString() : '',
       'storeId': storeId is String ? storeId?.toString() : '',

@@ -121,6 +121,7 @@ void main() {
               inStock: true));
     });
   });
+
   group('Test Product.toMap()', () {
     test('test product object with null data', () {
       final product = Product(
@@ -141,6 +142,7 @@ void main() {
         'image': '',
       });
     });
+
     test('test with product object', () {
       final product = Product(
           id: 'documentId',
@@ -160,6 +162,7 @@ void main() {
         'image': "url here",
       });
     });
+
     test('test with missing value(s)', () {
       final product = Product(
           id: 'documentId',
