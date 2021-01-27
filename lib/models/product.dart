@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'dart:ui';
 
 class Product {
   Product({
@@ -28,25 +29,49 @@ class Product {
 
     return new Product(
       id: documentId,
-      storeId: data['storeId'] ?? '',
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      price: data['price'].toDouble() ?? 00.00,
-      stock: data['stock'].toInt() ?? 0,
-      image: data['image'] ?? '',
-      inStock: data['inStock'] ?? false,
+      storeId: data['storeId'] is String ? data['storeId']?.toString() : '',
+      name: data['name'] is String ? data['name']?.toString() : '',
+      description:
+          data['description'] is String ? data['description']?.toString() : '',
+      price: data['price'] is num ? data['price']?.toDouble() : 00.00,
+      stock: data['stock'] is num ? data['stock']?.toInt() : 0,
+      image: data['image'] is String ? data['image']?.toString() : '',
+      inStock: data['inStock'] is bool ? data['inStock'] : false,
     );
   }
 
   Map<String, dynamic> toMap(int quantity) {
-    double finalPrice = price.toDouble() * quantity;
+    double finalPrice = price is num ? price?.toDouble() * quantity : 00.00;
     return {
-      'productId': id.toString(),
-      'storeId': storeId.toString(),
-      'name': name.toString(),
-      'quantity': quantity,
-      'price': finalPrice,
-      'image': image.toString(),
+      'productId': id is String ? id?.toString() : '',
+      'storeId': storeId is String ? storeId?.toString() : '',
+      'name': name is String ? name?.toString() : '',
+      'quantity': quantity is num ? quantity?.toInt() : 0,
+      'price': finalPrice is num ? finalPrice?.toDouble() : 00.00,
+      'image': image is String ? image?.toString() : '',
     };
   }
+
+  @override
+  int get hashCode =>
+      hashValues(id, storeId, name, description, price, stock, image, inStock);
+
+  @override
+  bool operator ==(other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    final Product otherProduct = other;
+    return id == otherProduct.id &&
+        storeId == otherProduct.storeId &&
+        name == otherProduct.name &&
+        description == otherProduct.description &&
+        price == otherProduct.price &&
+        stock == otherProduct.stock &&
+        image == otherProduct.image &&
+        inStock == otherProduct.inStock;
+  }
+
+  @override
+  String toString() =>
+      'id: $id, storeId: $storeId, name: $name, description: $description, price: $price, stock: $stock, image: $image, inStock: $inStock';
 }
