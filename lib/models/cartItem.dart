@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 
 class CartItem {
@@ -26,22 +28,45 @@ class CartItem {
 
     return new CartItem(
       id: documentId,
-      productId: data['productId'] ?? '',
-      storeId: data['storeId'] ?? '',
-      name: data['name'] ?? '',
-      price: data['price'].toDouble() ?? 00.00,
-      quantity: data['quantity'].toInt() ?? 0,
-      image: data['image'].toString() ?? '',
+      productId:
+          data['productId'] is String ? data['productId']?.toString() : '',
+      storeId: data['storeId'] is String ? data['storeId']?.toString() : '',
+      name: data['name'] is String ? data['name']?.toString() : '',
+      price: data['price'] is num ? data['price']?.toDouble() : 00.00,
+      quantity: data['quantity'] is num ? data['quantity']?.toInt() : 0,
+      image: data['image'] is String ? data['image']?.toString() : '',
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'productId': id.toString(),
-      'storeId': storeId.toString(),
-      'name': name.toString(),
-      'quantity': quantity,
-      'price': price.toDouble(),
+      'productId': id is String ? id?.toString() : '',
+      'storeId': storeId is String ? storeId?.toString() : '',
+      'name': name is String ? name?.toString() : '',
+      'quantity': quantity is num ? quantity?.toInt() : 0,
+      'price': price is num ? price?.toDouble() : 00.00,
     };
   }
+
+  @override
+  int get hashCode =>
+      hashValues(id, productId, storeId, name, price, quantity, image);
+
+  @override
+  bool operator ==(other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    final CartItem otherStore = other;
+    return id == otherStore.id &&
+        productId == otherStore.productId &&
+        storeId == otherStore.storeId &&
+        name == otherStore.name &&
+        price == otherStore.price &&
+        quantity == otherStore.quantity &&
+        image == otherStore.image;
+  }
+
+  @override
+  String toString() =>
+      'id: $id, productId: $productId, storeId: $storeId, name: $name, price: $price, quantity: $quantity, image: $image';
 }
