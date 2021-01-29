@@ -55,6 +55,7 @@ dependencies:
   fzregex: ^1.0.3
   http: ^0.12.2
   flutter_progress_dialog: ^0.1.0
+  nfc_in_flutter: ^2.0.5
 
 dev_dependencies:
   flutter_test:
