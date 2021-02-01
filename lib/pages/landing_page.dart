@@ -1,11 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:nf_kicks/models/product.dart';
+import 'package:nf_kicks/models/store.dart';
+
 import 'package:nf_kicks/pages/cart/cart_page.dart';
 import 'package:nf_kicks/pages/landing/landing_map.dart';
 import 'package:nf_kicks/pages/orders/orders_page.dart';
 import 'package:nf_kicks/pages/profile/profile_page.dart';
+import 'package:nf_kicks/pages/store/product_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
@@ -53,9 +58,31 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  void readNFCProductTag(DatabaseApi databaseApi) {
+    FlutterNfcReader.onTagDiscovered().listen((onData) async {
+      String productCode = onData.content;
+      Product productStream =
+          await databaseApi.nfcProductStream(nfcCode: productCode).first;
+      String storeName =
+          await databaseApi.storeName(storeId: productStream.storeId).first;
+      changePageForNFC(ProductPage(
+        dataStore: databaseApi,
+        productId: productStream.id,
+        storeName: storeName,
+      ));
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final database = Provider.of<DatabaseApi>(context, listen: false);
     final auth = Provider.of<AuthenticationApi>(context, listen: false);
+
+    readNFCProductTag(database);
 
     if (_selectedItemPosition == 4) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -158,5 +185,15 @@ class _LandingPageState extends State<LandingPage> {
         ),
       );
     });
+  }
+
+  void changePageForNFC(Widget pageToNavigateTo) {
+    if (this.mounted)
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => pageToNavigateTo,
+        ),
+      );
   }
 }

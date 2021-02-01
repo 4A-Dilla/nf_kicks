@@ -351,9 +351,8 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  RaisedButton(
-                    onPressed: () => _loginWithGoogle(context),
-                    color: Colors.white,
+                  InkWell(
+                    onTap: () => _loginWithGoogle(context),
                     child: Container(
                       height: 50,
                       width: 80,
@@ -363,9 +362,8 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                       ),
                     ),
                   ),
-                  RaisedButton(
-                    onPressed: () => _loginWithFacebook(context),
-                    color: Colors.white,
+                  InkWell(
+                    onTap: () => _loginWithFacebook(context),
                     child: Container(
                       height: 50,
                       width: 80,

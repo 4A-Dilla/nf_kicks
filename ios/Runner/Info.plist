@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NFCReaderUsageDescription</key>
+    <string>Used to retrieve data from an nfc tag</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>This app needs access to the library when uploading an image avatar.</string>
     <key>NSCameraUsageDescription</key>

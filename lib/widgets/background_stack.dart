@@ -15,7 +15,7 @@ Stack backgroundStack(Widget main) {
         ),
       ),
       BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
         child: Container(
           color: Colors.orangeAccent.withOpacity(0.2),
         ),

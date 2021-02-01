@@ -12,9 +12,13 @@ abstract class DatabaseApi {
 
   Stream<Product> productStream({@required String productId});
 
+  Stream<Product> nfcProductStream({@required String nfcCode});
+
   Stream<List<Store>> storesStream();
 
   Stream<Store> storeStream({@required String storeId});
+
+  Stream<String> storeName({@required String storeId});
 
   Stream<List<CartItem>> storeCartStream({@required String storeCartName});
 

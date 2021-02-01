@@ -32,6 +32,19 @@ class Database implements DatabaseApi {
   }
 
   @override
+  Stream<String> storeName({String storeId}) {
+    final path = APIPath.store(storeId);
+    final reference = FirebaseFirestore.instance.doc(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => Store.fromMap(
+        snapshot.data(),
+        snapshot.id,
+      ).name,
+    );
+  }
+
+  @override
   Stream<Product> productStream({String productId}) {
     final path = APIPath.product(productId);
     final reference = FirebaseFirestore.instance.doc(path);
@@ -41,6 +54,25 @@ class Database implements DatabaseApi {
         snapshot.data(),
         snapshot.id,
       ),
+    );
+  }
+
+  @override
+  Stream<Product> nfcProductStream({String nfcCode}) {
+    final path = APIPath.products();
+    final reference = FirebaseFirestore.instance
+        .collection(path)
+        .where('name', isEqualTo: nfcCode.substring(41));
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => snapshot.docs
+          .map(
+            (snapshot) => Product.fromMap(
+              snapshot.data(),
+              snapshot.id,
+            ),
+          )
+          .first,
     );
   }
 
