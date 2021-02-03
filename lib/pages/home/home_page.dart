@@ -12,13 +12,17 @@ import '../user_state_page.dart';
 class Home extends StatelessWidget {
   static const String id = 'home_screen';
   final bool connectionStatus;
+  final bool jailbreakOrRootStatus;
   final Future<FirebaseApp> init;
 
-  Home({this.connectionStatus, this.init});
+  Home(
+      {@required this.connectionStatus,
+      @required this.jailbreakOrRootStatus,
+      @required this.init});
 
   @override
   Widget build(BuildContext context) {
-    return connectionStatus
+    return connectionStatus && !jailbreakOrRootStatus
         ? FutureBuilder(
             future: init,
             builder: (context, snapshot) {
@@ -28,7 +32,10 @@ class Home extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Provider<AuthenticationApi>(
                   create: (context) => Authentication(),
-                  child: UserStatePage(),
+                  child: UserStatePage(
+                    connectionStatus: connectionStatus,
+                    jailbreakOrRootStatus: jailbreakOrRootStatus,
+                  ),
                 );
               }
               return Loading(

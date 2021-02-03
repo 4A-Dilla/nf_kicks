@@ -32,7 +32,7 @@ final kLogoError = Column(
     ),
     Center(
       child: Text(
-        "Check wifi connection, something went wrong...",
+        "Check wifi connection, something went wrong (please ensure you do not have a jailbroken device)...",
         style: GoogleFonts.josefinSans(
           textStyle: TextStyle(
             fontSize: 18,

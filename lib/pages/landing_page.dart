@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:nf_kicks/models/product.dart';
-import 'package:nf_kicks/models/store.dart';
 
 import 'package:nf_kicks/pages/cart/cart_page.dart';
 import 'package:nf_kicks/pages/landing/landing_map.dart';
 import 'package:nf_kicks/pages/orders/orders_page.dart';
 import 'package:nf_kicks/pages/profile/profile_page.dart';
+import 'package:nf_kicks/pages/something_went_wrong_page.dart';
 import 'package:nf_kicks/pages/store/product_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
@@ -21,8 +21,15 @@ class LandingPage extends StatefulWidget {
 
   final String uid;
   final AuthenticationApi authenticationApi;
+  final bool connectionStatus;
+  final bool jailbreakOrRootStatus;
 
-  const LandingPage({Key key, this.authenticationApi, this.uid})
+  const LandingPage(
+      {Key key,
+      this.authenticationApi,
+      this.uid,
+      @required this.connectionStatus,
+      @required this.jailbreakOrRootStatus})
       : super(key: key);
 
   @override
@@ -105,38 +112,40 @@ class _LandingPageState extends State<LandingPage> {
         dataStore: database,
       ));
     }
-    return Scaffold(
-      body: Stack(
-        children: [
-          LandingMap(),
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+    return widget.connectionStatus && !widget.jailbreakOrRootStatus
+        ? Scaffold(
+            body: Stack(
               children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  flex: 2,
+                LandingMap(),
+                SafeArea(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Image.asset(
-                        "assets/logo.png",
-                        scale: 7,
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "assets/logo.png",
+                              scale: 7,
+                            ),
+                          ],
+                        ),
+                      ),
+                      landingBottomAppBar(),
+                      SizedBox(
+                        height: 30,
                       ),
                     ],
                   ),
                 ),
-                landingBottomAppBar(),
-                SizedBox(
-                  height: 30,
-                ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          )
+        : SomethingWentWrong();
   }
 
   Expanded landingBottomAppBar() {

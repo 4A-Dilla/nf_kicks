@@ -13,6 +13,14 @@ import 'landing_page.dart';
 import 'login_registration/login_registration_page.dart';
 
 class UserStatePage extends StatelessWidget {
+  final bool connectionStatus;
+  final bool jailbreakOrRootStatus;
+
+  UserStatePage({
+    @required this.connectionStatus,
+    @required this.jailbreakOrRootStatus,
+  });
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthenticationApi>(context, listen: false);
@@ -43,6 +51,8 @@ class UserStatePage extends StatelessWidget {
             child: LandingPage(
               authenticationApi: auth,
               uid: user.uid,
+              connectionStatus: connectionStatus,
+              jailbreakOrRootStatus: jailbreakOrRootStatus,
             ),
           );
         }

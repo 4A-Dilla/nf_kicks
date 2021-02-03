@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 
 import 'package:nf_kicks/pages/home/home_page.dart';
 import 'package:nf_kicks/pages/landing_page.dart';
+import 'package:trust_fall/trust_fall.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,15 +24,16 @@ class _AppState extends State<App> {
   final Future<FirebaseApp> _init = Firebase.initializeApp();
 
   bool _connectionStatusBool = false;
-  final Connectivity _connectivity = Connectivity();
+  bool _jailbreakOrRootStatusBool = false;
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
   void initState() {
     super.initState();
     initConnectivity();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+    _connectivitySubscription = Connectivity()
+        .onConnectivityChanged
+        .listen(_updateConnectionStatusAndCheckJailbreakOrRoot);
   }
 
   @override
@@ -43,7 +46,7 @@ class _AppState extends State<App> {
     ConnectivityResult result;
 
     try {
-      result = await _connectivity.checkConnectivity();
+      result = await (Connectivity().checkConnectivity());
     } on PlatformException catch (e) {
       print(e.toString());
     }
@@ -52,18 +55,43 @@ class _AppState extends State<App> {
       return Future.value(null);
     }
 
-    return _updateConnectionStatus(result);
+    return _updateConnectionStatusAndCheckJailbreakOrRoot(result);
   }
 
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    if (result == ConnectivityResult.wifi ||
-        result == ConnectivityResult.mobile) {
-      setState(() {
-        _connectionStatusBool = true;
-      });
+  Future<void> _updateConnectionStatusAndCheckJailbreakOrRoot(
+      ConnectivityResult result) async {
+    bool isTrustFall =
+        await TrustFall.isJailBroken && await TrustFall.isRealDevice;
+    if (isTrustFall == false) {
+      // _jailbreakOrRootStatusBool = false;
+      print("Not Jailbroken!");
+      if (result == ConnectivityResult.wifi ||
+          result == ConnectivityResult.mobile) {
+        print("Wifi or Mobile is on!");
+        try {
+          final result = await InternetAddress.lookup('youtube.com');
+          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            setState(() {
+              print("Connected!");
+              _connectionStatusBool = true;
+            });
+          }
+        } on SocketException catch (_) {
+          setState(() {
+            print("Not Connected!");
+            _connectionStatusBool = false;
+          });
+        }
+      } else {
+        setState(() {
+          print("Not wifi or mobile is not on!");
+          _connectionStatusBool = false;
+        });
+      }
     } else {
       setState(() {
-        _connectionStatusBool = false;
+        print("Jailbroken!");
+        _jailbreakOrRootStatusBool = true;
       });
     }
   }
@@ -76,9 +104,13 @@ class _AppState extends State<App> {
       routes: {
         Home.id: (context) => Home(
               connectionStatus: _connectionStatusBool,
+              jailbreakOrRootStatus: _jailbreakOrRootStatusBool,
               init: _init,
             ),
-        LandingPage.id: (context) => LandingPage(),
+        LandingPage.id: (context) => LandingPage(
+              connectionStatus: _connectionStatusBool,
+              jailbreakOrRootStatus: _jailbreakOrRootStatusBool,
+            ),
       },
     );
   }
