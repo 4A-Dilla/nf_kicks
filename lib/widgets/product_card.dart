@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nf_kicks/pages/store/product_page.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/widgets/constants.dart';
 import 'package:toast/toast.dart';
 
 Dismissible dismissibleProductCard(
@@ -16,13 +17,13 @@ Dismissible dismissibleProductCard(
 ) {
   return Dismissible(
     background: Container(
-      color: Colors.red,
+      color: kNfkicksRed,
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Icon(Icons.delete, color: Colors.white),
+            Icon(Icons.delete, color: kSecondaryColor),
           ],
         ),
       ),
@@ -67,7 +68,7 @@ Card cartProductCard(
     margin: EdgeInsets.only(top: 18, left: 18, right: 18),
     child: Container(
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.deepOrangeAccent, width: 2),
+          border: Border.all(color: kPrimaryColor, width: 2),
           borderRadius: BorderRadius.all(Radius.circular(15))),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -93,14 +94,14 @@ Card cartProductCard(
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                              color: Colors.deepOrangeAccent,
+                              color: kPrimaryColor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                           padding: EdgeInsets.all(8),
                           child: Text(
                             "€${productPrice.toStringAsFixed(2)}",
                             style: TextStyle(
-                                color: Colors.white,
+                                color: kSecondaryColor,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -116,7 +117,7 @@ Card cartProductCard(
                           child: Text(
                               "Quantity: ${productQuantity.toStringAsFixed(0)}",
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: kSecondaryColor,
                                   fontWeight: FontWeight.bold)),
                         ),
                       ],
@@ -159,7 +160,7 @@ Card productCard(
     margin: EdgeInsets.only(top: 18, left: 18, right: 18),
     child: Container(
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.deepOrangeAccent, width: 2),
+          border: Border.all(color: kPrimaryColor, width: 2),
           borderRadius: BorderRadius.all(Radius.circular(15))),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -185,14 +186,14 @@ Card productCard(
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                              color: Colors.deepOrangeAccent,
+                              color: kPrimaryColor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                           padding: EdgeInsets.all(8),
                           child: Text(
                             "€${productPrice.toStringAsFixed(2)}",
                             style: TextStyle(
-                                color: Colors.white,
+                                color: kSecondaryColor,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -201,13 +202,13 @@ Card productCard(
                         ),
                         Container(
                           decoration: BoxDecoration(
-                              color: Colors.black,
+                              color: kNfkicksBlack,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
                           padding: EdgeInsets.all(8),
                           child: Text(productStock.toStringAsFixed(0),
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: kSecondaryColor,
                                   fontWeight: FontWeight.bold)),
                         ),
                       ],

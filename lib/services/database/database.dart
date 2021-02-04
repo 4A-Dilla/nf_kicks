@@ -119,7 +119,6 @@ class Database implements DatabaseApi {
     final path = APIPath.userAccount(uid);
     final documentReference = FirebaseFirestore.instance.doc(path);
     final collection = documentReference.collection(storeNameOrder);
-    print("here: ${order.toMap()}");
 
     await collection.add(order.toMap());
     emptyCart(storeName: storeName);

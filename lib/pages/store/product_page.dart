@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/widgets/floating_action_button.dart';
 import 'package:nf_kicks/widgets/product_card.dart';
 
-import '../../constants.dart';
+import '../../widgets/constants.dart';
 
 class ProductPage extends StatefulWidget {
   final String productId;
@@ -34,8 +35,8 @@ class _ProductPageState extends State<ProductPage> {
             return kLoadingNoLogo;
           }
           return Scaffold(
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
+            floatingActionButton: nfKicksFloatingActionButton(
+              fabButtonOnPress: () {
                 if (!snapshotData.data.inStock ||
                     snapshotData.data.stock == 0) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -54,8 +55,7 @@ class _ProductPageState extends State<ProductPage> {
                       storeName: widget.storeName);
                 }
               },
-              child: Icon(Icons.add_shopping_cart),
-              backgroundColor: Colors.deepOrangeAccent,
+              fabIcon: Icon(Icons.add_shopping_cart),
             ),
             backgroundColor: Colors.white,
             appBar: AppBar(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:nf_kicks/constants.dart';
+import 'package:nf_kicks/widgets/constants.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/pages/store/store_page.dart';
 import 'package:nf_kicks/services/database/database_api.dart';

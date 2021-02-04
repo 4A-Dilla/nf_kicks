@@ -1,27 +1,20 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
+import 'package:nf_kicks/utils/common_functions.dart';
 import 'package:nf_kicks/widgets/background_stack.dart';
+import 'package:nf_kicks/widgets/floating_action_button.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
+import '../widgets/constants.dart';
 
 class CheckEmail extends StatelessWidget {
-  Future<void> _logOut(BuildContext context) async {
-    try {
-      final auth = Provider.of<AuthenticationApi>(context, listen: false);
-      await auth.logOut();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _logOut(context),
-        child: Icon(Icons.login),
-        backgroundColor: Colors.deepOrangeAccent,
+      floatingActionButton: nfKicksFloatingActionButton(
+        fabButtonOnPress: () => CommonFunctions.logOut(context),
+        fabIcon: Icon(Icons.login),
       ),
       body: backgroundStack(kLogoCheckEmail),
     );

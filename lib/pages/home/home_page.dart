@@ -4,7 +4,7 @@ import 'package:nf_kicks/services/authentication/authentication.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants.dart';
+import '../../widgets/constants.dart';
 import '../loading_page.dart';
 import '../something_went_wrong_page.dart';
 import '../user_state_page.dart';

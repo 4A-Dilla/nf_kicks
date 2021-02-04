@@ -13,6 +13,7 @@ import 'package:nf_kicks/pages/something_went_wrong_page.dart';
 import 'package:nf_kicks/pages/store/product_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/utils/common_functions.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -39,15 +40,6 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   int _selectedItemPosition = 2;
 
-  Future<void> _logOut(BuildContext context) async {
-    try {
-      final auth = Provider.of<AuthenticationApi>(context, listen: false);
-      await auth.logOut();
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   Future<void> _showLogoutDialog(BuildContext context) async {
     final logoutDialog = await showAlertDialog(context,
         title: 'Logout',
@@ -55,7 +47,7 @@ class _LandingPageState extends State<LandingPage> {
         cancelBtn: 'Cancel',
         actionBtn: 'Logout');
     if (logoutDialog == true) {
-      _logOut(context);
+      CommonFunctions.logOut(context);
     }
   }
 

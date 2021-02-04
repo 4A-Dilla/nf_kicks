@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:nf_kicks/constants.dart';
+import 'package:nf_kicks/widgets/constants.dart';
 import 'package:nf_kicks/pages/loading_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database.dart';

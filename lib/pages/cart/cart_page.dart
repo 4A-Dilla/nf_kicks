@@ -6,7 +6,7 @@ import 'package:nf_kicks/pages/payment/payment_button.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/product_card.dart';
 
-import '../../constants.dart';
+import '../../widgets/constants.dart';
 
 class CartPage extends StatelessWidget {
   final DatabaseApi dataStore;

@@ -231,6 +231,7 @@ PODS:
   - connectivity (0.0.1):
     - Flutter
     - Reachability
+  - DTTJailbreakDetection (0.4.0)
   - FBSDKCoreKit (8.2.0):
     - FBSDKCoreKit/Basics (= 8.2.0)
     - FBSDKCoreKit/Core (= 8.2.0)
@@ -298,6 +299,9 @@ PODS:
   - flutter_login_facebook (0.3.0):
     - FBSDKLoginKit (~> 8.0)
     - Flutter
+  - flutter_nfc_reader (0.0.1):
+    - Flutter
+    - VYNFCKit
   - geolocator (6.1.9):
     - Flutter
   - google_maps_flutter (0.0.1):
@@ -386,6 +390,10 @@ PODS:
     - Flutter
     - Stripe (~> 19.4.0)
   - TOCropViewController (2.5.5)
+  - trust_fall (0.0.1):
+    - DTTJailbreakDetection
+    - Flutter
+  - VYNFCKit (0.3.2)
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -395,6 +403,7 @@ DEPENDENCIES:
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
   - flutter_login_facebook (from `.symlinks/plugins/flutter_login_facebook/ios`)
+  - flutter_nfc_reader (from `.symlinks/plugins/flutter_nfc_reader/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
@@ -403,12 +412,14 @@ DEPENDENCIES:
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - stripe_payment (from `.symlinks/plugins/stripe_payment/ios`)
+  - trust_fall (from `.symlinks/plugins/trust_fall/ios`)
 
 SPEC REPOS:
   trunk:
     - abseil
     - AppAuth
     - BoringSSL-GRPC
+    - DTTJailbreakDetection
     - FBSDKCoreKit
     - FBSDKLoginKit
     - Firebase
@@ -431,6 +442,7 @@ SPEC REPOS:
     - Reachability
     - Stripe
     - TOCropViewController
+    - VYNFCKit
 
 EXTERNAL SOURCES:
   cloud_firestore:
@@ -447,6 +459,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_login_facebook:
     :path: ".symlinks/plugins/flutter_login_facebook/ios"
+  flutter_nfc_reader:
+    :path: ".symlinks/plugins/flutter_nfc_reader/ios"
   geolocator:
     :path: ".symlinks/plugins/geolocator/ios"
   google_maps_flutter:
@@ -463,6 +477,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences/ios"
   stripe_payment:
     :path: ".symlinks/plugins/stripe_payment/ios"
+  trust_fall:
+    :path: ".symlinks/plugins/trust_fall/ios"
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
@@ -470,6 +486,7 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   cloud_firestore: b8c0e15fa49dfff87c2817d288b577e5dca2df13
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
+  DTTJailbreakDetection: 5e356c5badc17995f65a83ed9483f787a0057b71
   FBSDKCoreKit: 4afd6ff53d8133a433dbcda44451c9498f8c6ce4
   FBSDKLoginKit: 7181765f2524d7ebf82d9629066c8e6caafc99d0
   Firebase: 8db6f2d1b2c5e2984efba4949a145875a8f65fe5
@@ -481,8 +498,9 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
   FirebaseFirestore: adff4877869ca91a11250cc0989a6cd56bad163f
   FirebaseStorage: 15e0f15ef3c7fec3d1899d68623e47d4447066b4
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_login_facebook: 86e1415ecde2d59ca72c5760fd53d1d1952017fb
+  flutter_nfc_reader: 67d71071d779d28b827ea50dcbe00d09286f253d
   geolocator: 057a0c63a43e9c5296d8ad845a3ac8e6df23d899
   google_maps_flutter: c7f9c73576de1fbe152a227bfd6e6c4ae8088619
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc
@@ -505,6 +523,8 @@ SPEC CHECKSUMS:
   Stripe: 92f1c73a9dbd3c54277ed06a1fea6e08f20414c6
   stripe_payment: 1cbe9c339c21b5ecf01035e80eea351067c67c56
   TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe
+  trust_fall: 89fc4fbfe2ca9994ffa64185c6cc48225ca0204c
+  VYNFCKit: 86a9b711fd1f34f6f7128a2a883cd58dbd781b9d
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 

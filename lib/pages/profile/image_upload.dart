@@ -8,7 +8,7 @@ import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/product_card.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 
-import '../../constants.dart';
+import '../../widgets/constants.dart';
 import '../loading_page.dart';
 
 class ImageUpload extends StatefulWidget {

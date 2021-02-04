@@ -4,6 +4,7 @@ import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/services/payments/payments.dart';
+import 'package:nf_kicks/utils/end_to_end_encryption.dart';
 
 class PaymentsButton extends StatefulWidget {
   final double totalPrice;

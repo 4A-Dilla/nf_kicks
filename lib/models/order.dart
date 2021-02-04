@@ -4,7 +4,7 @@ import 'dart:ui';
 
 class Order {
   Order({
-    @required this.id,
+    this.id,
     @required this.dateOpened,
     @required this.isComplete,
     @required this.readyForPickup,

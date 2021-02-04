@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nf_kicks/widgets/background_stack.dart';
 
-import '../constants.dart';
+import '../widgets/constants.dart';
 
 class SomethingWentWrong extends StatelessWidget {
   @override

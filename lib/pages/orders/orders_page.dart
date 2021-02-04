@@ -8,7 +8,7 @@ import 'package:nf_kicks/widgets/product_card.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:toast/toast.dart';
 
-import '../../constants.dart';
+import '../../widgets/constants.dart';
 
 class OrdersPage extends StatelessWidget {
   final DatabaseApi dataStore;

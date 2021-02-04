@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:nf_kicks/constants.dart';
+import 'package:nf_kicks/widgets/constants.dart';
 import 'package:nf_kicks/pages/check_email_page.dart';
 import 'package:nf_kicks/pages/loading_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
