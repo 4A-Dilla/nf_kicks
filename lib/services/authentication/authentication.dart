@@ -72,18 +72,18 @@ class Authentication implements AuthenticationApi {
       FacebookPermission.email
     ]);
     switch (response.status) {
-      case FacebookLoginStatus.Success:
+      case FacebookLoginStatus.success:
         final accessToken = response.accessToken;
         final userCredential = await _firebaseAuth.signInWithCredential(
           FacebookAuthProvider.credential(accessToken.token),
         );
         return userCredential.user;
-      case FacebookLoginStatus.Cancel:
+      case FacebookLoginStatus.cancel:
         throw FirebaseAuthException(
           code: 'ERROR_ABORTED_BY_USER',
           message: 'Sign in aborted by user',
         );
-      case FacebookLoginStatus.Error:
+      case FacebookLoginStatus.error:
         throw FirebaseAuthException(
           code: 'ERROR_FACEBOOK_LOGIN_FAILED',
           message: response.error.developerMessage,

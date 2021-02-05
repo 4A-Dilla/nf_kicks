@@ -6,10 +6,10 @@ import 'package:nf_kicks/models/nfkicksUser.dart';
 import 'package:nf_kicks/pages/profile/image_upload.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/widgets/constants.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:password_compromised/password_compromised.dart';
 
-import '../../constants.dart';
 import '../loading_page.dart';
 
 class ProfilePage extends StatefulWidget {
