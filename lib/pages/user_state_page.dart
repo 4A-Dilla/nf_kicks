@@ -34,9 +34,7 @@ class UserStatePage extends StatelessWidget {
             return LoginAndRegistrationPage();
           } else if (user.emailVerified == false) {
             try {
-              final Database myDb = Database(uid: auth.currentUser.uid);
               user.sendEmailVerification();
-              myDb.createUser(user: {'email': user.email});
               return CheckEmail();
             } on FirebaseAuthException catch (e) {
               showAlertDialog(context,

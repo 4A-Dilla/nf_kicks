@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:nf_kicks/utils/end_to_end_encryption.dart';
 import 'package:path/path.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -236,7 +237,7 @@ class Database implements DatabaseApi {
   Future<void> updateUserInformation({NfkicksUser user, String uid}) async {
     final path = APIPath.userAccount(uid);
     final documentReference = FirebaseFirestore.instance.doc(path);
-    await documentReference.update(user.toMap());
+    await documentReference.update(user.toMapNoImage());
   }
 
   @override
@@ -255,7 +256,9 @@ class Database implements DatabaseApi {
 
     final accountPath = APIPath.userAccount(uid);
     final documentReference = FirebaseFirestore.instance.doc(accountPath);
-    await documentReference
-        .update({'image': await firebaseStorageRef.getDownloadURL()});
+    await documentReference.update({
+      'image': EndToEndEncryption.encrypt(
+          data: await firebaseStorageRef.getDownloadURL())
+    });
   }
 }

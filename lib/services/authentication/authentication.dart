@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:nf_kicks/models/nfkicksUser.dart';
 import 'package:nf_kicks/services/authentication/firebase_auth_exception_handler.dart';
+import 'package:nf_kicks/services/database/database.dart';
+import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/widgets/text_constants.dart';
 
 import 'authentication_api.dart';
 
@@ -16,12 +20,36 @@ class Authentication implements AuthenticationApi {
   @override
   Stream<User> authStateChanges() => _firebaseAuth.authStateChanges();
 
+  void createUserDetails(UserCredential userCredential, bool isNormalUser) {
+    DatabaseApi _databaseApi = Database(uid: userCredential.user.uid);
+    if (isNormalUser) {
+      _databaseApi.createUser(
+          user: new NfkicksUser(
+                  email: userCredential.user.email,
+                  image: kDefaultImageUrl,
+                  has2FA: false,
+                  phoneNumber: kDefaultPhoneNumber,
+                  fullName: kDefaultFullName)
+              .toMap());
+    } else {
+      _databaseApi.createUser(
+          user: new NfkicksUser(
+        email: userCredential.user.email,
+        fullName: userCredential.user.displayName,
+        image: userCredential.user.photoURL,
+        has2FA: false,
+        phoneNumber: kDefaultPhoneNumber,
+      ).toMap());
+    }
+  }
+
   @override
   Future<User> createUserWithEmailAndPassword(
       String email, String password) async {
     try {
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
+      createUserDetails(userCredential, true);
       return userCredential.user;
     } catch (e) {
       throw FirebaseAuthExceptionHandler.handleException(e);
@@ -46,13 +74,17 @@ class Authentication implements AuthenticationApi {
     if (googleAccount != null) {
       final googleAuth = await googleAccount.authentication;
       if (googleAuth.idToken != null) {
-        final userCredential = await _firebaseAuth.signInWithCredential(
+        final userCredential = await _firebaseAuth
+            .signInWithCredential(
           GoogleAuthProvider.credential(
             idToken: googleAuth.idToken,
             accessToken: googleAuth.accessToken,
           ),
-        );
-        return userCredential.user;
+        )
+            .then((value) {
+          createUserDetails(value, false);
+        });
+        return userCredential;
       } else {
         throw FirebaseAuthException(
           code: 'ERROR_MISSING_GOOGLE_ID_TOKEN',
@@ -74,10 +106,14 @@ class Authentication implements AuthenticationApi {
     switch (response.status) {
       case FacebookLoginStatus.success:
         final accessToken = response.accessToken;
-        final userCredential = await _firebaseAuth.signInWithCredential(
+        final userCredential = await _firebaseAuth
+            .signInWithCredential(
           FacebookAuthProvider.credential(accessToken.token),
-        );
-        return userCredential.user;
+        )
+            .then((value) {
+          createUserDetails(value, false);
+        });
+        return userCredential;
       case FacebookLoginStatus.cancel:
         throw FirebaseAuthException(
           code: 'ERROR_ABORTED_BY_USER',
@@ -112,7 +148,7 @@ class Authentication implements AuthenticationApi {
   @override
   Future<void> deleteUserAccount() async {
     try {
-      await _firebaseAuth.currentUser.delete();
+      await _firebaseAuth.currentUser.delete().whenComplete(() => logOut());
     } catch (e) {
       throw FirebaseAuthExceptionHandler.handleException(e);
     }

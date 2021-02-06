@@ -27,7 +27,9 @@ class Home extends StatelessWidget {
             future: init,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return SomethingWentWrong();
+                return Loading(
+                  loadingWidget: kLoadingLogo,
+                );
               }
               if (snapshot.connectionState == ConnectionState.done) {
                 return Provider<AuthenticationApi>(

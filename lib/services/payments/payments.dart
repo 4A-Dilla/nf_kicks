@@ -1,15 +1,15 @@
 import 'dart:convert';
 
+import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:nf_kicks/models/stripeTransactionResponse.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class Payments {
-  // Todo make getters to access values
-  static final String apiUrl = 'https://api.stripe.com/v1';
+  static final String apiUrl = FlutterConfig.get('STRIPE_API_URL');
   static final String _paymentApiUrl = '${Payments.apiUrl}/payment_intents';
-  static final String secret = 'sk_test_77GGQnProPxjztAvaC3dCiUM00a1Xc5vdW';
+  static final String secret = FlutterConfig.get('STRIPE_SECRET');
   static final Map<String, String> headers = {
     'Authorization': 'Bearer ${Payments.secret}',
     'Content-Type': 'application/x-www-form-urlencoded'
@@ -18,7 +18,7 @@ class Payments {
   static init() {
     StripePayment.setOptions(
       StripeOptions(
-          publishableKey: "pk_test_uWsbmRDANMClUuQjJpY4cAxZ",
+          publishableKey: FlutterConfig.get('PUBLISHABLE_KEY'),
           merchantId: "Test",
           androidPayMode: 'test'),
     );

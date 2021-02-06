@@ -296,13 +296,15 @@ PODS:
     - FirebaseCore (~> 6.10)
     - GTMSessionFetcher/Core (~> 1.1)
   - Flutter (1.0.0)
+  - flutter_config (0.0.1):
+    - Flutter
   - flutter_login_facebook (0.3.0):
     - FBSDKLoginKit (~> 8.0)
     - Flutter
   - flutter_nfc_reader (0.0.1):
     - Flutter
     - VYNFCKit
-  - geolocator (6.1.9):
+  - geolocator (6.2.0):
     - Flutter
   - google_maps_flutter (0.0.1):
     - Flutter
@@ -402,6 +404,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
+  - flutter_config (from `.symlinks/plugins/flutter_config/ios`)
   - flutter_login_facebook (from `.symlinks/plugins/flutter_login_facebook/ios`)
   - flutter_nfc_reader (from `.symlinks/plugins/flutter_nfc_reader/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
@@ -457,6 +460,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
+  flutter_config:
+    :path: ".symlinks/plugins/flutter_config/ios"
   flutter_login_facebook:
     :path: ".symlinks/plugins/flutter_login_facebook/ios"
   flutter_nfc_reader:
@@ -499,9 +504,10 @@ SPEC CHECKSUMS:
   FirebaseFirestore: adff4877869ca91a11250cc0989a6cd56bad163f
   FirebaseStorage: 15e0f15ef3c7fec3d1899d68623e47d4447066b4
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  flutter_config: 2226c1df19c78fe34a05eb7f1363445f18e76fc1
   flutter_login_facebook: 86e1415ecde2d59ca72c5760fd53d1d1952017fb
   flutter_nfc_reader: 67d71071d779d28b827ea50dcbe00d09286f253d
-  geolocator: 057a0c63a43e9c5296d8ad845a3ac8e6df23d899
+  geolocator: f5e3de65e241caba7ce3e8a618803387bda73384
   google_maps_flutter: c7f9c73576de1fbe152a227bfd6e6c4ae8088619
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833

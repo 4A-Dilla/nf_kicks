@@ -103,8 +103,6 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
       } else {
         try {
           await auth.createUserWithEmailAndPassword(_email, _password);
-          final Database myDb = Database(uid: auth.currentUser.uid);
-          myDb.createUser(user: {'email': _email});
         } catch (e) {
           showAlertDialog(context,
               title: 'Sign up failed', description: e, actionBtn: 'OK');

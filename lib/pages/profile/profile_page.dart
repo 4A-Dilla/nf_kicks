@@ -8,6 +8,7 @@ import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/constants.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
+import 'package:nf_kicks/widgets/text_constants.dart';
 import 'package:password_compromised/password_compromised.dart';
 
 import '../loading_page.dart';
@@ -93,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
         await widget.dataStore.deleteUserInformation(
             uid: widget.authenticationApi.currentUser.uid);
         await widget.authenticationApi.deleteUserAccount();
-        await widget.authenticationApi.logOut();
+        Navigator.pop(context);
       }
     } on FirebaseAuthException catch (e) {
       showAlertDialog(context,
@@ -159,9 +160,17 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _updateUserInformation(
-      String fullname, String phoneNumber) async {
+      String fullName, String phoneNumber) async {
     await widget.dataStore.updateUserInformation(
-        user: new NfkicksUser(fullName: fullname, phoneNumber: phoneNumber),
+        user: new NfkicksUser(
+          fullName: fullName,
+          phoneNumber: phoneNumber,
+          image: widget.authenticationApi.currentUser.photoURL != null
+              ? this
+              : kDefaultImageUrl,
+          email: widget.authenticationApi.currentUser.email,
+          has2FA: false,
+        ),
         uid: widget.authenticationApi.currentUser.uid);
     await showAlertDialog(context,
         title: 'User details have been updated',
@@ -450,15 +459,11 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
     {DatabaseApi databaseApi,
     AuthenticationApi authenticationApi,
     VoidCallback toggleFormField}) {
-  final String _defaultImageUrl =
-      "https://firebasestorage.googleapis.com/v0/b/nfkicks-35620.appspot.com/o/avatar.jpg?alt=media&token=a95e1f32-eb65-49cd-8e30-3f26693f4d2f";
-
   return StreamBuilder<NfkicksUser>(
     stream:
         databaseApi.getUserInformation(uid: authenticationApi.currentUser.uid),
     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
       if (snapshot.hasError) {
-        print("Errors: ${snapshot.error}");
         return kLoadingNoLogo;
       }
       if (!snapshot.hasData) {
@@ -482,7 +487,7 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
               },
               child: userImage(snapshot.data.image.toString().isNotEmpty
                   ? snapshot.data.image
-                  : _defaultImageUrl),
+                  : kDefaultImageUrl),
             ),
           ),
           SizedBox(
@@ -503,7 +508,7 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
                           child: Text(
                             snapshot.data.fullName.toString().isNotEmpty
                                 ? snapshot.data.fullName
-                                : "Placeholder Name",
+                                : kDefaultFullName,
                             style: TextStyle(
                               fontSize: 23,
                               fontWeight: FontWeight.bold,
@@ -516,7 +521,7 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
                         Text(
                           snapshot.data.email.toString().isNotEmpty
                               ? snapshot.data.email
-                              : "LacreshaB@gmail.com",
+                              : kDefaultEmail,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 16,
@@ -530,7 +535,7 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
                         Text(
                           snapshot.data.phoneNumber.toString().isNotEmpty
                               ? snapshot.data.phoneNumber
-                              : "Placeholder phone number",
+                              : kDefaultPhoneNumber,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 16,

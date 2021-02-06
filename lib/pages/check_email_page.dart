@@ -4,7 +4,6 @@ import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/utils/common_functions.dart';
 import 'package:nf_kicks/widgets/background_stack.dart';
 import 'package:nf_kicks/widgets/floating_action_button.dart';
-import 'package:provider/provider.dart';
 
 import '../widgets/constants.dart';
 

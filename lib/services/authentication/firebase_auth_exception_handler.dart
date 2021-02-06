@@ -29,6 +29,9 @@ class FirebaseAuthExceptionHandler {
       case "weak-password":
         errorMessage = "Your password is weak, choose a stronger one.";
         break;
+      case "too-many-requests":
+        errorMessage = "We have blocked all request from this device.";
+        break;
       default:
         errorMessage = "Something unexpected happened, try again later.";
     }
