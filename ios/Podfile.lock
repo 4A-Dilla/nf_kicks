@@ -304,6 +304,8 @@ PODS:
   - flutter_nfc_reader (0.0.1):
     - Flutter
     - VYNFCKit
+  - flutter_stetho (0.0.1):
+    - Flutter
   - geolocator (6.2.0):
     - Flutter
   - google_maps_flutter (0.0.1):
@@ -407,6 +409,7 @@ DEPENDENCIES:
   - flutter_config (from `.symlinks/plugins/flutter_config/ios`)
   - flutter_login_facebook (from `.symlinks/plugins/flutter_login_facebook/ios`)
   - flutter_nfc_reader (from `.symlinks/plugins/flutter_nfc_reader/ios`)
+  - flutter_stetho (from `.symlinks/plugins/flutter_stetho/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
@@ -466,6 +469,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_login_facebook/ios"
   flutter_nfc_reader:
     :path: ".symlinks/plugins/flutter_nfc_reader/ios"
+  flutter_stetho:
+    :path: ".symlinks/plugins/flutter_stetho/ios"
   geolocator:
     :path: ".symlinks/plugins/geolocator/ios"
   google_maps_flutter:
@@ -507,6 +512,7 @@ SPEC CHECKSUMS:
   flutter_config: 2226c1df19c78fe34a05eb7f1363445f18e76fc1
   flutter_login_facebook: 86e1415ecde2d59ca72c5760fd53d1d1952017fb
   flutter_nfc_reader: 67d71071d779d28b827ea50dcbe00d09286f253d
+  flutter_stetho: 0e844616b41b86d6429e86a518ae3a46e83af7cd
   geolocator: f5e3de65e241caba7ce3e8a618803387bda73384
   google_maps_flutter: c7f9c73576de1fbe152a227bfd6e6c4ae8088619
   google_sign_in: 6bd214b9c154f881422f5fe27b66aaa7bbd580cc
