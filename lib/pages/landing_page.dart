@@ -14,7 +14,6 @@ import 'package:nf_kicks/pages/store/product_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/utils/common_functions.dart';
-import 'package:nf_kicks/widgets/product_card.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
