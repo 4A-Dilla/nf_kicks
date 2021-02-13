@@ -291,6 +291,9 @@ class _ProductPageState extends State<ProductPage> {
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     height: 400,
                     child: StreamBuilder<List<Product>>(
