@@ -62,10 +62,11 @@ class _AppState extends State<App> {
 
   Future<void> _updateConnectionStatusAndCheckJailbreakOrRoot(
       ConnectivityResult result) async {
-    bool isTrustFall =
-        await TrustFall.isJailBroken && await TrustFall.isRealDevice;
+    // bool isTrustFall =
+    //     await TrustFall.isJailBroken && await TrustFall.isRealDevice;
+    bool isTrustFall = false;
     if (isTrustFall == false) {
-      // _jailbreakOrRootStatusBool = false;
+      _jailbreakOrRootStatusBool = false;
       print("Not Jailbroken!");
       if (result == ConnectivityResult.wifi ||
           result == ConnectivityResult.mobile) {

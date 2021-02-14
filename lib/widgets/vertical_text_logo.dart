@@ -9,9 +9,8 @@ Column verticalTextWithLogo({String text}) {
     children: [
       Image.asset(
         "assets/logo.png",
-        alignment: Alignment.center,
       ),
-      SizedBox(
+      const SizedBox(
         height: 90,
       ),
       Center(
@@ -19,16 +18,16 @@ Column verticalTextWithLogo({String text}) {
             ? Text(
                 text,
                 style: GoogleFonts.josefinSans(
-                  textStyle: TextStyle(
+                  textStyle: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: kSecondaryColor,
                   ),
                 ),
               )
-            : CircularProgressIndicator(
+            : const CircularProgressIndicator(
                 backgroundColor: kSecondaryColor,
-                valueColor: new AlwaysStoppedAnimation<Color>(
+                valueColor: AlwaysStoppedAnimation<Color>(
                   kPrimaryColor,
                 ),
               ),

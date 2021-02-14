@@ -92,9 +92,17 @@ class _ProfilePageState extends State<ProfilePage> {
           actionBtn: 'Delete');
       if (deleteAccountDialog == true) {
         await widget.dataStore.deleteUserInformation(
-            uid: widget.authenticationApi.currentUser.uid);
-        await widget.authenticationApi.deleteUserAccount();
-        Navigator.pop(context);
+            uid: widget.authenticationApi.currentUser?.uid);
+        try {
+          await widget.authenticationApi.deleteUserAccount();
+        } catch (e) {
+          await showAlertDialog(context,
+              title: 'Account deletion failed',
+              description: e.message,
+              actionBtn: 'OK');
+        } finally {
+          Navigator.pop(context);
+        }
       }
     } on FirebaseAuthException catch (e) {
       showAlertDialog(context,
@@ -166,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
           fullName: fullName,
           phoneNumber: phoneNumber,
           image: widget.authenticationApi.currentUser.photoURL != null
-              ? this
+              ? widget.authenticationApi.currentUser.photoURL
               : kDefaultImageUrl,
           email: widget.authenticationApi.currentUser.email,
           has2FA: false,
@@ -179,13 +187,20 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _resetPassword(String newPassword) async {
-    await widget.authenticationApi.resetCurrentUserPassword(newPassword);
-    await widget.authenticationApi.logOut();
-    await showAlertDialog(context,
-        title: 'Password Reset',
-        description: 'Your password has been reset, please login again',
-        actionBtn: 'OK');
-    Navigator.pop(context);
+    try {
+      await widget.authenticationApi.resetCurrentUserPassword(newPassword);
+      await widget.authenticationApi.logOut();
+      Navigator.pop(context);
+      await showAlertDialog(context,
+          title: 'Password Reset',
+          description: 'Your password has been reset, please login again',
+          actionBtn: 'OK');
+    } catch (e) {
+      await showAlertDialog(context,
+          title: 'Password Reset Error',
+          description: e.toString(),
+          actionBtn: 'OK');
+    }
   }
 
   Widget _updateUserInformationFormFields() {
@@ -200,7 +215,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final phoneNumberValidator = MultiValidator([
         RequiredValidator(errorText: 'Phone number field is required'),
-        MinLengthValidator(5, errorText: 'Please enter a valid phone number'),
+        MinLengthValidator(10, errorText: 'Please enter a valid phone number'),
         MaxLengthValidator(10, errorText: 'Please enter a valid phone number'),
         PatternValidator(r'(^\s*\(?\s*\d{1,4}\s*\)?\s*[\d\s]{5,10}\s*$)',
             errorText: 'Please enter a valid phone number')
@@ -461,7 +476,7 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
     VoidCallback toggleFormField}) {
   return StreamBuilder<NfkicksUser>(
     stream:
-        databaseApi.getUserInformation(uid: authenticationApi.currentUser.uid),
+        databaseApi.getUserInformation(uid: authenticationApi.currentUser?.uid),
     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
       if (snapshot.hasError) {
         return kLoadingNoLogo;

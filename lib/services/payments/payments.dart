@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
-import 'package:nf_kicks/models/stripeTransactionResponse.dart';
+import 'package:nf_kicks/models/stripe_transaction_response.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 class Payments {

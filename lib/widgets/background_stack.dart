@@ -9,7 +9,7 @@ Stack backgroundStack(Widget main) {
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/background.jpeg"),
+            image: AssetImage("assets/background.gif"),
             fit: BoxFit.cover,
           ),
         ),
@@ -17,7 +17,7 @@ Stack backgroundStack(Widget main) {
       BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
         child: Container(
-          color: Colors.orangeAccent.withOpacity(0.2),
+          color: Colors.deepOrangeAccent.withOpacity(0.1),
         ),
       ),
       SafeArea(

@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_progress_dialog/flutter_progress_dialog.dart';
 import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/services/payments/payments.dart';
-import 'package:nf_kicks/utils/end_to_end_encryption.dart';
 
 class PaymentsButton extends StatefulWidget {
   final double totalPrice;
@@ -26,8 +24,6 @@ class PaymentsButton extends StatefulWidget {
 
 class _PaymentsButtonState extends State<PaymentsButton> {
   payViaNewCard(BuildContext context) async {
-    var dialog =
-        showProgressDialog(context: context, loadingText: 'Please wait...');
     var response = await Payments.payWithNewCard(
       amount: widget.totalPrice
           .toStringAsFixed(2)
@@ -44,7 +40,6 @@ class _PaymentsButtonState extends State<PaymentsButton> {
         ),
         storeName: widget.currentTabName,
       );
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -56,7 +51,6 @@ class _PaymentsButtonState extends State<PaymentsButton> {
         ),
       );
     }
-    dialog.dismiss();
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

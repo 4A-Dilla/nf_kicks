@@ -4,7 +4,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:nf_kicks/widgets/constants.dart';
 import 'package:nf_kicks/pages/loading_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
-import 'package:nf_kicks/services/database/database.dart';
 import 'package:nf_kicks/widgets/background_stack.dart';
 import 'package:password_compromised/password_compromised.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -105,7 +104,9 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
           await auth.createUserWithEmailAndPassword(_email, _password);
         } catch (e) {
           showAlertDialog(context,
-              title: 'Sign up failed', description: e, actionBtn: 'OK');
+              title: 'Sign up failed',
+              description: e.toString(),
+              actionBtn: 'OK');
         }
       }
     }
@@ -413,6 +414,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.deepOrangeAccent,
+                        wordSpacing: 7.4,
                       ),
                     ),
                   ),

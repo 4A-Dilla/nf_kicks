@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nf_kicks/models/cartItem.dart';
+import 'package:nf_kicks/models/cart_Item.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/pages/payment/payment_button.dart';
 import 'package:nf_kicks/services/database/database_api.dart';

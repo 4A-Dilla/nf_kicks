@@ -19,18 +19,18 @@ Future<bool> showAlertDialog(
         actions: <FlatButton>[
           if (cancelBtn != null)
             FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
               child: Text(
                 cancelBtn,
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
               ),
-              onPressed: () => Navigator.of(context).pop(false),
             ),
           FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
             child: Text(
               actionBtn,
-              style: TextStyle(color: Colors.deepOrangeAccent),
+              style: const TextStyle(color: Colors.deepOrangeAccent),
             ),
-            onPressed: () => Navigator.of(context).pop(true),
           ),
         ],
       ),
@@ -44,12 +44,12 @@ Future<bool> showAlertDialog(
       actions: <CupertinoDialogAction>[
         if (cancelBtn != null)
           CupertinoDialogAction(
-            child: Text(cancelBtn),
             onPressed: () => Navigator.of(context).pop(false),
+            child: Text(cancelBtn),
           ),
         CupertinoDialogAction(
-          child: Text(actionBtn),
           onPressed: () => Navigator.of(context).pop(true),
+          child: Text(actionBtn),
         ),
       ],
     ),

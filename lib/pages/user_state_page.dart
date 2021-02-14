@@ -28,6 +28,9 @@ class UserStatePage extends StatelessWidget {
     return StreamBuilder<User>(
       stream: auth.authStateChanges(),
       builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return LoginAndRegistrationPage();
+        }
         if (snapshot.connectionState == ConnectionState.active) {
           final User user = snapshot.data;
           if (user == null) {

@@ -18,7 +18,7 @@ void main() {
         "storeImage": "URL Here",
         "inStorePickup": true,
         "inStoreShopping": true,
-        "latLong": new GeoPoint(0, 0),
+        "latLong": const GeoPoint(0, 0),
       }, 'documentId');
       expect(
           store,
@@ -31,7 +31,7 @@ void main() {
             storeImage: "URL Here",
             inStorePickup: true,
             inStoreShopping: true,
-            latLong: new GeoPoint(0, 0),
+            latLong: const GeoPoint(0, 0),
           ));
     });
 
@@ -57,7 +57,7 @@ void main() {
             storeImage: "",
             inStorePickup: false,
             inStoreShopping: false,
-            latLong: new GeoPoint(0, 0),
+            latLong: const GeoPoint(0, 0),
           ));
     });
 
@@ -69,7 +69,7 @@ void main() {
         "storeImage": "URL Here",
         "inStorePickup": true,
         "inStoreShopping": true,
-        "latLong": new GeoPoint(0, 0),
+        "latLong": const GeoPoint(0, 0),
       }, 'documentId');
       expect(
           store,
@@ -82,7 +82,7 @@ void main() {
             storeImage: "URL Here",
             inStorePickup: true,
             inStoreShopping: true,
-            latLong: new GeoPoint(0, 0),
+            latLong: const GeoPoint(0, 0),
           ));
     });
 
@@ -94,7 +94,7 @@ void main() {
         "storeImage": 0.0,
         "inStorePickup": "might be true",
         "inStoreShopping": "might be true",
-        "latLong": new GeoPoint(0, 0),
+        "latLong": const GeoPoint(0, 0),
       }, 'documentId');
       expect(
           store,
@@ -107,7 +107,7 @@ void main() {
             storeImage: "",
             inStorePickup: false,
             inStoreShopping: false,
-            latLong: new GeoPoint(0, 0),
+            latLong: const GeoPoint(0, 0),
           ));
     });
 
@@ -120,7 +120,7 @@ void main() {
         "storeImage": "URL Here",
         "inStorePickup": true,
         "inStoreShopping": true,
-        "latLong": new GeoPoint(0, 0),
+        "latLong": const GeoPoint(0, 0),
       }, null);
       expect(
           store,
@@ -133,7 +133,7 @@ void main() {
             storeImage: "URL Here",
             inStorePickup: true,
             inStoreShopping: true,
-            latLong: new GeoPoint(0, 0),
+            latLong: const GeoPoint(0, 0),
           ));
     });
   });

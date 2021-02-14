@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter_config/flutter_config.dart';
 
@@ -16,5 +19,11 @@ class EndToEndEncryption {
     final iv = IV.fromLength(16);
     final textEncrypt = Encrypter(AES(key));
     return textEncrypt.decrypt64(data, iv: iv);
+  }
+
+  static String hash({String data}) {
+    final bytes = utf8.encode(data);
+    final hash = sha1.convert(bytes);
+    return hash.toString();
   }
 }

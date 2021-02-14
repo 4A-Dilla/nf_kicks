@@ -6,7 +6,7 @@ import 'package:path/path.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:nf_kicks/models/cartItem.dart';
+import 'package:nf_kicks/models/cart_Item.dart';
 import 'package:nf_kicks/models/nfkicksUser.dart';
 import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/models/product.dart';

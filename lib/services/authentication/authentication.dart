@@ -5,6 +5,7 @@ import 'package:nf_kicks/models/nfkicksUser.dart';
 import 'package:nf_kicks/services/authentication/firebase_auth_exception_handler.dart';
 import 'package:nf_kicks/services/database/database.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/utils/end_to_end_encryption.dart';
 import 'package:nf_kicks/widgets/text_constants.dart';
 
 import 'authentication_api.dart';
@@ -48,7 +49,7 @@ class Authentication implements AuthenticationApi {
       String email, String password) async {
     try {
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+          email: email, password: EndToEndEncryption.hash(data: password));
       createUserDetails(userCredential, true);
       return userCredential.user;
     } catch (e) {
@@ -59,8 +60,10 @@ class Authentication implements AuthenticationApi {
   @override
   Future<User> loginWithEmailAndPassword(String email, String password) async {
     try {
+      print("hash: ${EndToEndEncryption.hash(data: password)}");
       final userCredential = await _firebaseAuth.signInWithCredential(
-        EmailAuthProvider.credential(email: email, password: password),
+        EmailAuthProvider.credential(
+            email: email, password: EndToEndEncryption.hash(data: password)),
       );
       return userCredential.user;
     } catch (e) {
@@ -139,7 +142,8 @@ class Authentication implements AuthenticationApi {
   @override
   Future<void> resetCurrentUserPassword(String newPassword) async {
     try {
-      await _firebaseAuth.currentUser.updatePassword(newPassword);
+      await _firebaseAuth.currentUser
+          .updatePassword(EndToEndEncryption.hash(data: newPassword));
     } catch (e) {
       throw FirebaseAuthExceptionHandler.handleException(e);
     }
