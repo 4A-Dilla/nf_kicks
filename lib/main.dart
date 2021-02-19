@@ -11,9 +11,17 @@ import 'package:nf_kicks/pages/home/home_page.dart';
 import 'package:nf_kicks/pages/landing_page.dart';
 import 'package:trust_fall/trust_fall.dart';
 
+Future<bool> addSelfSignedCertificate() async {
+  ByteData data = await rootBundle.load('assets/certificate.pem');
+  SecurityContext context = SecurityContext.defaultContext;
+  context.setTrustedCertificatesBytes(data.buffer.asUint8List());
+  return true;
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterConfig.loadEnvVariables();
+  assert(await addSelfSignedCertificate());
   runApp(App());
 }
 
@@ -101,6 +109,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    print(FlutterConfig.get('NFKICKS_KEY'));
     return MaterialApp(
       title: 'Nf_Kicks',
       initialRoute: Home.id,

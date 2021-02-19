@@ -40,7 +40,7 @@ class _PaymentsButtonState extends State<PaymentsButton> {
         ),
         storeName: widget.currentTabName,
       );
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text(
             'An order has been made!',
@@ -52,7 +52,7 @@ class _PaymentsButtonState extends State<PaymentsButton> {
       );
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    Scaffold.of(context).showSnackBar(
       SnackBar(
         content: Text(response.message),
         duration:
