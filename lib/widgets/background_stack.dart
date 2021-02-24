@@ -1,13 +1,15 @@
+// Dart imports:
 import 'dart:ui';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 Stack backgroundStack(Widget main) {
   return Stack(
     children: [
       Container(
-        constraints: BoxConstraints.expand(),
-        decoration: BoxDecoration(
+        constraints: const BoxConstraints.expand(),
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/background.gif"),
             fit: BoxFit.cover,
