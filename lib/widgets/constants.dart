@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:nf_kicks/widgets/vertical_text_logo.dart';
 
 const kPrimaryColor = Colors.deepOrangeAccent;
@@ -17,9 +20,9 @@ final kLogoCheckEmail = verticalTextWithLogo(
   text: "Check your email and login to continue!",
 );
 
-final kLoadingNoLogo = Center(
+const kLoadingNoLogo = Center(
   child: CircularProgressIndicator(
     backgroundColor: kSecondaryColor,
-    valueColor: new AlwaysStoppedAnimation<Color>(kPrimaryColor),
+    valueColor: AlwaysStoppedAnimation<Color>(kPrimaryColor),
   ),
 );
