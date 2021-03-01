@@ -1,11 +1,15 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nf_kicks/models/cart_Item.dart';
+
+// Project imports:
+import 'package:nf_kicks/models/cart_item.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/pages/payment/payment_button.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/product_card.dart';
-
 import '../../widgets/constants.dart';
 
 class CartPage extends StatelessWidget {

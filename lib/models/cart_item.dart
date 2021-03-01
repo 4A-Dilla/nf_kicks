@@ -1,4 +1,7 @@
+// Dart imports:
 import 'dart:ui';
+
+// Flutter imports:
 import 'package:flutter/foundation.dart';
 
 class CartItem {
@@ -25,14 +28,14 @@ class CartItem {
       return null;
     }
 
-    return new CartItem(
+    return CartItem(
       id: documentId,
       productId:
           data['productId'] is String ? data['productId']?.toString() : '',
       storeId: data['storeId'] is String ? data['storeId']?.toString() : '',
       name: data['name'] is String ? data['name']?.toString() : '',
-      price: data['price'] is num ? data['price']?.toDouble() : 00.00,
-      quantity: data['quantity'] is num ? data['quantity']?.toInt() : 0,
+      price: data['price'] is num ? data['price']?.toDouble() as double : 00.00,
+      quantity: data['quantity'] is num ? data['quantity']?.toInt() as int : 0,
       image: data['image'] is String ? data['image']?.toString() : '',
     );
   }
@@ -52,7 +55,7 @@ class CartItem {
       hashValues(id, productId, storeId, name, price, quantity, image);
 
   @override
-  bool operator ==(other) {
+  bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     if (runtimeType != other.runtimeType) return false;
     final CartItem otherStore = other;
