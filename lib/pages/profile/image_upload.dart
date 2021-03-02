@@ -1,13 +1,18 @@
+// Dart imports:
 import 'dart:io';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
+// Project imports:
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/product_card.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
-
 import '../../widgets/constants.dart';
 import '../loading_page.dart';
 
@@ -31,7 +36,7 @@ class _ImageUploadState extends State<ImageUpload> {
   final picker = ImagePicker();
 
   Future<void> _cropImage() async {
-    File cropped = await ImageCropper.cropImage(
+    final File cropped = await ImageCropper.cropImage(
       sourcePath: _imageFile.path,
     );
 
@@ -80,41 +85,41 @@ class _ImageUploadState extends State<ImageUpload> {
           Image.file(
             _imageFile,
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               OutlineButton(
-                borderSide: BorderSide(color: Colors.black, width: 2),
+                borderSide: const BorderSide(width: 2),
                 color: Colors.white,
-                child: Icon(
+                onPressed: _cropImage,
+                child: const Icon(
                   Icons.crop,
                   size: 30,
                   color: Colors.black,
                 ),
-                onPressed: _cropImage,
               ),
               OutlineButton(
-                borderSide: BorderSide(color: Colors.green, width: 2),
+                borderSide: const BorderSide(color: Colors.green, width: 2),
                 color: Colors.white,
-                child: Icon(
+                onPressed: _uploadImage,
+                child: const Icon(
                   Icons.check,
                   size: 30,
                   color: Colors.green,
                 ),
-                onPressed: _uploadImage,
               ),
               OutlineButton(
-                borderSide: BorderSide(color: Colors.red, width: 2),
+                borderSide: const BorderSide(color: Colors.red, width: 2),
                 color: Colors.white,
-                child: Icon(
+                onPressed: _clear,
+                child: const Icon(
                   Icons.close,
                   size: 30,
                   color: Colors.red,
                 ),
-                onPressed: _clear,
               ),
             ],
           ),
@@ -149,13 +154,13 @@ class _ImageUploadState extends State<ImageUpload> {
               IconButton(
                 color: Colors.white,
                 iconSize: 35,
-                icon: Icon(Icons.photo_camera),
+                icon: const Icon(Icons.photo_camera),
                 onPressed: () => _pickImage(ImageSource.camera),
               ),
               IconButton(
                 color: Colors.white,
                 iconSize: 35,
-                icon: Icon(Icons.photo_library),
+                icon: const Icon(Icons.photo_library),
                 onPressed: () => _pickImage(ImageSource.gallery),
               ),
             ],

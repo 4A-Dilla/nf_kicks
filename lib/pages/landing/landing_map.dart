@@ -1,14 +1,21 @@
+// Dart imports:
 import 'dart:async';
+
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:nf_kicks/widgets/constants.dart';
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/pages/store/store_page.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/widgets/constants.dart';
 import 'package:nf_kicks/widgets/product_card.dart';
-import 'package:provider/provider.dart';
 
 class LandingMap extends StatefulWidget {
   @override
@@ -16,7 +23,7 @@ class LandingMap extends StatefulWidget {
 }
 
 class _LandingMapState extends State<LandingMap> {
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
 
   static LatLng _initialPosition;
 
@@ -31,19 +38,19 @@ class _LandingMapState extends State<LandingMap> {
     super.dispose();
   }
 
-  void _getUserLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
+  Future<void> _getUserLocation() async {
+    final Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.bestForNavigation);
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         _initialPosition = LatLng(position.latitude, position.longitude);
       });
     }
   }
 
-  void _recenterCamera() async {
+  Future<void> _recenterCamera() async {
     final GoogleMapController controller = await _controller.future;
-    LatLng currentLocation = _initialPosition;
+    final LatLng currentLocation = _initialPosition;
 
     controller.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
@@ -53,7 +60,7 @@ class _LandingMapState extends State<LandingMap> {
     ));
   }
 
-  MapType _currentMapType = MapType.normal;
+  final MapType _currentMapType = MapType.normal;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +96,7 @@ class _LandingMapState extends State<LandingMap> {
         StreamBuilder<List<Store>>(
           stream: database.storesStream(),
           builder: (context, snapshot) {
-            Set<Marker> _markers = Set<Marker>();
+            Set<Marker> _markers = <Marker>{};
 
             if (snapshot.hasError) {
               print("Errors: ${snapshot.error}");
@@ -100,17 +107,17 @@ class _LandingMapState extends State<LandingMap> {
               return kLoadingNoLogo;
             }
 
-            snapshot.data.forEach((element) async {
+            for (final element in snapshot.data) {
               _markers.add(
                 Marker(
                   markerId: MarkerId(element.id) ?? MarkerId(''),
                   icon: BitmapDescriptor.defaultMarkerWithHue(20.00),
                   position: LatLng(element.latLong.latitude,
                           element.latLong.longitude) ??
-                      LatLng(0, 0),
+                      const LatLng(0, 0),
                   infoWindow: InfoWindow(
                           title: element.name, snippet: element.address) ??
-                      InfoWindow(title: '', snippet: ''),
+                      const InfoWindow(title: '', snippet: ''),
                   onTap: () => showModalBottomSheet(
                       context: context,
                       builder: (BuildContext context) {
@@ -122,13 +129,12 @@ class _LandingMapState extends State<LandingMap> {
                       }),
                 ),
               );
-            });
+            }
 
             return _buildGoogleMaps(_markers);
           },
         ),
         Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             recenterButton(),
             Expanded(
@@ -156,11 +162,21 @@ class _LandingMapState extends State<LandingMap> {
               MaterialPageRoute(builder: (context) => storePage),
             )
           : showToast(context, "Store is closed!"),
-      child: Container(
+      child: SizedBox(
         height: 300,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(50),
+                  bottomRight: Radius.circular(50)), //here
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                alignment: const Alignment(-1.0, -1),
+                image: NetworkImage(storeImage),
+              ),
+            ),
             child: Center(
               child: RaisedButton(
                 onPressed: () => !_isStoreClosed
@@ -177,16 +193,6 @@ class _LandingMapState extends State<LandingMap> {
                 ),
               ),
             ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50),
-                  bottomRight: Radius.circular(50)), //here
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                alignment: Alignment(-1.0, -1),
-                image: NetworkImage(storeImage),
-              ),
-            ),
           ),
         ),
       ),
@@ -199,19 +205,18 @@ class _LandingMapState extends State<LandingMap> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
-            child: RaisedButton.icon(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.deepOrangeAccent, width: 2),
-              ),
-              onPressed: _recenterCamera,
-              color: Colors.white,
-              textColor: Colors.deepOrangeAccent,
-              icon: Icon(Icons.navigation_outlined),
-              label: Text("Recenter".toUpperCase(),
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+          RaisedButton.icon(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+              side: const BorderSide(color: Colors.deepOrangeAccent, width: 2),
             ),
+            onPressed: _recenterCamera,
+            color: Colors.white,
+            textColor: Colors.deepOrangeAccent,
+            icon: const Icon(Icons.navigation_outlined),
+            label: Text("Recenter".toUpperCase(),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

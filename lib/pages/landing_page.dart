@@ -1,10 +1,16 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'package:nf_kicks/models/product.dart';
+import 'package:provider/provider.dart';
 
+// Project imports:
+import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/pages/cart/cart_page.dart';
 import 'package:nf_kicks/pages/landing/landing_map.dart';
 import 'package:nf_kicks/pages/orders/orders_page.dart';
@@ -15,23 +21,22 @@ import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/utils/common_functions.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
-import 'package:provider/provider.dart';
 
 class LandingPage extends StatefulWidget {
-  static const String id = 'landing_screen';
+  static final String id = 'landing_screen';
 
   final String uid;
   final AuthenticationApi authenticationApi;
   final bool connectionStatus;
   final bool jailbreakOrRootStatus;
 
-  const LandingPage(
-      {Key key,
-      this.authenticationApi,
-      this.uid,
-      @required this.connectionStatus,
-      @required this.jailbreakOrRootStatus})
-      : super(key: key);
+  const LandingPage({
+    Key key,
+    this.authenticationApi,
+    this.uid,
+    @required this.connectionStatus,
+    @required this.jailbreakOrRootStatus,
+  }) : super(key: key);
 
   @override
   _LandingPageState createState() => _LandingPageState();
@@ -63,23 +68,25 @@ class _LandingPageState extends State<LandingPage> {
 
   void readNFCProductTag(DatabaseApi databaseApi) {
     FlutterNfcReader.onTagDiscovered().listen((onData) async {
-      String productCode = onData.content;
-      Product productStream =
-          await databaseApi.nfcProductStream(nfcCode: productCode).first;
-      String storeName =
-          await databaseApi.storeName(storeId: productStream.storeId).first;
+      final String _productCode = onData.content;
+      final Product _productStream =
+          await databaseApi.nfcProductStream(nfcCode: _productCode).first;
+      final String _storeName =
+          await databaseApi.storeName(storeId: _productStream.storeId).first;
       changePageForNFC(ProductPage(
         dataStore: databaseApi,
-        productId: productStream.id,
-        storeName: storeName,
+        productId: _productStream.id,
+        storeName: _storeName,
       ));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final database = Provider.of<DatabaseApi>(context, listen: false);
-    final auth = Provider.of<AuthenticationApi>(context, listen: false);
+    final DatabaseApi database =
+        Provider.of<DatabaseApi>(context, listen: false);
+    final AuthenticationApi auth =
+        Provider.of<AuthenticationApi>(context, listen: false);
 
     readNFCProductTag(database);
 
@@ -113,7 +120,7 @@ class _LandingPageState extends State<LandingPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Expanded(
@@ -128,7 +135,7 @@ class _LandingPageState extends State<LandingPage> {
                         ),
                       ),
                       landingBottomAppBar(),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                     ],
@@ -147,16 +154,15 @@ class _LandingPageState extends State<LandingPage> {
         snakeViewColor: Colors.deepOrangeAccent,
         unselectedItemColor: Colors.deepOrangeAccent,
         selectedItemColor: Colors.white,
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         elevation: 2.0,
         behaviour: SnakeBarBehaviour.floating,
-        snakeShape: SnakeShape.circle,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25)),
         ),
         currentIndex: _selectedItemPosition,
         onTap: (index) => setState(() => _selectedItemPosition = index),
-        items: [
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart),
           ),
@@ -189,12 +195,13 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   void changePageForNFC(Widget pageToNavigateTo) {
-    if (this.mounted)
+    if (mounted) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => pageToNavigateTo,
         ),
       );
+    }
   }
 }
