@@ -1,3 +1,8 @@
+//Login page Strings:
+
+import 'package:flutter/foundation.dart';
+
+// Profile page Strings:
 const String kDefaultFullName = "John Doe";
 const String kDefaultPhoneNumber = "Placeholder Number";
 const String kDefaultEmail = "Placeholder Email";

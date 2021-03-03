@@ -1,14 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:nf_kicks/widgets/constants.dart';
+
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:nf_kicks/pages/check_email_page.dart';
 import 'package:nf_kicks/pages/loading_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/widgets/constants.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
-import 'package:provider/provider.dart';
-
 import 'landing_page.dart';
 import 'login_registration/login_registration_page.dart';
 
@@ -16,7 +20,7 @@ class UserStatePage extends StatelessWidget {
   final bool connectionStatus;
   final bool jailbreakOrRootStatus;
 
-  UserStatePage({
+  const UserStatePage({
     @required this.connectionStatus,
     @required this.jailbreakOrRootStatus,
   });

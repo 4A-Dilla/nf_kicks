@@ -1,6 +1,11 @@
-import 'package:flutter/widgets.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+// Package imports:
 import 'package:google_fonts/google_fonts.dart';
+
+// Project imports:
 import 'package:nf_kicks/widgets/constants.dart';
 
 Column verticalTextWithLogo({String text}) {
