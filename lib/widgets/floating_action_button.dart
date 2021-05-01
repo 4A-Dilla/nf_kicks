@@ -1,14 +1,17 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:nf_kicks/widgets/constants.dart';
 
 FloatingActionButton nfKicksFloatingActionButton({
-  Function fabButtonOnPress,
+  void Function() fabButtonOnPress,
   Icon fabIcon,
   Color fabColor = kPrimaryColor,
 }) {
   return FloatingActionButton(
     onPressed: fabButtonOnPress,
-    child: fabIcon,
     backgroundColor: fabColor,
+    child: fabIcon,
   );
 }

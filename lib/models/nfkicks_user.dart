@@ -1,4 +1,7 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
 import 'package:nf_kicks/utils/end_to_end_encryption.dart';
 
 class NfkicksUser {
@@ -23,13 +26,15 @@ class NfkicksUser {
       return null;
     }
 
-    return new NfkicksUser(
+    return NfkicksUser(
       uid: userUid,
-      fullName: EndToEndEncryption.decrypt(data: data['fullName'] ?? ''),
-      email: EndToEndEncryption.decrypt(data: data['email'] ?? ''),
-      phoneNumber: EndToEndEncryption.decrypt(data: data['phoneNumber'] ?? ''),
-      image: EndToEndEncryption.decrypt(data: data['image'] ?? ''),
-      has2FA: data['has2FA'] ?? false,
+      fullName:
+          EndToEndEncryption.decrypt(data: data['fullName'] as String ?? ''),
+      email: EndToEndEncryption.decrypt(data: data['email'] as String ?? ''),
+      phoneNumber:
+          EndToEndEncryption.decrypt(data: data['phoneNumber'] as String ?? ''),
+      image: EndToEndEncryption.decrypt(data: data['image'] as String ?? ''),
+      has2FA: data['has2FA'] as bool ?? false,
     );
   }
 

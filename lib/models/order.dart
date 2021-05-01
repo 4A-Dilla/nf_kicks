@@ -1,6 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+// Dart imports:
 import 'dart:ui';
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Order {
   Order({
@@ -48,7 +53,7 @@ class Order {
       'readyForPickup': readyForPickup is bool ? readyForPickup : false,
       'products': products is List<Map<String, dynamic>>
           ? products
-          : new List<Map<String, dynamic>>(),
+          : <Map<String, dynamic>>[],
       'totalPrice': totalPrice is num ? totalPrice?.toDouble() : 00.00,
     };
   }

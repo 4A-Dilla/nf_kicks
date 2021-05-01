@@ -1,6 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+// Dart imports:
 import 'dart:ui';
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Store {
   Store({
@@ -30,7 +35,7 @@ class Store {
       return null;
     }
 
-    return new Store(
+    return Store(
       id: documentId,
       name: data['name'] is String ? data['name']?.toString() : '',
       description:
@@ -43,8 +48,9 @@ class Store {
           data['inStorePickup'] is bool ? data['inStorePickup'] : false,
       inStoreShopping:
           data['inStoreShopping'] is bool ? data['inStoreShopping'] : false,
-      latLong:
-          data['latLong'] is GeoPoint ? data['latLong'] : new GeoPoint(0, 0),
+      latLong: data['latLong'] is GeoPoint
+          ? data['latLong'] as GeoPoint
+          : const GeoPoint(0, 0),
     );
   }
 

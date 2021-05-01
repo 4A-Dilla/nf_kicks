@@ -58,6 +58,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.nci.nf_kicks"
+        // Todo: change API level to 24 to protect against janus vulnerability
         minSdkVersion 21
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
@@ -77,20 +78,22 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             shrinkResources true
+            zipAlignEnabled true
             minifyEnabled true
             signingConfig signingConfigs.release
             useProguard true
 
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            setProguardFiles([getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'])
         }
         debug {
             // TODO: Add your own signing config for the debug build.
             shrinkResources true
+            zipAlignEnabled true
             minifyEnabled true
             signingConfig signingConfigs.debug
             useProguard true
 
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            setProguardFiles([getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'])
         }
     }
 }
@@ -101,9 +104,9 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    implementation platform('com.google.firebase:firebase-bom:26.5.0')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.facebook.android:facebook-login:8.1.0'
+    implementation 'com.google.firebase:firebase-auth'
 }
 
 apply plugin: 'com.google.gms.google-services'

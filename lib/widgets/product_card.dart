@@ -1,8 +1,13 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:toast/toast.dart';
+
+// Project imports:
 import 'package:nf_kicks/pages/store/product_page.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/constants.dart';
-import 'package:toast/toast.dart';
 
 Dismissible dismissibleProductCard(
   BuildContext context,
@@ -18,14 +23,9 @@ Dismissible dismissibleProductCard(
   return Dismissible(
     background: Container(
       color: kNfkicksRed,
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Icon(Icons.delete, color: kSecondaryColor),
-          ],
-        ),
+      child: const Padding(
+        padding: EdgeInsets.all(15),
+        child: Icon(Icons.delete, color: kSecondaryColor),
       ),
     ),
     key: Key(cartId),
@@ -64,12 +64,14 @@ Card cartProductCard(
       borderRadius: BorderRadius.circular(15),
     ),
     elevation: 5,
-    borderOnForeground: true,
-    margin: EdgeInsets.only(top: 18, left: 18, right: 18),
+    margin: const EdgeInsets.only(top: 18, left: 18, right: 18),
     child: Container(
       decoration: BoxDecoration(
-          border: Border.all(color: kPrimaryColor, width: 2),
-          borderRadius: BorderRadius.all(Radius.circular(15))),
+        border: Border.all(color: kPrimaryColor, width: 2),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(15),
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -77,46 +79,45 @@ Card cartProductCard(
             Expanded(
               flex: 2,
               child: Container(
-                padding: EdgeInsets.only(right: 20, left: 10),
+                padding: const EdgeInsets.only(right: 20, left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       productName,
                       softWrap: true,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
                       children: [
                         Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Text(
                             "€${productPrice.toStringAsFixed(2)}",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: kSecondaryColor,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               color: Colors.black,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Text(
                               "Quantity: ${productQuantity.toStringAsFixed(0)}",
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: kSecondaryColor,
                                   fontWeight: FontWeight.bold)),
                         ),
@@ -127,13 +128,12 @@ Card cartProductCard(
               ),
             ),
             Expanded(
-              flex: 1,
               child: Container(
                 height: 100,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                       image: NetworkImage(productImage), fit: BoxFit.cover),
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
                 ),
@@ -156,12 +156,14 @@ Card productCard(
       borderRadius: BorderRadius.circular(15),
     ),
     elevation: 5,
-    borderOnForeground: true,
-    margin: EdgeInsets.only(top: 18, left: 18, right: 18),
+    margin: const EdgeInsets.only(top: 18, left: 18, right: 18),
     child: Container(
       decoration: BoxDecoration(
-          border: Border.all(color: kPrimaryColor, width: 2),
-          borderRadius: BorderRadius.all(Radius.circular(15))),
+        border: Border.all(color: kPrimaryColor, width: 2),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(15),
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -169,45 +171,44 @@ Card productCard(
             Expanded(
               flex: 2,
               child: Container(
-                padding: EdgeInsets.only(right: 20, left: 10),
+                padding: const EdgeInsets.only(right: 20, left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       productName,
                       softWrap: true,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
                       children: [
                         Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               color: kPrimaryColor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Text(
                             "€${productPrice.toStringAsFixed(2)}",
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: kSecondaryColor,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 5,
                         ),
                         Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               color: kNfkicksBlack,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Text(productStock.toStringAsFixed(0),
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: kSecondaryColor,
                                   fontWeight: FontWeight.bold)),
                         ),
@@ -218,13 +219,12 @@ Card productCard(
               ),
             ),
             Expanded(
-              flex: 1,
               child: Container(
                 height: 100,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                       image: NetworkImage(productImage), fit: BoxFit.cover),
-                  borderRadius: BorderRadius.all(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(10),
                   ),
                 ),

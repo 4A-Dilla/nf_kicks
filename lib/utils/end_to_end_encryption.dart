@@ -4,9 +4,11 @@ import 'dart:convert';
 // Package imports:
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
-import 'package:flutter_config/flutter_config.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+// import 'package:flutter_config/flutter_config.dart';
 
-final String _keyString = FlutterConfig.get('NFKICKS_KEY').toString();
+// final String _keyString = FlutterConfig.get('NFKICKS_KEY').toString();
+final String _keyString = env['NFKICKS_KEY'].toString();
 final Key _key = Key.fromUtf8(_keyString);
 final IV _iv = IV.fromLength(16);
 final Encrypter _textEncrypt = Encrypter(AES(_key));

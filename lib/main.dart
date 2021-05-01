@@ -1,27 +1,31 @@
+// Dart imports:
 import 'dart:async';
 import 'dart:io';
 
-import 'package:connectivity/connectivity.dart';
-import 'package:firebase_core/firebase_core.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_config/flutter_config.dart';
 
-import 'package:nf_kicks/pages/home/home_page.dart';
-import 'package:nf_kicks/pages/landing_page.dart';
+// Package imports:
+import 'package:connectivity/connectivity.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:trust_fall/trust_fall.dart';
 
-Future<bool> addSelfSignedCertificate() async {
-  ByteData data = await rootBundle.load('assets/certificate.pem');
-  SecurityContext context = SecurityContext.defaultContext;
-  context.setTrustedCertificatesBytes(data.buffer.asUint8List());
-  return true;
-}
+// Project imports:
+import 'package:nf_kicks/pages/home/home_page.dart';
+import 'package:nf_kicks/pages/landing_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterConfig.loadEnvVariables();
-  assert(await addSelfSignedCertificate());
+  await DotEnv.load(fileName: ".env");
+
+  const bool isProduction = bool.fromEnvironment('dart.vm.product');
+  if (isProduction) {
+    debugPrint = (String message, {int wrapWidth}) {};
+  }
+
   runApp(App());
 }
 
@@ -56,13 +60,13 @@ class _AppState extends State<App> {
     ConnectivityResult result;
 
     try {
-      result = await (Connectivity().checkConnectivity());
+      result = await Connectivity().checkConnectivity();
     } on PlatformException catch (e) {
       print(e.toString());
     }
 
     if (!mounted) {
-      return Future.value(null);
+      return Future.value();
     }
 
     return _updateConnectionStatusAndCheckJailbreakOrRoot(result);
@@ -70,9 +74,8 @@ class _AppState extends State<App> {
 
   Future<void> _updateConnectionStatusAndCheckJailbreakOrRoot(
       ConnectivityResult result) async {
-    // bool isTrustFall =
-    //     await TrustFall.isJailBroken && await TrustFall.isRealDevice;
-    bool isTrustFall = false;
+    final bool isTrustFall = await TrustFall.isJailBroken;
+    // const bool isTrustFall = false;
     if (isTrustFall == false) {
       _jailbreakOrRootStatusBool = false;
       print("Not Jailbroken!");
@@ -109,7 +112,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    print(FlutterConfig.get('NFKICKS_KEY'));
+    print(env['NFKICKS_KEY']);
     return MaterialApp(
       title: 'Nf_Kicks',
       initialRoute: Home.id,

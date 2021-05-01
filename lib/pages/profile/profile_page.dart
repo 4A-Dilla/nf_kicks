@@ -1,31 +1,36 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nf_kicks/models/nfkicksUser.dart';
+import 'package:password_compromised/password_compromised.dart';
+
+// Project imports:
+import 'package:nf_kicks/models/nfkicks_user.dart';
 import 'package:nf_kicks/pages/profile/image_upload.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/constants.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 import 'package:nf_kicks/widgets/text_constants.dart';
-import 'package:password_compromised/password_compromised.dart';
-
 import '../loading_page.dart';
 
 class ProfilePage extends StatefulWidget {
   final DatabaseApi dataStore;
   final AuthenticationApi authenticationApi;
 
-  const ProfilePage({Key key, this.dataStore, this.authenticationApi})
-      : super(key: key);
+  const ProfilePage(
+      {@required this.dataStore, @required this.authenticationApi});
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
@@ -85,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
       _isLoading = true;
     });
     try {
-      final deleteAccountDialog = await showAlertDialog(context,
+      final bool deleteAccountDialog = await showAlertDialog(context,
           title: 'Delete Account',
           description: 'Are you sure you want to delete your account?',
           cancelBtn: 'Cancel',
@@ -95,7 +100,12 @@ class _ProfilePageState extends State<ProfilePage> {
             uid: widget.authenticationApi.currentUser?.uid);
         try {
           await widget.authenticationApi.deleteUserAccount();
-        } catch (e) {
+        } on FirebaseException catch (e) {
+          await showAlertDialog(context,
+              title: 'Account deletion failed',
+              description: e.message,
+              actionBtn: 'OK');
+        } on PlatformException catch (e) {
           await showAlertDialog(context,
               title: 'Account deletion failed',
               description: e.message,
@@ -109,14 +119,19 @@ class _ProfilePageState extends State<ProfilePage> {
           title: 'Account deletion failed',
           description: e.message,
           actionBtn: 'OK');
+    } on PlatformException catch (e) {
+      await showAlertDialog(context,
+          title: 'Account deletion failed',
+          description: e.message,
+          actionBtn: 'OK');
     } finally {
-      if (this.mounted) {
+      if (mounted) {
         setState(() => _isLoading = false);
       }
     }
   }
 
-  void _submitToUpdateUserInformation() async {
+  Future<void> _submitToUpdateUserInformation() async {
     setState(() {
       _isLoading = true;
     });
@@ -127,8 +142,13 @@ class _ProfilePageState extends State<ProfilePage> {
           title: 'Information update failed',
           description: e.message,
           actionBtn: 'OK');
+    } on PlatformException catch (e) {
+      await showAlertDialog(context,
+          title: 'Information update failed',
+          description: e.message,
+          actionBtn: 'OK');
     } finally {
-      if (this.mounted) {
+      if (mounted) {
         setState(() {
           _isLoading = false;
           _showUpdateDetailsForm = false;
@@ -137,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void _submitToResetPassword() async {
+  Future<void> _submitToResetPassword() async {
     setState(() {
       _isLoading = true;
     });
@@ -157,8 +177,13 @@ class _ProfilePageState extends State<ProfilePage> {
           title: 'Password reset failed',
           description: e.message,
           actionBtn: 'OK');
+    } on PlatformException catch (e) {
+      await showAlertDialog(context,
+          title: 'Password reset failed',
+          description: e.message,
+          actionBtn: 'OK');
     } finally {
-      if (this.mounted) {
+      if (mounted) {
         setState(() {
           _isLoading = false;
           _showUpdateDetailsForm = false;
@@ -170,12 +195,11 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _updateUserInformation(
       String fullName, String phoneNumber) async {
     await widget.dataStore.updateUserInformation(
-        user: new NfkicksUser(
+        user: NfkicksUser(
           fullName: fullName,
           phoneNumber: phoneNumber,
-          image: widget.authenticationApi.currentUser.photoURL != null
-              ? widget.authenticationApi.currentUser.photoURL
-              : kDefaultImageUrl,
+          image:
+              widget.authenticationApi.currentUser.photoURL ?? kDefaultImageUrl,
           email: widget.authenticationApi.currentUser.email,
           has2FA: false,
         ),
@@ -195,17 +219,22 @@ class _ProfilePageState extends State<ProfilePage> {
           title: 'Password Reset',
           description: 'Your password has been reset, please login again',
           actionBtn: 'OK');
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
+      showAlertDialog(context,
+          title: 'Password Reset Error',
+          description: e.message,
+          actionBtn: 'OK');
+    } on PlatformException catch (e) {
       await showAlertDialog(context,
           title: 'Password Reset Error',
-          description: e.toString(),
+          description: e.message,
           actionBtn: 'OK');
     }
   }
 
   Widget _updateUserInformationFormFields() {
     if (_showUpdateDetailsForm) {
-      final fullNameValidator = MultiValidator([
+      final MultiValidator fullNameValidator = MultiValidator([
         RequiredValidator(errorText: 'Full-name field is required'),
         MinLengthValidator(1,
             errorText: 'Please enter a name longer than one character'),
@@ -213,7 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
             errorText: 'Your full-name must be under 127 character long'),
       ]);
 
-      final phoneNumberValidator = MultiValidator([
+      final MultiValidator phoneNumberValidator = MultiValidator([
         RequiredValidator(errorText: 'Phone number field is required'),
         MinLengthValidator(10, errorText: 'Please enter a valid phone number'),
         MaxLengthValidator(10, errorText: 'Please enter a valid phone number'),
@@ -229,20 +258,16 @@ class _ProfilePageState extends State<ProfilePage> {
               validator: fullNameValidator,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: _fullNameController,
-              style: TextStyle(color: Colors.black, fontSize: 16),
-              decoration: InputDecoration(
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+              decoration: const InputDecoration(
                 errorStyle: TextStyle(fontSize: 16),
                 hintStyle: TextStyle(color: Colors.black),
                 fillColor: Colors.black,
                 labelText: 'New Full-Name',
                 hintText: 'full name',
                 labelStyle: TextStyle(color: Colors.black),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
+                focusedBorder: UnderlineInputBorder(),
+                enabledBorder: UnderlineInputBorder(),
                 focusColor: Colors.black,
               ),
               cursorColor: Colors.black,
@@ -251,21 +276,17 @@ class _ProfilePageState extends State<ProfilePage> {
               validator: phoneNumberValidator,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: _phoneNumberController,
-              style: TextStyle(color: Colors.black, fontSize: 16),
+              style: const TextStyle(color: Colors.black, fontSize: 16),
               keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 errorStyle: TextStyle(fontSize: 16),
                 hintStyle: TextStyle(color: Colors.black),
                 fillColor: Colors.black,
                 labelText: 'New Phone Number',
                 hintText: 'phone number',
                 labelStyle: TextStyle(color: Colors.black),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
+                focusedBorder: UnderlineInputBorder(),
+                enabledBorder: UnderlineInputBorder(),
                 focusColor: Colors.black,
               ),
               cursorColor: Colors.black,
@@ -280,7 +301,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _resetPasswordFormFields() {
     if (_showResetPasswordForm) {
-      final passwordValidator = MultiValidator([
+      final MultiValidator passwordValidator = MultiValidator([
         RequiredValidator(errorText: 'Password is required'),
         MinLengthValidator(8,
             errorText: 'Password must be at least 8 digits long'),
@@ -298,10 +319,10 @@ class _ProfilePageState extends State<ProfilePage> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: passwordValidator,
               controller: _newPasswordController,
-              style: TextStyle(color: Colors.black, fontSize: 16),
+              style: const TextStyle(color: Colors.black, fontSize: 16),
               decoration: InputDecoration(
-                errorStyle: TextStyle(fontSize: 16),
-                hintStyle: TextStyle(color: Colors.black),
+                errorStyle: const TextStyle(fontSize: 16),
+                hintStyle: const TextStyle(color: Colors.black),
                 fillColor: Colors.black,
                 labelText: 'New Password',
                 suffixIcon: IconButton(
@@ -316,13 +337,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 hintText: 'new password',
-                labelStyle: TextStyle(color: Colors.black),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
+                labelStyle: const TextStyle(color: Colors.black),
+                focusedBorder: const UnderlineInputBorder(),
+                enabledBorder: const UnderlineInputBorder(),
                 focusColor: Colors.black,
               ),
               cursorColor: Colors.black,
@@ -337,20 +354,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 return null;
               },
               controller: _confirmNewPasswordController,
-              style: TextStyle(color: Colors.black, fontSize: 16),
-              decoration: InputDecoration(
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+              decoration: const InputDecoration(
                 errorStyle: TextStyle(fontSize: 16),
                 hintStyle: TextStyle(color: Colors.black),
                 fillColor: Colors.black,
                 labelText: 'Confirm New Password',
                 hintText: 'confirm your new password',
                 labelStyle: TextStyle(color: Colors.black),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
+                focusedBorder: UnderlineInputBorder(),
+                enabledBorder: UnderlineInputBorder(),
                 focusColor: Colors.black,
               ),
               cursorColor: Colors.black,
@@ -384,7 +397,6 @@ class _ProfilePageState extends State<ProfilePage> {
       body: Column(
         children: <Widget>[
           Expanded(
-            flex: 1,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: _buildUserDetails(
@@ -401,65 +413,67 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _showUpdateDetailsForm
-                      ? _updateUserInformationFormFields()
-                      : Container(),
-                  SizedBox(
+                  if (_showUpdateDetailsForm)
+                    _updateUserInformationFormFields()
+                  else
+                    Container(),
+                  const SizedBox(
                     height: 10,
                   ),
-                  _showUpdateDetailsForm
-                      ? Container()
-                      : OutlineButton(
-                          borderSide: BorderSide(color: Colors.black),
-                          onPressed: () => _toggleResetPasswordFormType(),
-                          child: Text(
-                            "Reset Password".toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                  if (_showUpdateDetailsForm)
+                    Container()
+                  else
+                    OutlineButton(
+                      borderSide: const BorderSide(),
+                      onPressed: () => _toggleResetPasswordFormType(),
+                      child: Text(
+                        "Reset Password".toUpperCase(),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
-                  _showResetPasswordForm
-                      ? _resetPasswordFormFields()
-                      : Container(),
-                  _showResetPasswordForm
-                      ? RaisedButton(
-                          color: Colors.redAccent,
-                          onPressed: () => _formKey.currentState.validate()
-                              ? _submitToResetPassword()
-                              : null,
-                          child: Text(
-                            "submit".toUpperCase(),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      : _showUpdateDetailsForm
-                          ? RaisedButton(
-                              color: Colors.redAccent,
-                              onPressed: () => _formKey.currentState.validate()
-                                  ? _submitToUpdateUserInformation()
-                                  : null,
-                              child: Text(
-                                "submit".toUpperCase(),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            )
-                          : RaisedButton(
-                              color: Colors.redAccent,
-                              onPressed: () =>
-                                  _showDeleteAccountDialog(context),
-                              child: Text(
-                                "Delete Account".toUpperCase(),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
+                      ),
+                    ),
+                  if (_showResetPasswordForm)
+                    _resetPasswordFormFields()
+                  else
+                    Container(),
+                  if (_showResetPasswordForm)
+                    RaisedButton(
+                      color: Colors.redAccent,
+                      onPressed: () => _formKey.currentState.validate()
+                          ? _submitToResetPassword()
+                          : null,
+                      child: Text(
+                        "submit".toUpperCase(),
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  else
+                    _showUpdateDetailsForm
+                        ? RaisedButton(
+                            color: Colors.redAccent,
+                            onPressed: () => _formKey.currentState.validate()
+                                ? _submitToUpdateUserInformation()
+                                : null,
+                            child: Text(
+                              "submit".toUpperCase(),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
+                          )
+                        : RaisedButton(
+                            color: Colors.redAccent,
+                            onPressed: () => _showDeleteAccountDialog(context),
+                            child: Text(
+                              "Delete Account".toUpperCase(),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
                 ],
               ),
             ),
@@ -501,16 +515,16 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
                 )
               },
               child: userImage(snapshot.data.image.toString().isNotEmpty
-                  ? snapshot.data.image
+                  ? snapshot.data.image.toString()
                   : kDefaultImageUrl),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
           Expanded(
             flex: 3,
-            child: Container(
+            child: SizedBox(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -522,37 +536,37 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
                         Flexible(
                           child: Text(
                             snapshot.data.fullName.toString().isNotEmpty
-                                ? snapshot.data.fullName
+                                ? snapshot.data.fullName.toString()
                                 : kDefaultFullName,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 23,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Text(
                           snapshot.data.email.toString().isNotEmpty
-                              ? snapshot.data.email
+                              ? snapshot.data.email.toString()
                               : kDefaultEmail,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 5,
                         ),
                         Text(
                           snapshot.data.phoneNumber.toString().isNotEmpty
-                              ? snapshot.data.phoneNumber
+                              ? snapshot.data.phoneNumber.toString()
                               : kDefaultPhoneNumber,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
@@ -562,13 +576,12 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
                     ),
                   ),
                   Expanded(
-                    flex: 1,
                     child: RaisedButton(
                       color: Colors.deepOrangeAccent,
                       onPressed: toggleFormField,
                       child: Text(
                         "Update info...".toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),

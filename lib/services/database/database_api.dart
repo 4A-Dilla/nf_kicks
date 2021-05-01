@@ -1,8 +1,12 @@
+// Dart imports:
 import 'dart:io';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:nf_kicks/models/cart_Item.dart';
-import 'package:nf_kicks/models/nfkicksUser.dart';
+
+// Project imports:
+import 'package:nf_kicks/models/cart_item.dart';
+import 'package:nf_kicks/models/nfkicks_user.dart';
 import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/models/store.dart';

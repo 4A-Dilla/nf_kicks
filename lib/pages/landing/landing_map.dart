@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -178,18 +179,24 @@ class _LandingMapState extends State<LandingMap> {
               ),
             ),
             child: Center(
-              child: RaisedButton(
-                onPressed: () => !_isStoreClosed
-                    ? Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => storePage),
-                      )
-                    : showToast(context, "Store is closed!"),
-                color: !_isStoreClosed ? Colors.deepOrangeAccent : Colors.grey,
-                child: Text(
-                  !_isStoreClosed ? "Go to store" : "Store Closed",
-                  style: GoogleFonts.permanentMarker(
-                      color: Colors.white, fontSize: 30),
+              child: ButtonTheme(
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      !_isStoreClosed ? Colors.deepOrangeAccent : Colors.grey,
+                    ),
+                  ),
+                  onPressed: () => !_isStoreClosed
+                      ? Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => storePage),
+                        )
+                      : showToast(context, "Store is closed!"),
+                  child: Text(
+                    !_isStoreClosed ? "Go to store" : "Store Closed",
+                    style: GoogleFonts.permanentMarker(
+                        color: Colors.white, fontSize: 30),
+                  ),
                 ),
               ),
             ),
@@ -205,18 +212,30 @@ class _LandingMapState extends State<LandingMap> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          RaisedButton.icon(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18.0),
-              side: const BorderSide(color: Colors.deepOrangeAccent, width: 2),
+          ButtonTheme(
+            child: ElevatedButton.icon(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: const BorderSide(
+                        color: Colors.deepOrangeAccent, width: 2),
+                  ),
+                ),
+                minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              ),
+              onPressed: _recenterCamera,
+              label: Text("Recenter".toUpperCase(),
+                  style: const TextStyle(
+                      color: Colors.deepOrangeAccent,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold)),
+              icon: const Icon(
+                Icons.navigation_outlined,
+                color: Colors.deepOrangeAccent,
+              ),
             ),
-            onPressed: _recenterCamera,
-            color: Colors.white,
-            textColor: Colors.deepOrangeAccent,
-            icon: const Icon(Icons.navigation_outlined),
-            label: Text("Recenter".toUpperCase(),
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

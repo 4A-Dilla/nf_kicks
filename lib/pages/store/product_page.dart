@@ -1,10 +1,14 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:google_fonts/google_fonts.dart';
+
+// Project imports:
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/widgets/floating_action_button.dart';
 import 'package:nf_kicks/widgets/product_card.dart';
-
 import '../../widgets/constants.dart';
 
 class ProductPage extends StatefulWidget {
@@ -51,7 +55,7 @@ class _ProductPageState extends State<ProductPage> {
                         storeName: widget.storeName);
                   }
                 },
-                fabIcon: Icon(Icons.add_shopping_cart),
+                fabIcon: const Icon(Icons.add_shopping_cart),
               ),
             ),
             backgroundColor: Colors.white,
@@ -83,41 +87,40 @@ class _ProductPageState extends State<ProductPage> {
                             child: Container(),
                           ),
                           Expanded(
-                            flex: 1,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: Colors.deepOrangeAccent,
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(15),
                                     ),
                                   ),
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   child: Text(
                                     snapshotData.data.name.toUpperCase(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: Colors.black,
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(15),
                                     ),
                                   ),
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   child: Text(
                                     "€${snapshotData.data.price.toStringAsFixed(2)}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold,
@@ -135,7 +138,7 @@ class _ProductPageState extends State<ProductPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Row(
@@ -162,7 +165,7 @@ class _ProductPageState extends State<ProductPage> {
                                       else
                                         {
                                           Scaffold.of(context).showSnackBar(
-                                            SnackBar(
+                                            const SnackBar(
                                               content: Text(
                                                 'This product is not in stock!',
                                               ),
@@ -178,7 +181,7 @@ class _ProductPageState extends State<ProductPage> {
                                           color: Colors.deepOrangeAccent,
                                           borderRadius:
                                               BorderRadius.circular(5)),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           "-",
                                           style: TextStyle(
@@ -189,18 +192,18 @@ class _ProductPageState extends State<ProductPage> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 15,
                                   ),
                                   Text(
                                     snapshotData.data.inStock
                                         ? quantity.toString()
                                         : 0.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 15,
                                   ),
                                   GestureDetector(
@@ -221,7 +224,7 @@ class _ProductPageState extends State<ProductPage> {
                                       else
                                         {
                                           Scaffold.of(context).showSnackBar(
-                                            SnackBar(
+                                            const SnackBar(
                                               content: Text(
                                                 'This product is not in stock!',
                                               ),
@@ -237,7 +240,7 @@ class _ProductPageState extends State<ProductPage> {
                                           color: Colors.deepOrangeAccent,
                                           borderRadius:
                                               BorderRadius.circular(5)),
-                                      child: Center(
+                                      child: const Center(
                                         child: Text(
                                           "+",
                                           style: TextStyle(
@@ -254,10 +257,10 @@ class _ProductPageState extends State<ProductPage> {
                                 children: [
                                   Text(
                                     "in-Stock".toUpperCase(),
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   Container(
@@ -266,11 +269,12 @@ class _ProductPageState extends State<ProductPage> {
                                     decoration: BoxDecoration(
                                         color: Colors.black,
                                         borderRadius: BorderRadius.circular(5)),
-                                    padding: EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(8),
                                     child: Center(
                                       child: Text(
-                                        "${snapshotData.data.stock.toStringAsFixed(0)}",
-                                        style: TextStyle(
+                                        snapshotData.data.stock
+                                            .toStringAsFixed(0),
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -280,20 +284,20 @@ class _ProductPageState extends State<ProductPage> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Text(
                             snapshotData.data.description,
-                            style: TextStyle(height: 1.3),
+                            style: const TextStyle(height: 1.3),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
-                    Container(
+                    SizedBox(
                       height: 400,
                       child: StreamBuilder<List<Product>>(
                           stream: widget.dataStore.productsStream(
@@ -347,7 +351,7 @@ class _ProductPageState extends State<ProductPage> {
   }
 }
 
-_displaySnackBar(BuildContext context, String text) {
+void _displaySnackBar(BuildContext context, String text) {
   final snackBar = SnackBar(content: Text(text));
   Scaffold.of(context).showSnackBar(snackBar);
 }

@@ -1,16 +1,25 @@
+// Dart imports:
 import 'dart:ui';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:nf_kicks/widgets/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:nf_kicks/widgets/text_constants.dart';
+import 'package:password_compromised/password_compromised.dart';
+import 'package:provider/provider.dart';
+
+// Project imports:
 import 'package:nf_kicks/pages/loading_page.dart';
 import 'package:nf_kicks/services/authentication/authentication_api.dart';
 import 'package:nf_kicks/widgets/background_stack.dart';
-import 'package:password_compromised/password_compromised.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:nf_kicks/widgets/constants.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
-import 'package:provider/provider.dart';
+import 'package:simple_logger/simple_logger.dart';
 
 enum FormType { login, register }
 
@@ -21,7 +30,8 @@ class LoginAndRegistrationPage extends StatefulWidget {
 }
 
 class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
-  final _formKey = GlobalKey<FormState>();
+  final SimpleLogger logger = SimpleLogger();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -48,15 +58,23 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
   Future<void> _loginWithFacebook(BuildContext context) async {
     try {
       setState(() => _isLoading = true);
-      final auth = Provider.of<AuthenticationApi>(context, listen: false);
+      final AuthenticationApi auth =
+          Provider.of<AuthenticationApi>(context, listen: false);
       await auth.loginWithFacebook();
     } on FirebaseException catch (e) {
+      logger.warning(e);
+      showAlertDialog(context,
+          title: 'Facebook login failed',
+          description: e.message,
+          actionBtn: 'OK');
+    } on PlatformException catch (e) {
+      logger.warning(e);
       showAlertDialog(context,
           title: 'Facebook login failed',
           description: e.message,
           actionBtn: 'OK');
     } finally {
-      if (this.mounted) {
+      if (mounted) {
         setState(() => _isLoading = false);
       }
     }
@@ -65,31 +83,45 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
   Future<void> _loginWithGoogle(BuildContext context) async {
     try {
       setState(() => _isLoading = true);
-      final auth = Provider.of<AuthenticationApi>(context, listen: false);
+      final AuthenticationApi auth =
+          Provider.of<AuthenticationApi>(context, listen: false);
       await auth.loginWithGoogle();
     } on FirebaseException catch (e) {
+      logger.warning(e);
+      showAlertDialog(context,
+          title: 'Google login failed',
+          description: e.message,
+          actionBtn: 'OK');
+    } on PlatformException catch (e) {
+      logger.warning(e);
       showAlertDialog(context,
           title: 'Google login failed',
           description: e.message,
           actionBtn: 'OK');
     } finally {
-      if (this.mounted) {
+      if (mounted) {
         setState(() => _isLoading = false);
       }
     }
   }
 
-  void _submit() async {
+  Future<void> _submit() async {
     setState(() {
       _isLoading = true;
     });
-    final auth = Provider.of<AuthenticationApi>(context, listen: false);
+    final AuthenticationApi auth =
+        Provider.of<AuthenticationApi>(context, listen: false);
     if (_formType == FormType.login) {
       try {
         await auth.loginWithEmailAndPassword(_email, _password);
-      } catch (e) {
+      } on FirebaseException catch (e) {
+        logger.warning(e);
         showAlertDialog(context,
-            title: 'Sign in failed', description: e, actionBtn: 'OK');
+            title: 'Sign in failed', description: e.message, actionBtn: 'OK');
+      } on PlatformException catch (e) {
+        logger.warning(e);
+        showAlertDialog(context,
+            title: 'Sign in failed', description: e.message, actionBtn: 'OK');
       }
     } else {
       final compromised = await isPasswordCompromised(_password);
@@ -102,15 +134,18 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
       } else {
         try {
           await auth.createUserWithEmailAndPassword(_email, _password);
-        } catch (e) {
+        } on FirebaseException catch (e) {
+          logger.warning(e);
           showAlertDialog(context,
-              title: 'Sign up failed',
-              description: e.toString(),
-              actionBtn: 'OK');
+              title: 'Sign up failed', description: e.message, actionBtn: 'OK');
+        } on PlatformException catch (e) {
+          logger.warning(e);
+          showAlertDialog(context,
+              title: 'Sign up failed', description: e.message, actionBtn: 'OK');
         }
       }
     }
-    if (this.mounted) {
+    if (mounted) {
       setState(() => _isLoading = false);
     }
   }
@@ -133,21 +168,20 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
 
   Form _formFields() {
     if (_formType == FormType.login) {
+      final MultiValidator _emailValidator = MultiValidator([
+        RequiredValidator(errorText: 'Email is required'),
+        EmailValidator(errorText: 'Please enter a valid email'),
+      ]);
       return Form(
         key: _formKey,
         child: Column(
           children: <TextFormField>[
             TextFormField(
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return "E-Mail field is required";
-                }
-                return null;
-              },
+              validator: _emailValidator,
               controller: _emailController,
-              style: TextStyle(color: Colors.white, fontSize: 16),
-              decoration: InputDecoration(
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+              decoration: const InputDecoration(
                 errorStyle: TextStyle(fontSize: 16),
                 hintStyle: TextStyle(color: Colors.white),
                 fillColor: Colors.white,
@@ -177,10 +211,10 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                 return null;
               },
               controller: _passwordController,
-              style: TextStyle(color: Colors.white, fontSize: 16),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
               decoration: InputDecoration(
-                errorStyle: TextStyle(fontSize: 16),
-                hintStyle: TextStyle(color: Colors.white),
+                errorStyle: const TextStyle(fontSize: 16),
+                hintStyle: const TextStyle(color: Colors.white),
                 fillColor: Colors.white,
                 labelText: 'Password',
                 suffixIcon: IconButton(
@@ -194,12 +228,12 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                     color: Colors.white,
                   ),
                 ),
-                hintText: 'yourpassword',
-                labelStyle: TextStyle(color: Colors.white),
-                focusedBorder: UnderlineInputBorder(
+                hintText: 'your password',
+                labelStyle: const TextStyle(color: Colors.white),
+                focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                 ),
-                enabledBorder: UnderlineInputBorder(
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                 ),
                 focusColor: Colors.white,
@@ -211,12 +245,12 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
         ),
       );
     } else {
-      final emailValidator = MultiValidator([
+      final MultiValidator _emailValidator = MultiValidator([
         RequiredValidator(errorText: 'Email is required'),
         EmailValidator(errorText: 'Please enter a valid email'),
       ]);
 
-      final passwordValidator = MultiValidator([
+      final MultiValidator _passwordValidator = MultiValidator([
         RequiredValidator(errorText: 'Password is required'),
         MinLengthValidator(8,
             errorText: 'Password must be at least 8 digits long'),
@@ -232,11 +266,11 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
           children: <TextFormField>[
             TextFormField(
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: emailValidator,
+              validator: _emailValidator,
               controller: _emailController,
-              style: TextStyle(color: Colors.white, fontSize: 16),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
               keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 errorStyle: TextStyle(fontSize: 16),
                 hintStyle: TextStyle(color: Colors.white),
                 fillColor: Colors.white,
@@ -259,12 +293,12 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
             ),
             TextFormField(
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              validator: passwordValidator,
+              validator: _passwordValidator,
               controller: _passwordController,
-              style: TextStyle(color: Colors.white, fontSize: 16),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
               decoration: InputDecoration(
-                errorStyle: TextStyle(fontSize: 16),
-                hintStyle: TextStyle(color: Colors.white),
+                errorStyle: const TextStyle(fontSize: 16),
+                hintStyle: const TextStyle(color: Colors.white),
                 fillColor: Colors.white,
                 labelText: 'Password',
                 suffixIcon: IconButton(
@@ -278,12 +312,12 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                     color: Colors.white,
                   ),
                 ),
-                hintText: 'yourpassword',
-                labelStyle: TextStyle(color: Colors.white),
-                focusedBorder: UnderlineInputBorder(
+                hintText: 'your password',
+                labelStyle: const TextStyle(color: Colors.white),
+                focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                 ),
-                enabledBorder: UnderlineInputBorder(
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                 ),
                 focusColor: Colors.white,
@@ -300,13 +334,13 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                 return null;
               },
               controller: _confirmPasswordController,
-              style: TextStyle(color: Colors.white, fontSize: 16),
-              decoration: InputDecoration(
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+              decoration: const InputDecoration(
                 errorStyle: TextStyle(fontSize: 16),
                 hintStyle: TextStyle(color: Colors.white),
                 fillColor: Colors.white,
                 labelText: 'Confirm Password',
-                hintText: 'confirm yourpassword',
+                hintText: 'confirm your password',
                 labelStyle: TextStyle(color: Colors.white),
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
@@ -337,14 +371,13 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
         SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 60,
               ),
               Image.asset(
                 "assets/logo.png",
-                alignment: Alignment.center,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 90,
               ),
               Row(
@@ -352,7 +385,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                 children: [
                   InkWell(
                     onTap: () => _loginWithGoogle(context),
-                    child: Container(
+                    child: SizedBox(
                       height: 50,
                       width: 80,
                       child: Image.asset(
@@ -363,7 +396,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                   ),
                   InkWell(
                     onTap: () => _loginWithFacebook(context),
-                    child: Container(
+                    child: SizedBox(
                       height: 50,
                       width: 80,
                       child: Image.asset(
@@ -374,32 +407,34 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               _formFields(),
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               ButtonTheme(
-                minWidth: 200.0,
-                padding: EdgeInsets.all(10),
-                child: RaisedButton(
-                  color: Colors.deepOrangeAccent,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Colors.deepOrangeAccent),
+                  ),
+                  onPressed: () =>
+                      _formKey.currentState.validate() ? _submit() : null,
                   child: Text(
                     _formType == FormType.login ? "Login" : "Sign Up",
                     style: GoogleFonts.permanentMarker(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                         fontSize: 23,
                         color: Colors.white,
                       ),
                     ),
                   ),
-                  onPressed: () =>
-                      _formKey.currentState.validate() ? _submit() : null,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 80,
               ),
               Column(
@@ -410,7 +445,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                         ? "Don't have an account?"
                         : "Already have an account?",
                     style: GoogleFonts.permanentMarker(
-                      textStyle: TextStyle(
+                      textStyle: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.deepOrangeAccent,
@@ -418,7 +453,7 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   GestureDetector(
@@ -428,14 +463,14 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
                         Text(
                           _formType == FormType.login ? "Sign up" : "Login",
                           style: GoogleFonts.josefinSans(
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
                         ),
-                        Icon(
+                        const Icon(
                           Icons.keyboard_arrow_right,
                           color: Colors.white,
                         ),

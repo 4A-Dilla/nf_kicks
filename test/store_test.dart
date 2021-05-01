@@ -1,5 +1,8 @@
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+// Project imports:
 import 'package:nf_kicks/models/store.dart';
 
 void main() {
@@ -61,7 +64,7 @@ void main() {
           ));
     });
 
-    test('test store object with missing value(s)', () {
+    test('test store object with missing key(s) and value(s)', () {
       final store = Store.fromMap({
         "name": "Nike Shoes",
         "description": "Lorem Ipsum",

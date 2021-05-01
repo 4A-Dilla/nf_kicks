@@ -1,18 +1,23 @@
+// Dart imports:
 import 'dart:io';
 
+// Flutter imports:
+import 'package:flutter/foundation.dart';
+
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:nf_kicks/utils/end_to_end_encryption.dart';
 import 'package:path/path.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-import 'package:nf_kicks/models/cart_Item.dart';
-import 'package:nf_kicks/models/nfkicksUser.dart';
+// Project imports:
+import 'package:nf_kicks/models/cart_item.dart';
+import 'package:nf_kicks/models/nfkicks_user.dart';
 import 'package:nf_kicks/models/order.dart';
 import 'package:nf_kicks/models/product.dart';
 import 'package:nf_kicks/models/store.dart';
 import 'package:nf_kicks/services/api/api_path.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
+import 'package:nf_kicks/utils/end_to_end_encryption.dart';
 
 class Database implements DatabaseApi {
   Database({@required this.uid});
@@ -116,7 +121,7 @@ class Database implements DatabaseApi {
   @override
   Future<void> createOrder({Order order, String storeName}) async {
     final String storeNameOrder =
-        "${storeName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Order";
+        "${storeName.toLowerCase().replaceAll(RegExp(r"\s+"), "")}Order";
     final path = APIPath.userAccount(uid);
     final documentReference = FirebaseFirestore.instance.doc(path);
     final collection = documentReference.collection(storeNameOrder);
@@ -127,12 +132,25 @@ class Database implements DatabaseApi {
 
   Future<void> emptyCart({String storeName}) async {
     final String storeNameCart =
-        "${storeName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart";
+        "${storeName.toLowerCase().replaceAll(RegExp(r"\s+"), "")}Cart";
     final cartPath = APIPath.storeCart(uid, storeNameCart);
     final cartCollectionReference =
         FirebaseFirestore.instance.collection(cartPath);
     cartCollectionReference.get().then((snapshot) async {
-      for (DocumentSnapshot ds in snapshot.docs) {
+      for (final DocumentSnapshot ds in snapshot.docs) {
+        await ds.reference.delete();
+      }
+    });
+  }
+
+  Future<void> updateStock({String storeName}) async {
+    final String storeNameCart =
+        "${storeName.toLowerCase().replaceAll(RegExp(r"\s+"), "")}Cart";
+    final cartPath = APIPath.storeCart(uid, storeNameCart);
+    final cartCollectionReference =
+        FirebaseFirestore.instance.collection(cartPath);
+    cartCollectionReference.get().then((snapshot) async {
+      for (final DocumentSnapshot ds in snapshot.docs) {
         await ds.reference.delete();
       }
     });
@@ -142,7 +160,7 @@ class Database implements DatabaseApi {
   Future<void> addToCart(
       {Product product, int quantity, String storeName}) async {
     final String storeNameCart =
-        "${storeName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart";
+        "${storeName.toLowerCase().replaceAll(RegExp(r"\s+"), "")}Cart";
     final path = APIPath.userAccount(uid);
     final documentReference = FirebaseFirestore.instance.doc(path);
     final collection = documentReference.collection(storeNameCart);
@@ -159,7 +177,7 @@ class Database implements DatabaseApi {
   @override
   Stream<List<Order>> ordersStream({String storeOrderName}) {
     final String storeNameOrder =
-        "${storeOrderName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Order";
+        "${storeOrderName.toLowerCase().replaceAll(RegExp(r"\s+"), "")}Order";
     final path = APIPath.storeCart(uid, storeNameOrder);
     final reference = FirebaseFirestore.instance
         .collection(path)
@@ -180,7 +198,7 @@ class Database implements DatabaseApi {
   @override
   Stream<List<CartItem>> storeCartStream({String storeCartName}) {
     final String storeNameCart =
-        "${storeCartName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart";
+        "${storeCartName.toLowerCase().replaceAll(RegExp(r"\s+"), "")}Cart";
     final path = APIPath.storeCart(uid, storeNameCart);
     final reference = FirebaseFirestore.instance.collection(path);
     final snapshots = reference.snapshots();
@@ -199,7 +217,7 @@ class Database implements DatabaseApi {
   @override
   Future<void> deleteCartItem({String cartItemId, String storeCartName}) async {
     final String storeNameCart =
-        "${storeCartName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Cart";
+        "${storeCartName.toLowerCase().replaceAll(RegExp(r"\s+"), "")}Cart";
     final path = APIPath.storeCartItem(uid, storeNameCart, cartItemId);
     final documentReference = FirebaseFirestore.instance.doc(path);
     await documentReference.delete();
@@ -208,7 +226,7 @@ class Database implements DatabaseApi {
   @override
   Stream<Order> orderStream({String storeOrderName, String orderId}) {
     final String storeNameOrder =
-        "${storeOrderName.toLowerCase().replaceAll(new RegExp(r"\s+"), "")}Order";
+        "${storeOrderName.toLowerCase().replaceAll(RegExp(r"\s+"), "")}Order";
     final path = APIPath.storeOrder(uid, storeNameOrder, orderId);
     final reference = FirebaseFirestore.instance.doc(path);
     final snapshots = reference.snapshots();
@@ -249,7 +267,7 @@ class Database implements DatabaseApi {
 
   @override
   Future<void> uploadUserAvatar({String uid, File imageFile}) async {
-    String fileName = basename(imageFile.path);
+    final String fileName = basename(imageFile.path);
     final path = APIPath.userImageLocation(uid, fileName);
     final firebaseStorageRef = FirebaseStorage.instance.ref(path);
     await firebaseStorageRef.putFile(imageFile);

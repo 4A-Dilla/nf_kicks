@@ -1,19 +1,22 @@
+// Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:nf_kicks/models/nfkicksUser.dart';
+
+// Project imports:
+import 'package:nf_kicks/models/nfkicks_user.dart';
 import 'package:nf_kicks/services/authentication/firebase_auth_exception_handler.dart';
 import 'package:nf_kicks/services/database/database.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/utils/end_to_end_encryption.dart';
 import 'package:nf_kicks/widgets/text_constants.dart';
-
 import 'authentication_api.dart';
 
 class Authentication implements AuthenticationApi {
-  final _firebaseAuth = FirebaseAuth.instance;
-  final _googleSignIn = GoogleSignIn();
-  final _fb = FacebookLogin();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FacebookLogin _fb = FacebookLogin();
 
   @override
   User get currentUser => _firebaseAuth.currentUser;
@@ -22,10 +25,10 @@ class Authentication implements AuthenticationApi {
   Stream<User> authStateChanges() => _firebaseAuth.authStateChanges();
 
   void createUserDetails(UserCredential userCredential, bool isNormalUser) {
-    DatabaseApi _databaseApi = Database(uid: userCredential.user.uid);
+    final DatabaseApi _databaseApi = Database(uid: userCredential.user.uid);
     if (isNormalUser) {
       _databaseApi.createUser(
-          user: new NfkicksUser(
+          user: NfkicksUser(
                   email: userCredential.user.email,
                   image: kDefaultImageUrl,
                   has2FA: false,
@@ -34,7 +37,7 @@ class Authentication implements AuthenticationApi {
               .toMap());
     } else {
       _databaseApi.createUser(
-          user: new NfkicksUser(
+          user: NfkicksUser(
         email: userCredential.user.email,
         fullName: userCredential.user.displayName,
         image: userCredential.user.photoURL,
@@ -48,34 +51,46 @@ class Authentication implements AuthenticationApi {
   Future<User> createUserWithEmailAndPassword(
       String email, String password) async {
     try {
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: EndToEndEncryption.hash(data: password));
+      final UserCredential userCredential =
+          await _firebaseAuth.createUserWithEmailAndPassword(
+              email: email, password: EndToEndEncryption.hash(data: password));
       createUserDetails(userCredential, true);
       return userCredential.user;
-    } catch (e) {
-      throw FirebaseAuthExceptionHandler.handleException(e);
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseAuthException(
+        code: 'FIREBASE_LOGIN_ERROR',
+        message: FirebaseAuthExceptionHandler.handleException(e),
+      );
+    } on PlatformException catch (e) {
+      throw PlatformException(code: e.code, message: e.message);
     }
   }
 
   @override
   Future<User> loginWithEmailAndPassword(String email, String password) async {
     try {
-      print("hash: ${EndToEndEncryption.hash(data: password)}");
-      final userCredential = await _firebaseAuth.signInWithCredential(
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithCredential(
         EmailAuthProvider.credential(
             email: email, password: EndToEndEncryption.hash(data: password)),
       );
       return userCredential.user;
-    } catch (e) {
-      throw FirebaseAuthExceptionHandler.handleException(e);
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseAuthException(
+        code: 'FIREBASE_LOGIN_ERROR',
+        message: FirebaseAuthExceptionHandler.handleException(e),
+      );
+    } on PlatformException catch (e) {
+      throw PlatformException(code: e.code, message: e.message);
     }
   }
 
   @override
   Future<User> loginWithGoogle() async {
-    final googleAccount = await _googleSignIn.signIn();
+    final GoogleSignInAccount googleAccount = await _googleSignIn.signIn();
     if (googleAccount != null) {
-      final googleAuth = await googleAccount.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleAccount.authentication;
       if (googleAuth.idToken != null) {
         final userCredential = await _firebaseAuth
             .signInWithCredential(
@@ -102,7 +117,7 @@ class Authentication implements AuthenticationApi {
 
   @override
   Future<User> loginWithFacebook() async {
-    final response = await _fb.logIn(permissions: [
+    final FacebookLoginResult response = await _fb.logIn(permissions: [
       FacebookPermission.publicProfile,
       FacebookPermission.email
     ]);
@@ -144,8 +159,13 @@ class Authentication implements AuthenticationApi {
     try {
       await _firebaseAuth.currentUser
           .updatePassword(EndToEndEncryption.hash(data: newPassword));
-    } catch (e) {
-      throw FirebaseAuthExceptionHandler.handleException(e);
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseAuthException(
+        code: 'FIREBASE_LOGIN_ERROR',
+        message: FirebaseAuthExceptionHandler.handleException(e),
+      );
+    } on PlatformException catch (e) {
+      throw PlatformException(code: e.code, message: e.message);
     }
   }
 
@@ -153,8 +173,13 @@ class Authentication implements AuthenticationApi {
   Future<void> deleteUserAccount() async {
     try {
       await _firebaseAuth.currentUser.delete().whenComplete(() => logOut());
-    } catch (e) {
-      throw FirebaseAuthExceptionHandler.handleException(e);
+    } on FirebaseAuthException catch (e) {
+      throw FirebaseAuthException(
+        code: 'FIREBASE_LOGIN_ERROR',
+        message: FirebaseAuthExceptionHandler.handleException(e),
+      );
+    } on PlatformException catch (e) {
+      throw PlatformException(code: e.code, message: e.message);
     }
   }
 }

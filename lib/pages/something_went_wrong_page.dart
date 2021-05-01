@@ -1,6 +1,8 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:nf_kicks/widgets/background_stack.dart';
 
+// Project imports:
+import 'package:nf_kicks/widgets/background_stack.dart';
 import '../widgets/constants.dart';
 
 class SomethingWentWrong extends StatelessWidget {

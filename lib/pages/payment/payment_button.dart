@@ -1,6 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Project imports:
 import 'package:nf_kicks/models/order.dart';
+import 'package:nf_kicks/models/stripe_transaction_response.dart';
 import 'package:nf_kicks/services/database/database_api.dart';
 import 'package:nf_kicks/services/payments/payments.dart';
 
@@ -23,15 +29,20 @@ class PaymentsButton extends StatefulWidget {
 }
 
 class _PaymentsButtonState extends State<PaymentsButton> {
-  payViaNewCard(BuildContext context) async {
-    var response = await Payments.payWithNewCard(
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> payViaNewCard(BuildContext context) async {
+    final StripeTransactionResponse response = await Payments.payWithNewCard(
       amount: widget.totalPrice
           .toStringAsFixed(2)
           .replaceAll(new RegExp(r"[^a-z0-9_]+"), ''),
     );
     if (response.success == true) {
       widget.dataStore.createOrder(
-        order: new Order(
+        order: Order(
           products: widget.productListMap,
           isComplete: false,
           totalPrice: widget.totalPrice,
@@ -41,7 +52,7 @@ class _PaymentsButtonState extends State<PaymentsButton> {
         storeName: widget.currentTabName,
       );
       Scaffold.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
             'An order has been made!',
           ),
@@ -56,7 +67,7 @@ class _PaymentsButtonState extends State<PaymentsButton> {
       SnackBar(
         content: Text(response.message),
         duration:
-            new Duration(milliseconds: response.success == true ? 1200 : 3000),
+            Duration(milliseconds: response.success == true ? 1200 : 3000),
       ),
     );
   }
@@ -74,42 +85,47 @@ class _PaymentsButtonState extends State<PaymentsButton> {
       children: [
         Row(
           children: [
-            Text(
+            const Text(
               "Total Price:",
               style: TextStyle(
                 fontSize: 16,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
             Text(
               widget.totalPrice.toStringAsFixed(2),
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
           ],
         ),
-        FlatButton(
-          onPressed: () {
-            payViaNewCard(context);
-          },
-          child: Text(
-            "Checkout",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+        ButtonTheme(
+          child: TextButton(
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    20,
+                  ),
+                ),
+              ),
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(Colors.deepOrangeAccent),
+            ),
+            onPressed: () => payViaNewCard(context),
+            child: const Text(
+              "Checkout",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              20,
-            ),
-          ),
-          color: Colors.deepOrangeAccent,
         ),
       ],
     );

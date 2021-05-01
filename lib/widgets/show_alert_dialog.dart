@@ -1,5 +1,7 @@
+// Dart imports:
 import 'dart:io';
 
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,20 +18,24 @@ Future<bool> showAlertDialog(
       builder: (context) => AlertDialog(
         title: Text(title),
         content: Text(description),
-        actions: <FlatButton>[
+        actions: [
           if (cancelBtn != null)
-            FlatButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(
-                cancelBtn,
-                style: const TextStyle(color: Colors.black),
+            ButtonTheme(
+              child: TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                  cancelBtn,
+                  style: const TextStyle(color: Colors.black),
+                ),
               ),
             ),
-          FlatButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(
-              actionBtn,
-              style: const TextStyle(color: Colors.deepOrangeAccent),
+          ButtonTheme(
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(
+                actionBtn,
+                style: const TextStyle(color: Colors.deepOrangeAccent),
+              ),
             ),
           ),
         ],
