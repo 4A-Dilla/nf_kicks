@@ -44,7 +44,8 @@ class Product {
   }
 
   Map<String, dynamic> toMap(int quantity) {
-    double finalPrice = price is num ? price.toDouble() * quantity : 00.00;
+    final double finalPrice =
+        price is num ? price.toDouble() * quantity : 00.00;
     return {
       'productId': id is String ? id?.toString() : '',
       'storeId': storeId is String ? storeId?.toString() : '',
@@ -60,7 +61,7 @@ class Product {
       hashValues(id, storeId, name, description, price, stock, image, inStock);
 
   @override
-  bool operator ==(other) {
+  bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     if (runtimeType != other.runtimeType) return false;
     final Product otherProduct = other;

@@ -23,7 +23,7 @@ import 'package:nf_kicks/utils/common_functions.dart';
 import 'package:nf_kicks/widgets/show_alert_dialog.dart';
 
 class LandingPage extends StatefulWidget {
-  static final String id = 'landing_screen';
+  static const String id = 'landing_screen';
 
   final String uid;
   final AuthenticationApi authenticationApi;

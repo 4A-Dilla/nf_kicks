@@ -38,7 +38,7 @@ class _PaymentsButtonState extends State<PaymentsButton> {
     final StripeTransactionResponse response = await Payments.payWithNewCard(
       amount: widget.totalPrice
           .toStringAsFixed(2)
-          .replaceAll(new RegExp(r"[^a-z0-9_]+"), ''),
+          .replaceAll(RegExp(r"[^a-z0-9_]+"), ''),
     );
     if (response.success == true) {
       widget.dataStore.createOrder(
@@ -51,7 +51,7 @@ class _PaymentsButtonState extends State<PaymentsButton> {
         ),
         storeName: widget.currentTabName,
       );
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
             'An order has been made!',
@@ -63,7 +63,7 @@ class _PaymentsButtonState extends State<PaymentsButton> {
       );
     }
 
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(response.message),
         duration:

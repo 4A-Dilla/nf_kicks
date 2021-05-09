@@ -13,7 +13,7 @@ final kLoadingLogo = verticalTextWithLogo();
 
 final kLogoError = verticalTextWithLogo(
   text:
-      "Check wifi connection, something went wrong (please ensure you do not have a jailbroken device)...",
+      "Check wifi connection, something went wrong (please ensure you do not have a rooted device)...",
 );
 
 final kLogoCheckEmail = verticalTextWithLogo(

@@ -423,14 +423,23 @@ class _ProfilePageState extends State<ProfilePage> {
                   if (_showUpdateDetailsForm)
                     Container()
                   else
-                    OutlineButton(
-                      borderSide: const BorderSide(),
-                      onPressed: () => _toggleResetPasswordFormType(),
-                      child: Text(
-                        "Reset Password".toUpperCase(),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                    ButtonTheme(
+                      child: OutlinedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.white,
+                          ),
+                          side: MaterialStateProperty.all<BorderSide>(
+                            const BorderSide(),
+                          ),
+                        ),
+                        onPressed: () => _toggleResetPasswordFormType(),
+                        child: Text(
+                          "Reset Password".toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
@@ -439,39 +448,60 @@ class _ProfilePageState extends State<ProfilePage> {
                   else
                     Container(),
                   if (_showResetPasswordForm)
-                    RaisedButton(
-                      color: Colors.redAccent,
-                      onPressed: () => _formKey.currentState.validate()
-                          ? _submitToResetPassword()
-                          : null,
-                      child: Text(
-                        "submit".toUpperCase(),
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                    ButtonTheme(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.redAccent,
+                          ),
+                        ),
+                        onPressed: () => _formKey.currentState.validate()
+                            ? _submitToResetPassword()
+                            : null,
+                        child: Text(
+                          "submit".toUpperCase(),
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     )
                   else
                     _showUpdateDetailsForm
-                        ? RaisedButton(
-                            color: Colors.redAccent,
-                            onPressed: () => _formKey.currentState.validate()
-                                ? _submitToUpdateUserInformation()
-                                : null,
-                            child: Text(
-                              "submit".toUpperCase(),
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                        ? ButtonTheme(
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  Colors.redAccent,
+                                ),
+                              ),
+                              onPressed: () => _formKey.currentState.validate()
+                                  ? _submitToUpdateUserInformation()
+                                  : null,
+                              child: Text(
+                                "submit".toUpperCase(),
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           )
-                        : RaisedButton(
-                            color: Colors.redAccent,
-                            onPressed: () => _showDeleteAccountDialog(context),
-                            child: Text(
-                              "Delete Account".toUpperCase(),
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                        : ButtonTheme(
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  Colors.redAccent,
+                                ),
+                              ),
+                              onPressed: () =>
+                                  _showDeleteAccountDialog(context),
+                              child: Text(
+                                "Delete Account".toUpperCase(),
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                 ],
@@ -576,15 +606,21 @@ StreamBuilder<NfkicksUser> _buildUserDetails(
                     ),
                   ),
                   Expanded(
-                    child: RaisedButton(
-                      color: Colors.deepOrangeAccent,
-                      onPressed: toggleFormField,
-                      child: Text(
-                        "Update info...".toUpperCase(),
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
+                    child: ButtonTheme(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.deepOrangeAccent,
+                          ),
+                        ),
+                        onPressed: toggleFormField,
+                        child: Text(
+                          "Update info...".toUpperCase(),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),

@@ -14,7 +14,7 @@ import '../something_went_wrong_page.dart';
 import '../user_state_page.dart';
 
 class Home extends StatelessWidget {
-  static final String id = 'home_screen';
+  static const String id = 'home_screen';
   final bool connectionStatus;
   final bool jailbreakOrRootStatus;
   final Future<FirebaseApp> init;

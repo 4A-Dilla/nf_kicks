@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nf_kicks/widgets/text_constants.dart';
 import 'package:password_compromised/password_compromised.dart';
 import 'package:provider/provider.dart';
 
@@ -254,8 +253,8 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
         RequiredValidator(errorText: 'Password is required'),
         MinLengthValidator(8,
             errorText: 'Password must be at least 8 digits long'),
-        MaxLengthValidator(127,
-            errorText: 'Password must be under 127 digits long'),
+        MaxLengthValidator(64,
+            errorText: 'Password must be under 64 digits long'),
         PatternValidator(r'(?=.*?[#?!@$%^&*-])',
             errorText: 'Passwords must have at least one special character')
       ]);
@@ -417,7 +416,8 @@ class _LoginAndRegistrationPageState extends State<LoginAndRegistrationPage> {
               ButtonTheme(
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all<Size>(Size(200, 50)),
+                    minimumSize:
+                        MaterialStateProperty.all<Size>(const Size(200, 50)),
                     backgroundColor: MaterialStateProperty.all<Color>(
                         Colors.deepOrangeAccent),
                   ),

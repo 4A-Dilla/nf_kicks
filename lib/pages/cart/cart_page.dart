@@ -61,7 +61,7 @@ class CartPage extends StatelessWidget {
                         (context, AsyncSnapshot<List<CartItem>> snapshotData) {
                       double _totalPrice = 0;
                       List<Map<String, dynamic>> _productListMap =
-                          new List<Map<String, dynamic>>();
+                          <Map<String, dynamic>>[];
 
                       if (snapshotData.hasError) {
                         print("Errors: ${snapshotData.error}");
@@ -71,7 +71,7 @@ class CartPage extends StatelessWidget {
                         return kLoadingNoLogo;
                       }
 
-                      snapshotData.data.forEach((cartItem) {
+                      snapshotData.data.forEach((CartItem cartItem) {
                         _totalPrice += cartItem.price;
                         _productListMap.add(cartItem.toMap());
                       });
@@ -83,7 +83,7 @@ class CartPage extends StatelessWidget {
                             if (index == 0) {
                               return Column(
                                 children: [
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   PaymentsButton(

@@ -164,7 +164,8 @@ class _ProductPageState extends State<ProductPage> {
                                         }
                                       else
                                         {
-                                          Scaffold.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
                                             const SnackBar(
                                               content: Text(
                                                 'This product is not in stock!',
@@ -223,7 +224,8 @@ class _ProductPageState extends State<ProductPage> {
                                         }
                                       else
                                         {
-                                          Scaffold.of(context).showSnackBar(
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
                                             const SnackBar(
                                               content: Text(
                                                 'This product is not in stock!',
@@ -353,5 +355,5 @@ class _ProductPageState extends State<ProductPage> {
 
 void _displaySnackBar(BuildContext context, String text) {
   final snackBar = SnackBar(content: Text(text));
-  Scaffold.of(context).showSnackBar(snackBar);
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }

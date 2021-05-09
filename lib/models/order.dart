@@ -29,7 +29,7 @@ class Order {
       return null;
     }
 
-    return new Order(
+    return Order(
       id: documentId,
       dateOpened: data['dateOpened'] is Timestamp
           ? data['dateOpened']
@@ -37,10 +37,10 @@ class Order {
       isComplete: data['isComplete'] is bool ? data['isComplete'] : false,
       readyForPickup:
           data['readyForPickup'] is bool ? data['readyForPickup'] : false,
-      products: new List<Map<String, dynamic>>.from(data['products'])
+      products: List<Map<String, dynamic>>.from(data['products'])
               is List<Map<String, dynamic>>
-          ? new List<Map<String, dynamic>>.from(data['products'])
-          : new List<Map<String, dynamic>>(),
+          ? List<Map<String, dynamic>>.from(data['products'])
+          : <Map<String, dynamic>>[],
       totalPrice:
           data['totalPrice'] is num ? data['totalPrice']?.toDouble() : 00.00,
     );
@@ -63,7 +63,7 @@ class Order {
       id, dateOpened, isComplete, readyForPickup, products, totalPrice);
 
   @override
-  bool operator ==(other) {
+  bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     if (runtimeType != other.runtimeType) return false;
     final Order otherOrder = other;

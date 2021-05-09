@@ -76,7 +76,6 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
             shrinkResources true
             zipAlignEnabled true
             minifyEnabled true
@@ -86,7 +85,6 @@ android {
             setProguardFiles([getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'])
         }
         debug {
-            // TODO: Add your own signing config for the debug build.
             shrinkResources true
             zipAlignEnabled true
             minifyEnabled true

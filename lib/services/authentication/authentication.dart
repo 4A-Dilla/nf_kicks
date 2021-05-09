@@ -53,7 +53,8 @@ class Authentication implements AuthenticationApi {
     try {
       final UserCredential userCredential =
           await _firebaseAuth.createUserWithEmailAndPassword(
-              email: email, password: EndToEndEncryption.hash(data: password));
+              email: email,
+              password: EndToEndEncryption.hash(password: password));
       createUserDetails(userCredential, true);
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
@@ -72,7 +73,8 @@ class Authentication implements AuthenticationApi {
       final UserCredential userCredential =
           await _firebaseAuth.signInWithCredential(
         EmailAuthProvider.credential(
-            email: email, password: EndToEndEncryption.hash(data: password)),
+            email: email,
+            password: EndToEndEncryption.hash(password: password)),
       );
       return userCredential.user;
     } on FirebaseAuthException catch (e) {
@@ -92,7 +94,7 @@ class Authentication implements AuthenticationApi {
       final GoogleSignInAuthentication googleAuth =
           await googleAccount.authentication;
       if (googleAuth.idToken != null) {
-        final userCredential = await _firebaseAuth
+        final User userCredential = await _firebaseAuth
             .signInWithCredential(
           GoogleAuthProvider.credential(
             idToken: googleAuth.idToken,
@@ -123,8 +125,8 @@ class Authentication implements AuthenticationApi {
     ]);
     switch (response.status) {
       case FacebookLoginStatus.success:
-        final accessToken = response.accessToken;
-        final userCredential = await _firebaseAuth
+        final FacebookAccessToken accessToken = response.accessToken;
+        final User userCredential = await _firebaseAuth
             .signInWithCredential(
           FacebookAuthProvider.credential(accessToken.token),
         )
@@ -158,7 +160,7 @@ class Authentication implements AuthenticationApi {
   Future<void> resetCurrentUserPassword(String newPassword) async {
     try {
       await _firebaseAuth.currentUser
-          .updatePassword(EndToEndEncryption.hash(data: newPassword));
+          .updatePassword(EndToEndEncryption.hash(password: newPassword));
     } on FirebaseAuthException catch (e) {
       throw FirebaseAuthException(
         code: 'FIREBASE_LOGIN_ERROR',

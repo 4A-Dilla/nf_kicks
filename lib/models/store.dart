@@ -59,7 +59,7 @@ class Store {
       storeImage, inStorePickup, inStoreShopping, latLong);
 
   @override
-  bool operator ==(other) {
+  bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     if (runtimeType != other.runtimeType) return false;
     final Store otherStore = other;

@@ -91,34 +91,58 @@ class _ImageUploadState extends State<ImageUpload> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              OutlineButton(
-                borderSide: const BorderSide(width: 2),
-                color: Colors.white,
-                onPressed: _cropImage,
-                child: const Icon(
-                  Icons.crop,
-                  size: 30,
-                  color: Colors.black,
+              ButtonTheme(
+                child: OutlinedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.white,
+                    ),
+                    side: MaterialStateProperty.all<BorderSide>(
+                      const BorderSide(width: 2),
+                    ),
+                  ),
+                  onPressed: _cropImage,
+                  child: const Icon(
+                    Icons.crop,
+                    size: 30,
+                    color: Colors.black,
+                  ),
                 ),
               ),
-              OutlineButton(
-                borderSide: const BorderSide(color: Colors.green, width: 2),
-                color: Colors.white,
-                onPressed: _uploadImage,
-                child: const Icon(
-                  Icons.check,
-                  size: 30,
-                  color: Colors.green,
+              ButtonTheme(
+                child: OutlinedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.white,
+                    ),
+                    side: MaterialStateProperty.all<BorderSide>(
+                      const BorderSide(color: Colors.green, width: 2),
+                    ),
+                  ),
+                  onPressed: _uploadImage,
+                  child: const Icon(
+                    Icons.check,
+                    size: 30,
+                    color: Colors.green,
+                  ),
                 ),
               ),
-              OutlineButton(
-                borderSide: const BorderSide(color: Colors.red, width: 2),
-                color: Colors.white,
-                onPressed: _clear,
-                child: const Icon(
-                  Icons.close,
-                  size: 30,
-                  color: Colors.red,
+              ButtonTheme(
+                child: OutlinedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      Colors.white,
+                    ),
+                    side: MaterialStateProperty.all<BorderSide>(
+                      const BorderSide(color: Colors.red, width: 2),
+                    ),
+                  ),
+                  onPressed: _clear,
+                  child: const Icon(
+                    Icons.close,
+                    size: 30,
+                    color: Colors.red,
+                  ),
                 ),
               ),
             ],
