@@ -55,17 +55,18 @@ class CartItem {
       hashValues(id, productId, storeId, name, price, quantity, image);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (runtimeType != other.runtimeType) return false;
-    final CartItem otherStore = other;
-    return id == otherStore.id &&
-        productId == otherStore.productId &&
-        storeId == otherStore.storeId &&
-        name == otherStore.name &&
-        price == otherStore.price &&
-        quantity == otherStore.quantity &&
-        image == otherStore.image;
+    final Object otherCartItem = other;
+    return otherCartItem is CartItem &&
+        id == otherCartItem.id &&
+        productId == otherCartItem.productId &&
+        storeId == otherCartItem.storeId &&
+        name == otherCartItem.name &&
+        price == otherCartItem.price &&
+        quantity == otherCartItem.quantity &&
+        image == otherCartItem.image;
   }
 
   @override

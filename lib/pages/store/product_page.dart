@@ -306,7 +306,6 @@ class _ProductPageState extends State<ProductPage> {
                               storeId: snapshotData.data.storeId),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
-                              print("Errors: ${snapshot.error}");
                               return kLoadingNoLogo;
                             }
                             if (!snapshot.hasData) {

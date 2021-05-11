@@ -174,7 +174,7 @@ class Authentication implements AuthenticationApi {
   @override
   Future<void> deleteUserAccount() async {
     try {
-      await _firebaseAuth.currentUser.delete().whenComplete(() => logOut());
+      await _firebaseAuth.currentUser.delete();
     } on FirebaseAuthException catch (e) {
       throw FirebaseAuthException(
         code: 'FIREBASE_LOGIN_ERROR',

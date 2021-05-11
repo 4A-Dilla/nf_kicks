@@ -31,7 +31,6 @@ class StorePage extends StatelessWidget {
         stream: dataStore.storeStream(storeId: storeId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            print("Errors: ${snapshot.error}");
             return kLoadingLogo;
           }
 
@@ -138,7 +137,6 @@ class StorePage extends StatelessWidget {
                       builder:
                           (context, AsyncSnapshot<List<Product>> snapshotData) {
                         if (snapshotData.hasError) {
-                          print("Errors: ${snapshotData.error}");
                           return kLoadingNoLogo;
                         }
                         if (!snapshotData.hasData) {

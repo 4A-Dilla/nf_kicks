@@ -13,17 +13,15 @@ import 'package:stripe_payment/stripe_payment.dart';
 // Project imports:
 import 'package:nf_kicks/models/stripe_transaction_response.dart';
 
-// final String _apiUrl = FlutterConfig.get('STRIPE_API_URL').toString();
 final String _apiUrl = env['STRIPE_API_URL'].toString();
 final String _paymentApiUrl = '$_apiUrl/payment_intents';
-// final String _secret = FlutterConfig.get('STRIPE_SECRET').toString();
 final String _secret = env['STRIPE_SECRET'].toString();
 final Map<String, String> _headers = {
   'Authorization': 'Bearer $_secret',
   'Content-Type': 'application/x-www-form-urlencoded'
 };
 
-StripeTransactionResponse _getPlatformExceptionErrorResult(error) {
+StripeTransactionResponse _getPlatformExceptionError(error) {
   String message = 'Something went wrong';
   if (error.code == 'cancelled') {
     message = 'Transaction cancelled';
@@ -42,9 +40,7 @@ Future<Map<String, dynamic>> _createPaymentIntent(String amount) async {
     final Response response =
         await http.post(_paymentApiUrl, body: body, headers: _headers);
     return jsonDecode(response.body) as Map<String, dynamic>;
-  } catch (error) {
-    print('err charging user: ${error.toString()}');
-  }
+  } catch (_) {}
   return null;
 }
 
@@ -52,15 +48,13 @@ class Payments {
   static void init() {
     StripePayment.setOptions(
       StripeOptions(
-          // publishableKey: FlutterConfig.get('PUBLISHABLE_KEY').toString(),
           publishableKey: env['PUBLISHABLE_KEY'].toString(),
           merchantId: "Test",
           androidPayMode: 'test'),
     );
   }
 
-  static Future<StripeTransactionResponse> payWithNewCard(
-      {String amount}) async {
+  static Future<StripeTransactionResponse> payWithCard({String amount}) async {
     try {
       final PaymentMethod paymentMethod =
           await StripePayment.paymentRequestWithCardForm(
@@ -81,7 +75,7 @@ class Payments {
             message: 'Transaction failed', success: false);
       }
     } on PlatformException catch (error) {
-      return _getPlatformExceptionErrorResult(error);
+      return _getPlatformExceptionError(error);
     } catch (error) {
       return StripeTransactionResponse(
           message: 'Transaction failed: ${error.toString()}', success: false);

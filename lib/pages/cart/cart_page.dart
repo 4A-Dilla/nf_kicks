@@ -23,7 +23,6 @@ class CartPage extends StatelessWidget {
       stream: dataStore.storesStream(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          print("Errors: ${snapshot.error}");
           return kLoadingLogo;
         }
 
@@ -64,7 +63,6 @@ class CartPage extends StatelessWidget {
                           <Map<String, dynamic>>[];
 
                       if (snapshotData.hasError) {
-                        print("Errors: ${snapshotData.error}");
                         return kLoadingNoLogo;
                       }
                       if (!snapshotData.hasData) {

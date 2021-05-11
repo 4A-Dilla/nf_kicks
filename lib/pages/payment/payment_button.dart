@@ -35,7 +35,7 @@ class _PaymentsButtonState extends State<PaymentsButton> {
   }
 
   Future<void> payViaNewCard(BuildContext context) async {
-    final StripeTransactionResponse response = await Payments.payWithNewCard(
+    final StripeTransactionResponse response = await Payments.payWithCard(
       amount: widget.totalPrice
           .toStringAsFixed(2)
           .replaceAll(RegExp(r"[^a-z0-9_]+"), ''),

@@ -100,7 +100,6 @@ class _LandingMapState extends State<LandingMap> {
             Set<Marker> _markers = <Marker>{};
 
             if (snapshot.hasError) {
-              print("Errors: ${snapshot.error}");
               return kLoadingLogo;
             }
 

@@ -25,7 +25,6 @@ class OrdersPage extends StatelessWidget {
       stream: dataStore.storesStream(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          print("Errors: ${snapshot.error}");
           return kLoadingLogo;
         }
 

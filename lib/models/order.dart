@@ -63,11 +63,12 @@ class Order {
       id, dateOpened, isComplete, readyForPickup, products, totalPrice);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (runtimeType != other.runtimeType) return false;
-    final Order otherOrder = other;
-    return id == otherOrder.id &&
+    final Object otherOrder = other;
+    return otherOrder is Order &&
+        id == otherOrder.id &&
         dateOpened == otherOrder.dateOpened &&
         isComplete == otherOrder.isComplete &&
         readyForPickup == otherOrder.readyForPickup &&

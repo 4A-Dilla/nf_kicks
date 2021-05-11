@@ -9,10 +9,12 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.5.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.3.5'
+        classpath 'org.owasp:dependency-check-gradle:6.1.6'
     }
 }
 
 allprojects {
+    apply plugin: 'org.owasp.dependencycheck'
     repositories {
         google()
         jcenter()

@@ -61,11 +61,12 @@ class Product {
       hashValues(id, storeId, name, description, price, stock, image, inStock);
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (runtimeType != other.runtimeType) return false;
-    final Product otherProduct = other;
-    return id == otherProduct.id &&
+    final Object otherProduct = other;
+    return otherProduct is Product &&
+        id == otherProduct.id &&
         storeId == otherProduct.storeId &&
         name == otherProduct.name &&
         description == otherProduct.description &&
