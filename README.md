@@ -1,16 +1,21 @@
-# nf_kicks
+# Nf_kicks
+![Nf_Kicks App Icon](https://raw.githubusercontent.com/4A-Dilla/nf_kicks/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
 
-Social distanced shopping
+The Nf kicks application is a socially distanced e-commerce app that serves as a security assessment for modern e-commerce application security.
 
-## Getting Started
+## Running the Project on Android
 
-This project is a starting point for a Flutter application.
+Simply download the release under "NF Kicks Android" to run this project on Android.
+The project requires an Android device running Android 7.0 (Nougat) or higher; devices lower this will not run the project.
 
-A few resources to get you started if this is your first Flutter project:
+## Running the Project on IOS
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Unfortunately, because the project is not registered with Apple, it will not run on a physical device. However, in order to run the iOS build, a Macbook running Xcode and an iOS simulator on the computer are required, simply run the flutter application in Android Studio.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Running the Project's Codebase
+
+To run this project's codebase resources to get you started are located here:
+
+- [Install Flutter Here](https://flutter.dev/docs/get-started/install)
+- [Install Android Studio Here](https://developer.android.com/studio/)
+- [Install Xcode Here](https://apps.apple.com/us/app/xcode/id497799835)
