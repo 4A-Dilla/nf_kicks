@@ -10,7 +10,7 @@ The project requires an Android device running Android 7.0 (Nougat) or higher; d
 
 ## Running the Project on IOS
 
-Unfortunately, because the project is not registered with Apple, it will not run on a physical device. However, in order to run the iOS build, a Macbook running Xcode and an iOS simulator on the computer are required, simply run the flutter application in Android Studio.
+Unfortunately, because the project is not registered with Apple, it will not run on a physical device. However, in order to run the iOS build, a Macbook running Xcode and an iOS simulator on the computer are required, run the flutter application by opening the codebase in Android Studio and choose the IOS simulator when running.
 
 ## Running the Project's Codebase
 
