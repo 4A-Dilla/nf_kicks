@@ -19,4 +19,5 @@ To run this project's codebase resources to get you started are located here:
 - [Install Flutter Here](https://flutter.dev/docs/get-started/install)
 - [Install Android Studio Here](https://developer.android.com/studio/)
 - [Install Xcode Here](https://apps.apple.com/us/app/xcode/id497799835)
+
 ![Nf_Kicks App Icon](https://raw.githubusercontent.com/4A-Dilla/nf_kicks/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png)
